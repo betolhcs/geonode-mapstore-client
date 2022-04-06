@@ -265,7 +265,8 @@ export const plugins = {
     DrawerMenuPlugin: toLazyPlugin(
         'DrawerMenu',
         import(/* webpackChunkName: 'plugins/drawer-menu-plugin' */ '@mapstore/framework/plugins/DrawerMenu')
-    )
+    ),
+    HelloWorldPlugin: require(/* webpackChunkName: 'plugins/hello-world-plugin' */ '@js/plugins/HelloWorld')
 };
 
 const pluginsDefinition = {

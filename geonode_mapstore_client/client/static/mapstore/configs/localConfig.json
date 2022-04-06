@@ -539,7 +539,7 @@
                     },
                     "toolsOptions": {
                         "scalebar": {
-                          "container" : "#footer-scalebar-container"
+                            "container" : "#footer-scalebar-container"
                         }
                     }
                 }
@@ -640,7 +640,7 @@
                     },
                     "toolsOptions": {
                         "scalebar": {
-                          "container" : "#footer-scalebar-container"
+                            "container" : "#footer-scalebar-container"
                         }
                     }
                 }
@@ -725,7 +725,7 @@
                     },
                     "toolsOptions": {
                         "scalebar": {
-                          "container" : "#footer-scalebar-container"
+                            "container" : "#footer-scalebar-container"
                         }
                     }
                 }
@@ -796,7 +796,7 @@
                     },
                     "toolsOptions": {
                         "scalebar": {
-                          "container" : "#footer-scalebar-container"
+                            "container" : "#footer-scalebar-container"
                         }
                     }
                 }
@@ -926,7 +926,7 @@
                     },
                     "toolsOptions": {
                         "scalebar": {
-                          "container" : "#footer-scalebar-container"
+                            "container" : "#footer-scalebar-container"
                         }
                     }
                 }
@@ -1207,7 +1207,7 @@
                     },
                     "toolsOptions": {
                         "scalebar": {
-                          "container" : "#footer-scalebar-container"
+                            "container" : "#footer-scalebar-container"
                         }
                     }
                 }
@@ -1488,7 +1488,7 @@
                     },
                     "toolsOptions": {
                         "scalebar": {
-                          "container" : "#footer-scalebar-container"
+                            "container" : "#footer-scalebar-container"
                         }
                     }
                 }
@@ -1740,8 +1740,7 @@
                     },
                     "toolsOptions": {
                         "scalebar": {
-                          "container" : "#footer-scalebar-container"
-
+                            "container" : "#footer-scalebar-container"
                         }
                     }
                 }
@@ -2020,7 +2019,7 @@
                     },
                     "toolsOptions": {
                         "scalebar": {
-                          "container" : "#footer-scalebar-container"
+                            "container" : "#footer-scalebar-container"
                         }
                     }
                 }
