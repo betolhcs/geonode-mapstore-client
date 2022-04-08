@@ -266,7 +266,8 @@ export const plugins = {
         'DrawerMenu',
         import(/* webpackChunkName: 'plugins/drawer-menu-plugin' */ '@mapstore/framework/plugins/DrawerMenu')
     ),
-    HelloWorldPlugin: require(/* webpackChunkName: 'plugins/hello-world-plugin' */ '@js/plugins/HelloWorld')
+    HelloWorldPlugin: require(/* webpackChunkName: 'plugins/hello-world-plugin' */ '@js/plugins/HelloWorld'),
+    LinksExternosPlugin: require('@js/plugins/LinksExternos')
 };
 
 const pluginsDefinition = {
