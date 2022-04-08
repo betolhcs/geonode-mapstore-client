@@ -13,17 +13,17 @@ class LinksExternosComponent extends React.Component {
 
     render() {
         const linksbar = {position: "absolute", bottom: "60px", right: "100px", zIndex: 1000, backgroundColor: "white", opacity: 0.8, borderRadius: "8px", padding: "10px"};
-        const image = {display: "inline", margin: "2 0px", height: "24px", width: "24px", opacity: 1}
-        var wikimapialink = `http://wikimapia.org/#lang=pt&lat=${this.props.y}&lon=${this.props.x}&z=${this.props.zoom}`
-        var googlemapslink = `http://maps.google.com/maps/place/${this.props.y},${this.props.x}/@${this.props.y},${this.props.x},${this.props.zoom}z/data=!3m1!1e3!4m2!3m1!1s0x0:0x0)`
-        var openstreetmaplink = `https://www.openstreetmap.org/#map=${this.props.zoom}/${this.props.y}/${this.props.x}`
-        var wazelink = `https://www.waze.com/pt-BR/livemap?zoom=${this.props.zoom}&lat=${this.props.y}&lon=${this.props.x}`
-        var binglink = `https://www.bing.com/maps/default.aspx?cp=${this.props.y}~${this.props.x}&lvl=${this.props.zoom}&style=a`
-        var nokiaherelink = `https://wego.here.com/?map=${this.props.y},${this.props.x},${this.props.zoom},satelite`
-        var planetexplorerlink = `https://www.planet.com/` //Precisa de Autenticacao?
-        var foursquarelink = `https://foursquare.com/explore?mode=url&amp;ne=${this.props.ne[1]}%2C${this.props.ne[0]}&amp;sw=${this.props.sw[1]}%2C${this.props.sw[0]}`//PRECISA PEGAR AS BORDAS
+        const image = {display: "inline", margin: "2 0px", height: "24px", width: "24px", opacity: 1};
+        var wikimapialink = `http://wikimapia.org/#lang=pt&lat=${this.props.y}&lon=${this.props.x}&z=${this.props.zoom}`;
+        var googlemapslink = `http://maps.google.com/maps/place/${this.props.y},${this.props.x}/@${this.props.y},${this.props.x},${this.props.zoom}z/data=!3m1!1e3!4m2!3m1!1s0x0:0x0)`;
+        var openstreetmaplink = `https://www.openstreetmap.org/#map=${this.props.zoom}/${this.props.y}/${this.props.x}`;
+        var wazelink = `https://www.waze.com/pt-BR/livemap?zoom=${this.props.zoom}&lat=${this.props.y}&lon=${this.props.x}`;
+        var binglink = `https://www.bing.com/maps/default.aspx?cp=${this.props.y}~${this.props.x}&lvl=${this.props.zoom}&style=a`;
+        var nokiaherelink = `https://wego.here.com/?map=${this.props.y},${this.props.x},${this.props.zoom},satelite`;
+        var planetexplorerlink = `https://www.planet.com/`; //Precisa de Autenticacao?
+        var foursquarelink = `https://foursquare.com/explore?mode=url&amp;ne=${this.props.ne[1]}%2C${this.props.ne[0]}&amp;sw=${this.props.sw[1]}%2C${this.props.sw[0]}`;//PRECISA PEGAR AS BORDAS
         
-        return <div style={linksbar}>
+        return (<div style={linksbar}>
             <table>
             <tbody>
                 <tr >
@@ -76,7 +76,7 @@ class LinksExternosComponent extends React.Component {
                 </tr>
             </tbody>
             </table>
-        </div>;
+        </div>);
     }
 }
 
