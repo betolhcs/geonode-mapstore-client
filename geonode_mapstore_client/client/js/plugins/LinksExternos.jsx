@@ -3,14 +3,16 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import {get} from 'lodash';
 import {toLonLat} from 'ol/proj';
+import { mapInfoSelector } from '@mapstore/framework/selectors/map';
 
 class LinksExternosComponent extends React.Component {
     static propTypes = {
-        zoom: PropTypes.string,
-        x: PropTypes.string,
-        y: PropTypes.string,
+        zoom: PropTypes.number,
+        x: PropTypes.number,
+        y: PropTypes.number,
         ne: PropTypes.array,
-        sw: PropTypes.array
+        sw: PropTypes.array,
+        id: PropTypes.number
     };
 
     render() {
@@ -24,12 +26,13 @@ class LinksExternosComponent extends React.Component {
         var nokiaherelink = `https://wego.here.com/?map=${this.props.y},${this.props.x},${this.props.zoom},satelite`;
         // var planetexplorerlink = `https://www.planet.com/`; // Precisa de Autenticacao?
         var foursquarelink = `https://foursquare.com/explore?mode=url&amp;ne=${this.props.ne[1]}%2C${this.props.ne[0]}&amp;sw=${this.props.sw[1]}%2C${this.props.sw[0]}`;
+        var linklocal = `http://localhost:8081/maps/${this.props.id}/embed`
 
         return (<div style={linksbar}>
             <table>
                 <tbody>
                     <tr >
-                        <td colSpan={6}><a href="http://localhost:8000/maps/1/view" style={{fontSize: "18px"}}>Link para essa página</a></td>
+                        <td colSpan={6}><a href={linklocal} target="_blank" style={{fontSize: "18px"}}>Link para essa página</a></td>
                     </tr>
                     <tr >
                         <td colSpan={6}> Link externos: </td>
@@ -84,15 +87,15 @@ class LinksExternosComponent extends React.Component {
 
 const LinksExternosConectado = connect((state) => {
     var bounds = get(state, 'map.present.bbox.bounds');
-    var sw = (bounds !== undefined) ? toLonLat([bounds.minx, bounds.miny]) : ["carregando", "carregando"];
-    var ne = (bounds !== undefined) ? toLonLat([bounds.maxx, bounds.maxy]) : ["carregando", "carregando"];
+    var mapInfo = mapInfoSelector(state)
 
     return {
+        id: mapInfo.id,
         zoom: get(state, 'map.present.zoom'), // connected property
         x: get(state, 'map.present.center.x'),
         y: get(state, 'map.present.center.y'),
-        sw: sw,
-        ne: ne
+        sw: (bounds !== undefined) ? toLonLat([bounds.minx, bounds.miny]) : ["carregando", "carregando"],
+        ne: (bounds !== undefined) ? toLonLat([bounds.maxx, bounds.maxy]) : ["carregando", "carregando"]
     };
 })(LinksExternosComponent);
 
