@@ -1,0 +1,10 @@
+#principal {
+    position: absolute;
+    bottom: 60px; 
+    right: 500px;
+    z-index: 1000; 
+    background-color: white;
+    opacity: 0.8; 
+    border-radius: 8px;
+    padding: 10px;
+}
