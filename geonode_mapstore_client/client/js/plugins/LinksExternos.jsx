@@ -26,7 +26,7 @@ class LinksExternosComponent extends React.Component {
         var nokiaherelink = `https://wego.here.com/?map=${this.props.y},${this.props.x},${this.props.zoom},satelite`;
         // var planetexplorerlink = `https://www.planet.com/`; // Precisa de Autenticacao?
         var foursquarelink = `https://foursquare.com/explore?mode=url&amp;ne=${this.props.ne[1]}%2C${this.props.ne[0]}&amp;sw=${this.props.sw[1]}%2C${this.props.sw[0]}`;
-        var linklocal = `http://localhost:8081/maps/${this.props.id}/embed`
+        var linklocal = `http://localhost:8081/maps/${this.props.id}/embed`; // MUDAR O HOST E PORTA AUTOMATICAMENTE DEPOIS
 
         return (<div style={linksbar}>
             <table>
@@ -87,7 +87,7 @@ class LinksExternosComponent extends React.Component {
 
 const LinksExternosConectado = connect((state) => {
     var bounds = get(state, 'map.present.bbox.bounds');
-    var mapInfo = mapInfoSelector(state)
+    var mapInfo = mapInfoSelector(state);
 
     return {
         id: mapInfo.id,

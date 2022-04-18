@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef } from "react";
+import React from "react"; // , { useState, useEffect, useRef }
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import {get} from 'lodash';
-import {toLonLat} from 'ol/proj';
+// import {toLonLat} from 'ol/proj';
 import { panTo } from '@mapstore/framework/actions/map';
 
 import './conversordecoordenada/style/conversordecoordenada.css';
@@ -11,16 +11,16 @@ import conversordecoordenadaEpics from '../epics/conversordecoordenada';
 import { geraCapturaCoordenada, geraEscreveCoordenada } from "../actions/conversordecoordenada";
 
 
-function FormularioDeCoordenada(props){
+function FormularioDeCoordenada(props) {
     const handleSubmit = (event) => {
         event.preventDefault();
-        props.onSubmit([props.x ,props.y])
-    }
+        props.onSubmit([props.x, props.y]);
+    };
 
     const otherAction = (event) =>{
         event.preventDefault();
         props.otherAction(true);
-    }
+    };
 
     return (<form onSubmit={handleSubmit}>
         <label>
@@ -46,29 +46,31 @@ function FormularioDeCoordenada(props){
 }
 
 
-
 class ConversorDeCoordenadaComponent extends React.Component {
-    static propTypes = {
-        b: PropTypes.number
-    }
-
     render() {
-        return(
-            <div id='principal'>
+        return (
+            <div id="principal">
                 <FormularioDeCoordenada x={this.props.lon} y={this.props.lat} onSubmit={this.props.onSubmit} onChange={this.props.onChange} otherAction={this.props.otherAction}/>
             </div>
         );
     }
 }
 
+ConversorDeCoordenadaComponent.propTypes = {
+    lat: PropTypes.number,
+    lon: PropTypes.number,
+    onSubmit: PropTypes.func, // achar nomes melhores pros 3 ultimos
+    otherAction: PropTypes.func,
+    onChange: PropTypes.func
+};
 
 
 const ConversorDeCoordenadaConectado = connect((state) =>{
-    var a = get(state, 'conversordecoordenada.y');
-    var b = get(state, 'conversordecoordenada.x');
+    var aux1 = get(state, 'conversordecoordenada.y');
+    var aux2 = get(state, 'conversordecoordenada.x');
     return {
-        lat: (a == undefined) ? 0 : a,
-        lon: (b == undefined) ? 0 : b
+        lat: (aux1 === undefined) ? 0 : aux1,
+        lon: (aux2 === undefined) ? 0 : aux2
     };
 },
 {
