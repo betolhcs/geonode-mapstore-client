@@ -1,21 +1,14 @@
 // import { CLICK_ON_MAP } from '@mapstore/framework/actions/map'
 import { CAPTURA_COORDENADA, ESCREVE_COORDENADA, PASSA_COORDENADA } from '../actions/conversordecoordenada';
 
-// function sample (state, action){
-//     switch (action.type) {
-//         case CLICK_ON_MAP:
-//             // const a = point?.latlng || {};
-//             console.log("teste");
-//             return state; //{
-//                 // ...state,
-//                 // coordenada: {lat: lat, lon: lon}
-//             //}
-//         default:
-//             return state;
-//     }
-// }
+const defaultState = {
+    x: 0,
+    y: 0,
+    crs: "EPSG:4326",
+    capturarcoordenada: false
+};
 
-export default function(state = {}, action) {
+export default function(state = defaultState, action) { //colocar default state
     var aux;
     var ativado;
     switch (action.type) { // filtrar pra so pegar dps de apertar o botao
@@ -27,6 +20,7 @@ export default function(state = {}, action) {
                 ...state,
                 x: action.x,
                 y: action.y,
+                crs: "EPSG:4326",
                 capturarcoordenada: false
             };
         }

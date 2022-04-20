@@ -16,7 +16,3 @@ export const pegarCoordenadaEpic = (action$) => // , store) =>
 export default {
     pegarCoordenadaEpic
 };
-
-// export const escreveCoordenadaEpic = (action$, store) =>
-//     action
-
