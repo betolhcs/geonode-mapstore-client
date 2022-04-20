@@ -15,34 +15,36 @@ import conversordecoordenadaEpics from '../epics/conversordecoordenada';
 import { geraCapturaCoordenada, geraEscreveCoordenada } from "../actions/conversordecoordenada";
 
 // funcao que muda o formato da coordenada de acordo com a notacao
-function FormataCoordenada(x, y, notacao){
-    let hx = (x >= 0) ? 'E' : 'W'
-    let hy = (y >= 0) ? 'N' : 'S'
+function formataCoordenada(x, y, notacao) {
+    // let hx = (x >= 0) ? 'E' : 'W';
+    let hy = (y >= 0) ? 'N' : 'S';
     var x1 = Math.trunc(x);
-    var auxx = ((x-x1)*60);
+    var auxx = ((x - x1) * 60);
     var x2 = Math.trunc(auxx);
-    var x3 = (auxx-x2)*60;
+    var x3 = (auxx - x2) * 60;
     var y1 = Math.trunc(y);
-    var auxy = (y-y1)*60;
+    var auxy = (y - y1) * 60;
     var y2 = Math.trunc(auxy);
-    var y3 = (auxy-y2)*60;
+    var y3 = (auxy - y2) * 60;
     var zona = Math.ceil((x + 180) / 6);
-    var utmString = "+proj=utm +zone=" + zona
+    var utmString = "+proj=utm +zone=" + zona;
     if (hy === 'N') {
-            utmString += ' +north'
-        } else {
-            utmString += ' +south'
-        }
+        utmString += ' +north';
+    } else {
+        utmString += ' +south';
+    }
 
     switch (notacao) {
-        case "gDecimal":
-            return [x,y];
-        case "gMinutoSegundo":
-            return [x1,x2,x3,y1,y2,y3];
-        case "gMinutoDecimal":
-            return [x1,auxx,y1,auxy];
-        case "utm":
-            return proj4("EPSG:4326", utmString, [x, y]);
+    case "gDecimal":
+        return [x, y];
+    case "gMinutoSegundo":
+        return [x1, x2, x3, y1, y2, y3];
+    case "gMinutoDecimal":
+        return [x1, auxx, y1, auxy];
+    case "utm":
+        return proj4("EPSG:4326", utmString, [x, y]);
+    default:
+        return [0, 0];
     }
 }
 
@@ -50,7 +52,7 @@ function FormularioDeCoordenada(props) { // separar em varios componentes
     const [opcao1, setOpcao1] = useState("gDecimal");
     const [opcao2, setOpcao2] = useState("EPSG:4326");
 
-    const handleSubmit = (event) => { // centraliza no ponto 
+    const handleSubmit = (event) => { // centraliza no ponto
         event.preventDefault();
         props.onSubmit([props.x, props.y]);
     };
@@ -64,19 +66,19 @@ function FormularioDeCoordenada(props) { // separar em varios componentes
         event.preventDefault();
         let marker = new Feature({
             geometry: new Point([props.x, props.y])
-        })
+        });
         let a = new KML();
         let teste = a.writeFeatures([marker], {
             dataProjection: 'EPSG:4326',
             featureProjection: 'EPSG:4326'
-        })
-        let blob = new Blob([teste], { type: 'text/plain;charset=utf-8' })
+        });
+        let blob = new Blob([teste], { type: 'text/plain;charset=utf-8' });
         saveAs(blob, "ponto.kml");
     };
 
     const handleNotacao = (event) => {
         // let a = transform([parseFloat(props.x), parseFloat(props.y)], opcao, event.target.value);
-        let a = FormataCoordenada(parseFloat(props.x), parseFloat(props.y), event.target.value)
+        let a = formataCoordenada(parseFloat(props.x), parseFloat(props.y), event.target.value);
         console.log(a);
         setOpcao1(event.target.value);
     };
@@ -88,7 +90,7 @@ function FormularioDeCoordenada(props) { // separar em varios componentes
     };
 
     // organizar html com tables
-    return (<form onSubmit={handleSubmit}> 
+    return (<form onSubmit={handleSubmit}>
         <label>
             Lon:
             <input
@@ -130,20 +132,6 @@ function FormularioDeCoordenada(props) { // separar em varios componentes
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 class ConversorDeCoordenadaComponent extends React.Component {
     render() {
         return (
@@ -164,7 +152,7 @@ ConversorDeCoordenadaComponent.propTypes = {
 
 
 const ConversorDeCoordenadaConectado = connect((state) =>{
-    console.log(state);
+    // console.log(state);
     var aux1 = get(state, 'conversordecoordenada.y');
     var aux2 = get(state, 'conversordecoordenada.x');
     return {

@@ -8,7 +8,7 @@ const defaultState = {
     capturarcoordenada: false
 };
 
-export default function(state = defaultState, action) { //colocar default state
+export default function(state = defaultState, action) { // colocar default state
     var aux;
     var ativado;
     switch (action.type) { // filtrar pra so pegar dps de apertar o botao
