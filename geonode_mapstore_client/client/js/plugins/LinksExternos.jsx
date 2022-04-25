@@ -26,7 +26,7 @@ class LinksExternosComponent extends React.Component {
         var nokiaherelink = `https://wego.here.com/?map=${this.props.y},${this.props.x},${this.props.zoom},satelite`;
         // var planetexplorerlink = `https://www.planet.com/`; // Precisa de Autenticacao?
         var foursquarelink = `https://foursquare.com/explore?mode=url&amp;ne=${this.props.ne[1]}%2C${this.props.ne[0]}&amp;sw=${this.props.sw[1]}%2C${this.props.sw[0]}`;
-        var linklocal = location.href;
+        var linklocal = window.location.href;
 
         return (<div style={linksbar}>
             <table>

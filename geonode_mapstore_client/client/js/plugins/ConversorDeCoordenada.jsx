@@ -14,7 +14,7 @@ import conversordecoordenada from '../reducers/conversordecoordenada';
 import conversordecoordenadaEpics from '../epics/conversordecoordenada';
 import { geraCapturaCoordenada, geraEscreveCoordenada } from "../actions/conversordecoordenada";
 
-// funcao que muda o formato da coordenada de acordo com a notacao
+// Funcao que muda o formato da coordenada para a notacao escolhida.
 function formataCoordenada(x, y, notacao) {
     // let hx = (x >= 0) ? 'E' : 'W';
     let hy = (y >= 0) ? 'N' : 'S';
@@ -28,6 +28,10 @@ function formataCoordenada(x, y, notacao) {
     var y3 = (auxy - y2) * 60;
     var zona = Math.ceil((x + 180) / 6);
     var utmString = "+proj=utm +zone=" + zona;
+    auxx = auxx.toFixed(4);
+    auxy = auxy.toFixed(4);
+    x3 = x3.toFixed(2);
+    y3 = y3.toFixed(2);
     if (hy === 'N') {
         utmString += ' +north';
     } else {
@@ -42,9 +46,149 @@ function formataCoordenada(x, y, notacao) {
     case "gMinutoDecimal":
         return [x1, auxx, y1, auxy];
     case "utm":
-        return proj4("EPSG:4326", utmString, [x, y]);
+        let auxutm = proj4("EPSG:4326", utmString, [x, y]);
+        auxutm[0] = auxutm[0].toFixed(1);
+        auxutm[1] = auxutm[1].toFixed(1);
+        auxutm.push(zona)
+        return auxutm;
     default:
         return [0, 0];
+    }
+}
+
+// funcao que pega a coordenada em alguma notacao e converte de volta para armazenar no estado.
+// function voltaCoordenada(){
+//     switch (notacao) {
+//     case "gDecimal":
+//         return [x, y];
+//     case "gMinutoSegundo":
+//         return [x1, x2, x3, y1, y2, y3];
+//     case "gMinutoDecimal":
+//         return [x1, auxx, y1, auxy];
+//     case "utm":
+//         return proj4("EPSG:4326", utmString, [x, y]);
+//     default:
+//         return [0, 0];
+//     }
+// }
+
+// Componente com os campos de coordenada, muda conforme o formato de coordenada muda.
+function CampoDeCoordenadas(props) {
+    let aux= formataCoordenada(parseFloat(props.x),parseFloat(props.y), props.opcao1);
+    if (props.opcao1 === "gDecimal"){
+        return (<>
+        <label>
+            Lat:
+            <input
+                type="text"
+                value={props.y}
+                onChange={event => props.onChange(props.x, event.target.value)}
+            /> º
+        </label>
+        <label>
+            Lon:
+            <input
+                type="text"
+                value={props.x}
+                onChange={event => props.onChange(event.target.value, props.y)}
+            /> º
+        </label></>);
+    }
+    else if(props.opcao1 === "gMinutoSegundo"){
+        return (<>
+        <label>
+            Lat:
+            <input
+                type="text"
+                value={aux[3]}
+                // onChange={event => props.onChange(props.x, event.target.value)}
+                /> º
+            <input 
+                type="text"
+                value={aux[4]}
+            /> '
+            <input
+                type="text"
+                value={aux[5]}
+            /> "
+        </label>
+        <label>
+            Lon:
+            <input
+                type="text"
+                value={aux[0]}
+                // onChange={event => props.onChange(event.target.value, props.y)}
+            /> º
+            <input 
+                type="text"
+                value={aux[1]}
+            /> '
+            <input
+                type="text"
+                value={aux[2]}
+            /> "
+        </label></>);
+    }
+    else if(props.opcao1 === "gMinutoDecimal"){
+        return (<>
+        <label>
+            Lat:
+            <input
+                type="text"
+                value={aux[2]}
+                // onChange={event => props.onChange(props.x, event.target.value)}
+            /> º
+            <input 
+                type="text"
+                value={aux[3]}
+            /> '
+        </label>
+        <label>
+            Lon:
+            <input
+                type="text"
+                value={aux[0]}
+                // onChange={event => props.onChange(event.target.value, props.y)}
+            /> º
+            <input 
+                type="text"
+                value={aux[1]}
+            /> '
+        </label></>);
+    }
+    else if(props.opcao1 === "utm"){
+        
+        return (<>
+        <label>
+            Lat:
+            <input
+                type="text"
+                value={aux[1]}
+                // onChange={event => props.onChange(props.x, event.target.value)}
+            />
+        </label>
+        <label>
+            Lon:
+            <input
+                type="text"
+                value={aux[0]}
+                // onChange={event => props.onChange(event.target.value, props.y)}
+            />
+        </label>
+        <label>
+            Fuso:
+            <input
+                type="text"
+                value={aux[2]}
+            />
+            <input
+                type="text"
+                value={(parseFloat(props.y) >= 0) ? 'N' : 'S'}
+            />
+        </label></>);
+    }
+    else {
+        return <p>erro</p>
     }
 }
 
@@ -77,7 +221,6 @@ function FormularioDeCoordenada(props) { // separar em varios componentes
     };
 
     const handleNotacao = (event) => {
-        // let a = transform([parseFloat(props.x), parseFloat(props.y)], opcao, event.target.value);
         let a = formataCoordenada(parseFloat(props.x), parseFloat(props.y), event.target.value);
         console.log(a);
         setOpcao1(event.target.value);
@@ -91,47 +234,39 @@ function FormularioDeCoordenada(props) { // separar em varios componentes
 
     // organizar html com tables
     return (<form onSubmit={handleSubmit}>
-        <label>
-            Lon:
-            <input
-                type="text"
-                value={props.x}
-                onChange={event => props.onChange(event.target.value, props.y)}
-            />
-        </label>
-        <label>
-            Lat:
-            <input
-                type="text"
-                value={props.y}
-                onChange={event => props.onChange(props.x, event.target.value)}
-            />
-        </label>
+        <table>
+            <tbody>
+                <tr>
+                    <CampoDeCoordenadas opcao1={opcao1} y={props.y} x={props.x} onChange={props.onChange}/>
+                </tr>
+                <tr>
+                    <label>
+                        Notação:
+                        <select value={opcao1} onChange={handleNotacao}>
+                            <option value="gMinutoSegundo">Graus, minutos, segundos</option>
+                            <option value="gDecimal">Graus decimais</option>
+                            <option value="gMinutoDecimal">Graus, minutos decimais</option>
+                            <option value="utm">UTM</option>
+                        </select>
+                    </label>
+                    <label>
+                        Datum:
+                        <select value={opcao2} onChange={handleDatum}>
+                            <option value="EPSG:4326">EPSG:4326</option>
+                            <option value="EPSG:3857">EPSG:3857</option>
+                        </select>
+                    </label>
 
-        <label>
-            Notação:
-            <select value={opcao1} onChange={handleNotacao}>
-                <option value="gMinutoSegundo">Graus, minutos, segundos</option>
-                <option value="gDecimal">Graus decimais</option>
-                <option value="gMinutoDecimal">Graus, minutos decimais</option>
-                <option value="utm">UTM</option>
-            </select>
-        </label>
-        <label>
-            Datum:
-            <select value={opcao2} onChange={handleDatum}>
-                <option value="EPSG:4326">EPSG:4326</option>
-                <option value="EPSG:3857">EPSG:3857</option>
-            </select>
-        </label>
-
-        <button type="button" onClick={botaoSelecionar}>Selecionar do Mapa</button>
-        <button type="button" onClick={botaoExportar}>Exportar .kml</button>
-        <button type="submit">Mostrar Ponto</button>
+                    <button type="button" onClick={botaoSelecionar}>Selecionar do Mapa</button>
+                    <button type="button" onClick={botaoExportar}>Exportar .kml</button>
+                    <button type="submit">Mostrar Ponto</button>
+                </tr>
+            </tbody>
+        </table>
     </form>);
 }
 
-
+// Componente principal
 class ConversorDeCoordenadaComponent extends React.Component {
     render() {
         return (
@@ -142,15 +277,7 @@ class ConversorDeCoordenadaComponent extends React.Component {
     }
 }
 
-ConversorDeCoordenadaComponent.propTypes = {
-    lat: PropTypes.number,
-    lon: PropTypes.number,
-    onSubmit: PropTypes.func, // achar nomes melhores pros 3 ultimos
-    otherAction: PropTypes.func,
-    onChange: PropTypes.func
-};
-
-
+// Conecta o componente principal com o estado geral da aplicação e pega as variaveis que serão necessárias.
 const ConversorDeCoordenadaConectado = connect((state) =>{
     // console.log(state);
     var aux1 = get(state, 'conversordecoordenada.y');
@@ -165,6 +292,14 @@ const ConversorDeCoordenadaConectado = connect((state) =>{
     onChange: geraEscreveCoordenada,
     otherAction: geraCapturaCoordenada
 })(ConversorDeCoordenadaComponent);
+
+ConversorDeCoordenadaComponent.propTypes = {
+    lat: PropTypes.number,
+    lon: PropTypes.number,
+    onSubmit: PropTypes.func, // achar nomes melhores pros 3 ultimos
+    otherAction: PropTypes.func,
+    onChange: PropTypes.func
+};
 
 
 export const ConversorDeCoordenadaPlugin = ConversorDeCoordenadaConectado;
