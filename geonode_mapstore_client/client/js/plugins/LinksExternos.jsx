@@ -6,7 +6,7 @@ import {toLonLat} from 'ol/proj';
 import { mapInfoSelector } from '@mapstore/framework/selectors/map';
 
 class LinksExternosComponent extends React.Component {
-    static propTypes = {
+    static propTypes = { // validação de dados do componente
         zoom: PropTypes.number,
         x: PropTypes.number,
         y: PropTypes.number,
@@ -28,6 +28,7 @@ class LinksExternosComponent extends React.Component {
         var foursquarelink = `https://foursquare.com/explore?mode=url&amp;ne=${this.props.ne[1]}%2C${this.props.ne[0]}&amp;sw=${this.props.sw[1]}%2C${this.props.sw[0]}`;
         var linklocal = window.location.href;
 
+        // html do componente
         return (<div style={linksbar}>
             <table>
                 <tbody>
@@ -85,13 +86,13 @@ class LinksExternosComponent extends React.Component {
     }
 }
 
-const LinksExternosConectado = connect((state) => {
+const LinksExternosConectado = connect((state) => { // Conecta o componente ao estado da aplicação no formato redux store
     var bounds = get(state, 'map.present.bbox.bounds');
     var mapInfo = mapInfoSelector(state);
 
     return {
         id: mapInfo.id,
-        zoom: get(state, 'map.present.zoom'), // connected property
+        zoom: get(state, 'map.present.zoom'),
         x: get(state, 'map.present.center.x'),
         y: get(state, 'map.present.center.y'),
         sw: (bounds !== undefined) ? toLonLat([bounds.minx, bounds.miny]) : ["carregando", "carregando"],
