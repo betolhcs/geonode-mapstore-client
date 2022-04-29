@@ -8,6 +8,8 @@ import Feature from 'ol/Feature';
 import KML from 'ol/format/KML';
 import { panTo } from '@mapstore/framework/actions/map';
 import { saveAs } from "file-saver";
+import { setControlProperty } from '@mapstore/framework/actions/controls';
+import { changeMapInfoState} from '@mapstore/framework/actions/mapInfo'
 
 import './conversordecoordenada/style/conversordecoordenada.css';
 import conversordecoordenada from '../reducers/conversordecoordenada';
@@ -15,6 +17,8 @@ import conversordecoordenadaEpics from '../epics/conversordecoordenada';
 import { geraCapturaCoordenada, geraEscreveCoordenada } from "../actions/conversordecoordenada";
 
 // TODO validar dados
+// Polir mais a aplicacao
+// Esconder e mostrar plugin
 // function validaCoordenada(coordenadas, notacao){
 
 // }
@@ -295,19 +299,22 @@ function FormularioDeCoordenada(props) {
     };
     const botaoSelecionar = (event) =>{ // seleciona ponto do mapa
         event.preventDefault();
-        props.otherAction(true);
+        props.habilitaCapturaDePonto(true);
+        props.changeMapInfoState(false);
+        props.suprimeIdentificacaoDePonto("capturacoordenada","enabled", true)
     };
     const botaoExportar = (event) => { // exporta o ponto como kml
         event.preventDefault();
-        let marker = new Feature({
+        let ponto = new Feature({
             geometry: new Point([props.x, props.y])
         });
         let a = new KML();
-        let teste = a.writeFeatures([marker], {
+        let kmlData = a.writeFeatures([ponto], {
             dataProjection: 'EPSG:4326',
             featureProjection: 'EPSG:4326'
         });
-        let blob = new Blob([teste], { type: 'text/plain;charset=utf-8' });
+        kmlData = kmlData.replace('</Placemark>', '</Placemark></Document>').replace('<Placemark>','<Document><Placemark>');
+        let blob = new Blob([kmlData], { type: 'text/plain;charset=utf-8' });
         saveAs(blob, "ponto.kml");
     };
     const handleNotacao = (event) => {
@@ -363,7 +370,7 @@ class ConversorDeCoordenadaComponent extends React.Component {
     render() {
         return (
             <div id="principal">
-                <FormularioDeCoordenada x={this.props.lon} y={this.props.lat} vaiProPonto={this.props.vaiProPonto} mudaEstadoCoordenada={this.props.mudaEstadoCoordenada} otherAction={this.props.otherAction}/>
+                <FormularioDeCoordenada x={this.props.lon} y={this.props.lat} vaiProPonto={this.props.vaiProPonto} mudaEstadoCoordenada={this.props.mudaEstadoCoordenada} habilitaCapturaDePonto={this.props.habilitaCapturaDePonto} suprimeIdentificacaoDePonto={this.props.suprimeIdentificacaoDePonto} changeMapInfoState={this.props.changeMapInfoState}/>
             </div>
         );
     }
@@ -383,7 +390,9 @@ const ConversorDeCoordenadaConectado = connect((state) =>{
 {
     vaiProPonto: panTo, // suporta escolha de projecao
     mudaEstadoCoordenada: geraEscreveCoordenada,
-    otherAction: geraCapturaCoordenada
+    habilitaCapturaDePonto: geraCapturaCoordenada,
+    suprimeIdentificacaoDePonto: setControlProperty,
+    changeMapInfoState: changeMapInfoState
 })(ConversorDeCoordenadaComponent);
 
 
@@ -391,9 +400,11 @@ const ConversorDeCoordenadaConectado = connect((state) =>{
 ConversorDeCoordenadaComponent.propTypes = {
     lat: PropTypes.number,
     lon: PropTypes.number,
-    vaiProPonto: PropTypes.func, // achar nomes melhores pros 3 ultimos
-    otherAction: PropTypes.func,
-    mudaEstadoCoordenada: PropTypes.func
+    vaiProPonto: PropTypes.func, // centraliza no ponto
+    habilitaCapturaDePonto: PropTypes.func, // ativa a captura do ponto direto do mapa
+    suprimeIdentificacaoDePonto: PropTypes.func, // desabilita o comportamento padrao de click no mapa
+    changeMapInfoState: PropTypes.func,
+    mudaEstadoCoordenada: PropTypes.func // estado do plugin
 };
 
 
