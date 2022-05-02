@@ -19,7 +19,7 @@ export function geraCapturaCoordenada(ativado) {
     };
 }
 
-// altera a coordenada pelo campo de input 
+// altera a coordenada pelo campo de input
 export function geraEscreveCoordenada(x, y) {
     return {
         type: ESCREVE_COORDENADA,

@@ -11,7 +11,7 @@ const defaultState = {
 export default function(state = defaultState, action) { // colocar default state
     var aux;
     var ativado;
-    switch (action.type) { 
+    switch (action.type) {
     case PASSA_COORDENADA:// CLICK_ON_MAP
         // const coordenadas = action.point?.latlng || {};
         aux = state.capturarcoordenada; // filtrar pra so pegar dps de ter apertado o botao

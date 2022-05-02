@@ -9,7 +9,7 @@ import KML from 'ol/format/KML';
 import { panTo } from '@mapstore/framework/actions/map';
 import { saveAs } from "file-saver";
 import { setControlProperty } from '@mapstore/framework/actions/controls';
-import { changeMapInfoState } from '@mapstore/framework/actions/mapInfo'
+import { changeMapInfoState } from '@mapstore/framework/actions/mapInfo';
 
 import './conversordecoordenada/style/conversordecoordenada.css';
 import conversordecoordenada from '../reducers/conversordecoordenada';
@@ -22,35 +22,35 @@ import { geraCapturaCoordenada, geraEscreveCoordenada } from "../actions/convers
 // Polir mais a aplicacao
 // Esconder e mostrar plugin
 
-function validaCoordenada(coordenadas, notacao){
+function validaCoordenada(coordenadas, notacao) {
     let aux = [false, false];
     switch (notacao) {
     case "gDecimal":
-        if(coordenadas[0]<180.0 && coordenadas[0]>-180.0) {
+        if (coordenadas[0] < 180.0 && coordenadas[0] > -180.0) {
             aux[0] = true;
         }
-        if(coordenadas[1]<90.0 && coordenadas[1]>-90.0) {
+        if (coordenadas[1] < 90.0 && coordenadas[1] > -90.0) {
             aux[1] = true;
-        };
+        }
         break;
     case "gMinutoSegundo":
-        if(coordenadas[0]<180 && coordenadas[0]>-180 && coordenadas[1]<60 && coordenadas[1]>=0 && coordenadas[2]<60.0 && coordenadas[2]>=0) {
+        if (coordenadas[0] < 180 && coordenadas[0] > -180 && coordenadas[1] < 60 && coordenadas[1] >= 0 && coordenadas[2] < 60.0 && coordenadas[2] >= 0) {
             aux[0] = true;
         }
-        if(coordenadas[3]<90 && coordenadas[3]>-90 && coordenadas[4]<60 && coordenadas[4]>=0 && coordenadas[5]<60.0 && coordenadas[5]>=0) {
+        if (coordenadas[3] < 90 && coordenadas[3] > -90 && coordenadas[4] < 60 && coordenadas[4] >= 0 && coordenadas[5] < 60.0 && coordenadas[5] >= 0) {
             aux[1] = true;
         }
         break;
     case "gMinutoDecimal":
-        if(coordenadas[0]<180 && coordenadas[0]>-180 && coordenadas[1]<60.0 && coordenadas[1]>=0) {
+        if (coordenadas[0] < 180 && coordenadas[0] > -180 && coordenadas[1] < 60.0 && coordenadas[1] >= 0) {
             aux[0] = true;
         }
-        if(coordenadas[2]<90 && coordenadas[2]>-90 && coordenadas[3]<60.0 && coordenadas[3]>=0) {
+        if (coordenadas[2] < 90 && coordenadas[2] > -90 && coordenadas[3] < 60.0 && coordenadas[3] >= 0) {
             aux[1] = true;
         }
         break;
     case "utm":
-        if(parseFloat(coordenadas[0]).toFixed().length <= 7){
+        if (parseFloat(coordenadas[0]).toFixed().length <= 7) {
             aux[0] = true;
         }
         aux[1] = true;
@@ -157,13 +157,13 @@ function voltaCoordenada(coordenadas, notacao) {
 }
 
 // Componente de texto de erro
-function MostraErro(props){
-    if(props.mostra){
-        return(<>
+function MostraErro(props) {
+    if (props.mostra) {
+        return (<>
             <tr>
                 <p className="erro"> {props.valor} inválida.</p>
             </tr>
-        </>)
+        </>);
     }
     return null;
 }
@@ -175,15 +175,14 @@ function CamposDeCoordenada(props) {
     useEffect(() => {
         setMostra([false, false]);
     }, [props.formato]);
-    
+
     const validaEMuda = () =>{
-        let valido = validaCoordenada(props.coordenadas, props.formato)
-        if(valido[0] === true && valido[1] === true){
+        let valido = validaCoordenada(props.coordenadas, props.formato);
+        if (valido[0] === true && valido[1] === true) {
             let aux = voltaCoordenada(props.coordenadas, props.formato);
             props.mudaEstadoGlobal(aux[0], aux[1]);
             setMostra(false, false);
-        }
-        else{
+        } else {
             setMostra([!valido[0], !valido[1]]);
         }
     };
@@ -202,7 +201,7 @@ function CamposDeCoordenada(props) {
                     /> º
                 </label>
             </tr>
-            <MostraErro mostra={mostra[1]} valor="Latitude"></MostraErro>
+            <MostraErro mostra={mostra[1]} valor="Latitude"/>
             <tr>
                 <label>
                     Lon:
@@ -214,7 +213,7 @@ function CamposDeCoordenada(props) {
                     /> º
                 </label>
             </tr>
-            <MostraErro mostra={mostra[0]} valor="Longitude"></MostraErro></>);
+            <MostraErro mostra={mostra[0]} valor="Longitude"/></>);
     case "gMinutoSegundo":
         return (<>
             <tr>
@@ -242,7 +241,7 @@ function CamposDeCoordenada(props) {
                     /> "
                 </label>
             </tr>
-            <MostraErro mostra={mostra[1]} valor="Latitude"></MostraErro>
+            <MostraErro mostra={mostra[1]} valor="Latitude"/>
             <tr>
                 <label>
                     Lon:
@@ -268,7 +267,7 @@ function CamposDeCoordenada(props) {
                     /> "
                 </label>
             </tr>
-            <MostraErro mostra={mostra[0]} valor="Longitude"></MostraErro></>);
+            <MostraErro mostra={mostra[0]} valor="Longitude"/></>);
     case "gMinutoDecimal":
         return (<>
             <tr>
@@ -289,7 +288,7 @@ function CamposDeCoordenada(props) {
                     /> '
                 </label>
             </tr>
-            <MostraErro mostra={mostra[1]} valor="Latitude"></MostraErro>
+            <MostraErro mostra={mostra[1]} valor="Latitude"/>
             <tr>
                 <label>
                     Lon:
@@ -308,7 +307,7 @@ function CamposDeCoordenada(props) {
                     /> '
                 </label>
             </tr>
-            <MostraErro mostra={mostra[0]} valor="Longitude"></MostraErro></>);
+            <MostraErro mostra={mostra[0]} valor="Longitude"/></>);
     case "utm":
         return (<>
             <tr>
@@ -323,7 +322,7 @@ function CamposDeCoordenada(props) {
                     />
                 </label>
             </tr>
-            <MostraErro mostra={mostra[1]} valor="Latitude"></MostraErro>
+            <MostraErro mostra={mostra[1]} valor="Latitude"/>
             <tr>
                 <label>
                     Lon:
@@ -336,7 +335,7 @@ function CamposDeCoordenada(props) {
                     />
                 </label>
             </tr>
-            <MostraErro mostra={mostra[0]} valor="Longitude"></MostraErro>
+            <MostraErro mostra={mostra[0]} valor="Longitude"/>
             <tr>
                 <label>
                     Fuso:
@@ -380,7 +379,7 @@ function FormularioDeCoordenada(props) {
         event.preventDefault();
         props.habilitaCapturaDePonto(true);
         props.changeMapInfoState(false);
-        props.suprimeIdentificacaoDePonto("capturacoordenada","enabled", true)
+        props.suprimeIdentificacaoDePonto("capturacoordenada", "enabled", true);
     };
     const botaoExportar = (event) => { // exporta o ponto como kml
         event.preventDefault();
@@ -392,7 +391,7 @@ function FormularioDeCoordenada(props) {
             dataProjection: 'EPSG:4326',
             featureProjection: 'EPSG:4326'
         });
-        kmlData = kmlData.replace('</Placemark>', '</Placemark></Document>').replace('<Placemark>','<Document><Placemark>');
+        kmlData = kmlData.replace('</Placemark>', '</Placemark></Document>').replace('<Placemark>', '<Document><Placemark>');
         let blob = new Blob([kmlData], { type: 'text/plain;charset=utf-8' });
         saveAs(blob, "ponto.kml");
     };
