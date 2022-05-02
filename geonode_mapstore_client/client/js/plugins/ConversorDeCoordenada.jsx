@@ -9,19 +9,58 @@ import KML from 'ol/format/KML';
 import { panTo } from '@mapstore/framework/actions/map';
 import { saveAs } from "file-saver";
 import { setControlProperty } from '@mapstore/framework/actions/controls';
-import { changeMapInfoState} from '@mapstore/framework/actions/mapInfo'
+import { changeMapInfoState } from '@mapstore/framework/actions/mapInfo'
 
 import './conversordecoordenada/style/conversordecoordenada.css';
 import conversordecoordenada from '../reducers/conversordecoordenada';
 import conversordecoordenadaEpics from '../epics/conversordecoordenada';
 import { geraCapturaCoordenada, geraEscreveCoordenada } from "../actions/conversordecoordenada";
 
-// TODO validar dados
+// TODO
+// importar kml
+// datum
 // Polir mais a aplicacao
 // Esconder e mostrar plugin
-// function validaCoordenada(coordenadas, notacao){
 
-// }
+function validaCoordenada(coordenadas, notacao){
+    let aux = [false, false];
+    switch (notacao) {
+    case "gDecimal":
+        if(coordenadas[0]<180.0 && coordenadas[0]>-180.0) {
+            aux[0] = true;
+        }
+        if(coordenadas[1]<90.0 && coordenadas[1]>-90.0) {
+            aux[1] = true;
+        };
+        break;
+    case "gMinutoSegundo":
+        if(coordenadas[0]<180 && coordenadas[0]>-180 && coordenadas[1]<60 && coordenadas[1]>=0 && coordenadas[2]<60.0 && coordenadas[2]>=0) {
+            aux[0] = true;
+        }
+        if(coordenadas[3]<90 && coordenadas[3]>-90 && coordenadas[4]<60 && coordenadas[4]>=0 && coordenadas[5]<60.0 && coordenadas[5]>=0) {
+            aux[1] = true;
+        }
+        break;
+    case "gMinutoDecimal":
+        if(coordenadas[0]<180 && coordenadas[0]>-180 && coordenadas[1]<60.0 && coordenadas[1]>=0) {
+            aux[0] = true;
+        }
+        if(coordenadas[2]<90 && coordenadas[2]>-90 && coordenadas[3]<60.0 && coordenadas[3]>=0) {
+            aux[1] = true;
+        }
+        break;
+    case "utm":
+        if(parseFloat(coordenadas[0]).toFixed().length <= 7){
+            aux[0] = true;
+        }
+        aux[1] = true;
+        break;
+    default:
+        aux = [false, false];
+        break;
+    }
+    return aux;
+}
 
 // Funcao que muda o formato de grau decimal para a notacao escolhida.
 function formataCoordenada(x, y, notacao) {
@@ -117,13 +156,36 @@ function voltaCoordenada(coordenadas, notacao) {
     }
 }
 
+// Componente de texto de erro
+function MostraErro(props){
+    if(props.mostra){
+        return(<>
+            <tr>
+                <p className="erro"> {props.valor} inválida.</p>
+            </tr>
+        </>)
+    }
+    return null;
+}
+
 // Componente com os campos de coordenada, muda conforme o formato de coordenada muda.
 function CamposDeCoordenada(props) {
+    const [mostra, setMostra] = useState([false, false]);
 
+    useEffect(() => {
+        setMostra([false, false]);
+    }, [props.formato]);
+    
     const validaEMuda = () =>{
-        // valida()
-        let aux = voltaCoordenada(props.coordenadas, props.formato);
-        props.mudaEstadoGlobal(aux[0], aux[1]);
+        let valido = validaCoordenada(props.coordenadas, props.formato)
+        if(valido[0] === true && valido[1] === true){
+            let aux = voltaCoordenada(props.coordenadas, props.formato);
+            props.mudaEstadoGlobal(aux[0], aux[1]);
+            setMostra(false, false);
+        }
+        else{
+            setMostra([!valido[0], !valido[1]]);
+        }
     };
 
     switch (props.formato) {
@@ -140,19 +202,19 @@ function CamposDeCoordenada(props) {
                     /> º
                 </label>
             </tr>
+            <MostraErro mostra={mostra[1]} valor="Latitude"></MostraErro>
             <tr>
                 <label>
                     Lon:
                     <input
                         type="text"
                         value={props.coordenadas[0]}
-                        // value={props.x}
-                        // onChange={event => props.mudaEstadoCoordenada(event.target.value, props.y)}
                         onChange={event => props.setCoordenadas(props.coordenadas.map((a, i) => (i === 0) ? event.target.value : a))}
                         onBlur={validaEMuda}
                     /> º
                 </label>
-            </tr></>);
+            </tr>
+            <MostraErro mostra={mostra[0]} valor="Longitude"></MostraErro></>);
     case "gMinutoSegundo":
         return (<>
             <tr>
@@ -163,12 +225,14 @@ function CamposDeCoordenada(props) {
                         value={props.coordenadas[3]}
                         onChange={event => props.setCoordenadas(props.coordenadas.map((a, i) => (i === 3) ? event.target.value : a))}
                         onBlur={validaEMuda}
+                        maxLength={3}
                     /> º
                     <input
                         type="text"
                         value={props.coordenadas[4]}
                         onChange={event => props.setCoordenadas(props.coordenadas.map((a, i) => (i === 4) ? event.target.value : a))}
                         onBlur={validaEMuda}
+                        maxLength={2}
                     /> '
                     <input
                         type="text"
@@ -178,6 +242,7 @@ function CamposDeCoordenada(props) {
                     /> "
                 </label>
             </tr>
+            <MostraErro mostra={mostra[1]} valor="Latitude"></MostraErro>
             <tr>
                 <label>
                     Lon:
@@ -186,12 +251,14 @@ function CamposDeCoordenada(props) {
                         value={props.coordenadas[0]}
                         onChange={event => props.setCoordenadas(props.coordenadas.map((a, i) => (i === 0) ? event.target.value : a))}
                         onBlur={validaEMuda}
+                        maxLength={3}
                     /> º
                     <input
                         type="text"
                         value={props.coordenadas[1]}
                         onChange={event => props.setCoordenadas(props.coordenadas.map((a, i) => (i === 1) ? event.target.value : a))}
                         onBlur={validaEMuda}
+                        maxLength={2}
                     /> '
                     <input
                         type="text"
@@ -200,7 +267,8 @@ function CamposDeCoordenada(props) {
                         onBlur={validaEMuda}
                     /> "
                 </label>
-            </tr></>);
+            </tr>
+            <MostraErro mostra={mostra[0]} valor="Longitude"></MostraErro></>);
     case "gMinutoDecimal":
         return (<>
             <tr>
@@ -211,6 +279,7 @@ function CamposDeCoordenada(props) {
                         value={props.coordenadas[2]}
                         onChange={event => props.setCoordenadas(props.coordenadas.map((a, i) => (i === 2) ? event.target.value : a))}
                         onBlur={validaEMuda}
+                        maxLength={3}
                     /> º
                     <input
                         type="text"
@@ -220,6 +289,7 @@ function CamposDeCoordenada(props) {
                     /> '
                 </label>
             </tr>
+            <MostraErro mostra={mostra[1]} valor="Latitude"></MostraErro>
             <tr>
                 <label>
                     Lon:
@@ -228,6 +298,7 @@ function CamposDeCoordenada(props) {
                         value={props.coordenadas[0]}
                         onChange={event => props.setCoordenadas(props.coordenadas.map((a, i) => (i === 0) ? event.target.value : a))}
                         onBlur={validaEMuda}
+                        maxLength={3}
                     /> º
                     <input
                         type="text"
@@ -236,7 +307,8 @@ function CamposDeCoordenada(props) {
                         onBlur={validaEMuda}
                     /> '
                 </label>
-            </tr></>);
+            </tr>
+            <MostraErro mostra={mostra[0]} valor="Longitude"></MostraErro></>);
     case "utm":
         return (<>
             <tr>
@@ -247,9 +319,11 @@ function CamposDeCoordenada(props) {
                         value={props.coordenadas[1]}
                         onChange={event => props.setCoordenadas(props.coordenadas.map((a, i) => (i === 1) ? event.target.value : a))}
                         onBlur={validaEMuda}
+                        maxLength={9}
                     />
                 </label>
             </tr>
+            <MostraErro mostra={mostra[1]} valor="Latitude"></MostraErro>
             <tr>
                 <label>
                     Lon:
@@ -258,9 +332,11 @@ function CamposDeCoordenada(props) {
                         value={props.coordenadas[0]}
                         onChange={event => props.setCoordenadas(props.coordenadas.map((a, i) => (i === 0) ? event.target.value : a))}
                         onBlur={validaEMuda}
+                        maxLength={9}
                     />
                 </label>
             </tr>
+            <MostraErro mostra={mostra[0]} valor="Longitude"></MostraErro>
             <tr>
                 <label>
                     Fuso:
@@ -269,13 +345,16 @@ function CamposDeCoordenada(props) {
                         value={props.coordenadas[2]}
                         onChange={event => props.setCoordenadas(props.coordenadas.map((a, i) => (i === 2) ? event.target.value : a))}
                         onBlur={validaEMuda}
+                        maxLength={2}
                     />
-                    <input
-                        type="text"
+                    <select
                         value={props.coordenadas[3]}
-                        onChange={event => props.setCoordenadas(props.coordenadas.map((a, i) => (i === 3) ? event.target.value : a))}
-                        onBlur={validaEMuda}
-                    />
+                        onChange={event =>
+                            props.setCoordenadas(props.coordenadas.map((a, i) => (i === 3) ? event.target.value : a))}
+                        onBlur={validaEMuda}>
+                        <option value="N">N</option>
+                        <option value="S">S</option>
+                    </select>
                 </label>
             </tr></>);
     default:
