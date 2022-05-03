@@ -10,17 +10,21 @@ import { panTo } from '@mapstore/framework/actions/map';
 import { saveAs } from "file-saver";
 import { setControlProperty } from '@mapstore/framework/actions/controls';
 import { changeMapInfoState } from '@mapstore/framework/actions/mapInfo';
+import assign from 'object-assign';
+import { Glyphicon } from 'react-bootstrap';
+import Message from '@mapstore/framework/components/I18N/Message';
 
 import './conversordecoordenada/style/conversordecoordenada.css';
 import conversordecoordenada from '../reducers/conversordecoordenada';
 import conversordecoordenadaEpics from '../epics/conversordecoordenada';
-import { geraCapturaCoordenada, geraEscreveCoordenada } from "../actions/conversordecoordenada";
+import { geraCapturaCoordenada, geraEscreveCoordenada, geraAlternaAtivacao } from "../actions/conversordecoordenada";
 
 // TODO
+// Botar Marcador
 // importar kml
 // datum
 // Polir mais a aplicacao
-// Esconder e mostrar plugin
+// MELHORAR "esconder e mostrar plugin"
 
 function validaCoordenada(coordenadas, notacao) {
     let aux = [false, false];
@@ -446,11 +450,12 @@ function FormularioDeCoordenada(props) {
 // Componente principal
 class ConversorDeCoordenadaComponent extends React.Component {
     render() {
-        return (
-            <div id="principal">
-                <FormularioDeCoordenada x={this.props.lon} y={this.props.lat} vaiProPonto={this.props.vaiProPonto} mudaEstadoCoordenada={this.props.mudaEstadoCoordenada} habilitaCapturaDePonto={this.props.habilitaCapturaDePonto} suprimeIdentificacaoDePonto={this.props.suprimeIdentificacaoDePonto} changeMapInfoState={this.props.changeMapInfoState}/>
-            </div>
-        );
+            return (this.props.enabled) ? (
+                <div id="principal">
+                    <button type="button" onClick={() => this.props.escondeOuMostra()}> X </button>
+                    {(this.props.enabled) ? <FormularioDeCoordenada x={this.props.lon} y={this.props.lat} vaiProPonto={this.props.vaiProPonto} mudaEstadoCoordenada={this.props.mudaEstadoCoordenada} habilitaCapturaDePonto={this.props.habilitaCapturaDePonto} suprimeIdentificacaoDePonto={this.props.suprimeIdentificacaoDePonto} changeMapInfoState={this.props.changeMapInfoState}/> : null}
+                </div>
+            ) : null;
     }
 }
 
@@ -461,6 +466,7 @@ const ConversorDeCoordenadaConectado = connect((state) =>{
     var aux1 = get(state, 'conversordecoordenada.y');
     var aux2 = get(state, 'conversordecoordenada.x');
     return {
+        enabled: get(state, 'conversordecoordenada.enabled'),
         lat: (aux1 === undefined) ? 0 : aux1,
         lon: (aux2 === undefined) ? 0 : aux2
     };
@@ -470,7 +476,8 @@ const ConversorDeCoordenadaConectado = connect((state) =>{
     mudaEstadoCoordenada: geraEscreveCoordenada,
     habilitaCapturaDePonto: geraCapturaCoordenada,
     suprimeIdentificacaoDePonto: setControlProperty,
-    changeMapInfoState: changeMapInfoState
+    changeMapInfoState: changeMapInfoState,
+    escondeOuMostra: geraAlternaAtivacao
 })(ConversorDeCoordenadaComponent);
 
 
@@ -479,13 +486,40 @@ ConversorDeCoordenadaComponent.propTypes = {
     lat: PropTypes.number,
     lon: PropTypes.number,
     vaiProPonto: PropTypes.func, // centraliza no ponto
+    escondeOuMostra: PropTypes.func,
     habilitaCapturaDePonto: PropTypes.func, // ativa a captura do ponto direto do mapa
     suprimeIdentificacaoDePonto: PropTypes.func, // desabilita o comportamento padrao de click no mapa
     changeMapInfoState: PropTypes.func,
     mudaEstadoCoordenada: PropTypes.func // estado do plugin
 };
 
+// export default {
+//     ConversorDeCoordenadaPlugin: assign(ConversorDeCoordenadaConectado, {
+//         Toolbar: {
+//             name: "ConversorDeCoordenada",
+//             position: 8,
+//             tooltip: "zoombuttons.zoomAllTooltip",
+//             icon: <Glyphicon glyph="resize-full"/>,
+//             help: <Message msgId="share.title"/>,
+//             // tool:true,
+//             priority: 1,
+//             action: () => geraAlternaAtivacao()
+//         }
+//     }),
+//     reducers: {conversordecoordenada},
+//     epics: conversordecoordenadaEpics
+// };
 
-export const ConversorDeCoordenadaPlugin = ConversorDeCoordenadaConectado;
+// export const ConversorDeCoordenadaPlugin = ConversorDeCoordenadaConectado;
+export const ConversorDeCoordenadaPlugin = assign(ConversorDeCoordenadaConectado, {
+            Toolbar: {
+                name: "ConversorDeCoordenada",
+                position: 8,
+                tooltip: "Conversor de Coordenada",
+                icon: <p>X Y</p>, // <Glyphicon glyph="resize-full"/>
+                help: <Message msgId="share.title"/>, //MUDAR
+                action: () => geraAlternaAtivacao()
+            }
+        });
 export const reducers = {conversordecoordenada};
 export const epics = conversordecoordenadaEpics;

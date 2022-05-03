@@ -1,7 +1,7 @@
-// import { CLICK_ON_MAP } from '@mapstore/framework/actions/map'
-import { CAPTURA_COORDENADA, ESCREVE_COORDENADA, PASSA_COORDENADA } from '../actions/conversordecoordenada';
+import { CAPTURA_COORDENADA, ESCREVE_COORDENADA, PASSA_COORDENADA, ALTERNA_ATIVACAO, DEFINE_ATIVACAO } from '../actions/conversordecoordenada';
 
 const defaultState = {
+    enabled: true,
     x: 0,
     y: 0,
     crs: "EPSG:4326",
@@ -9,12 +9,11 @@ const defaultState = {
 };
 
 export default function(state = defaultState, action) { // colocar default state
-    var aux;
-    var ativado;
+    
+    
     switch (action.type) {
-    case PASSA_COORDENADA:// CLICK_ON_MAP
-        // const coordenadas = action.point?.latlng || {};
-        aux = state.capturarcoordenada; // filtrar pra so pegar dps de ter apertado o botao
+    case PASSA_COORDENADA:
+        let aux = state.capturarcoordenada; // filtrar pra so pegar dps de ter apertado o botao
         if (aux) {
             return {
                 ...state,
@@ -32,10 +31,21 @@ export default function(state = defaultState, action) { // colocar default state
             y: action.y
         };
     case CAPTURA_COORDENADA:
-        ativado = action.ativado;
+        let ativado = action.ativado;
         return {
             ...state,
             capturarcoordenada: ativado
+        };
+    case DEFINE_ATIVACAO:
+        ativado = action.ativado;
+        return {
+            ...state,
+            enabled: ativado
+        };
+    case ALTERNA_ATIVACAO:
+        return {
+            ...state,
+            enabled: !state.enabled
         };
     default:
         return state;

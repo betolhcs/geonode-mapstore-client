@@ -1,6 +1,8 @@
 export const CAPTURA_COORDENADA = 'CONVERSORDECOORDENADA:CAPTURA_COORDENADA';
 export const PASSA_COORDENADA = 'CONVERSORDECOORDENADA:PASSA_COORDENADA';
 export const ESCREVE_COORDENADA = 'CONVERSORDECOORDENADA:ESCREVE_COORDENADA';
+export const DEFINE_ATIVACAO = 'CONVERSORDECOORDENADA:DEFINE_ATIVACAO';
+export const ALTERNA_ATIVACAO = 'CONVERSORDECOORDENADA:ALTERNA_ATIVACAO';
 
 // passa uma coordenada capturada do mapa
 export function geraPassaCoordenada(x, y) {
@@ -25,5 +27,20 @@ export function geraEscreveCoordenada(x, y) {
         type: ESCREVE_COORDENADA,
         x: x,
         y: y
+    };
+}
+
+// ativa e desativa o plugin
+export function geraDefineAtivacao(ativado) {
+    return {
+        type: DEFINE_ATIVACAO,
+        ativado: ativado
+    };
+}
+
+// troca o estado de ativacao o plugin
+export function geraAlternaAtivacao() {
+    return {
+        type: ALTERNA_ATIVACAO,
     };
 }
