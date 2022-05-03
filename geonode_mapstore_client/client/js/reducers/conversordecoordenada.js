@@ -9,8 +9,6 @@ const defaultState = {
 };
 
 export default function(state = defaultState, action) { // colocar default state
-    
-    
     switch (action.type) {
     case PASSA_COORDENADA:
         let aux = state.capturarcoordenada; // filtrar pra so pegar dps de ter apertado o botao

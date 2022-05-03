@@ -11,7 +11,7 @@ import { saveAs } from "file-saver";
 import { setControlProperty } from '@mapstore/framework/actions/controls';
 import { changeMapInfoState } from '@mapstore/framework/actions/mapInfo';
 import assign from 'object-assign';
-import { Glyphicon } from 'react-bootstrap';
+// import { Glyphicon } from 'react-bootstrap';
 import Message from '@mapstore/framework/components/I18N/Message';
 
 import './conversordecoordenada/style/conversordecoordenada.css';
@@ -450,12 +450,12 @@ function FormularioDeCoordenada(props) {
 // Componente principal
 class ConversorDeCoordenadaComponent extends React.Component {
     render() {
-            return (this.props.enabled) ? (
-                <div id="principal">
-                    <button type="button" onClick={() => this.props.escondeOuMostra()}> X </button>
-                    {(this.props.enabled) ? <FormularioDeCoordenada x={this.props.lon} y={this.props.lat} vaiProPonto={this.props.vaiProPonto} mudaEstadoCoordenada={this.props.mudaEstadoCoordenada} habilitaCapturaDePonto={this.props.habilitaCapturaDePonto} suprimeIdentificacaoDePonto={this.props.suprimeIdentificacaoDePonto} changeMapInfoState={this.props.changeMapInfoState}/> : null}
-                </div>
-            ) : null;
+        return (this.props.enabled) ? (
+            <div id="principal">
+                <button type="button" onClick={() => this.props.escondeOuMostra()}> X </button>
+                {(this.props.enabled) ? <FormularioDeCoordenada x={this.props.lon} y={this.props.lat} vaiProPonto={this.props.vaiProPonto} mudaEstadoCoordenada={this.props.mudaEstadoCoordenada} habilitaCapturaDePonto={this.props.habilitaCapturaDePonto} suprimeIdentificacaoDePonto={this.props.suprimeIdentificacaoDePonto} changeMapInfoState={this.props.changeMapInfoState}/> : null}
+            </div>
+        ) : null;
     }
 }
 
@@ -512,14 +512,14 @@ ConversorDeCoordenadaComponent.propTypes = {
 
 // export const ConversorDeCoordenadaPlugin = ConversorDeCoordenadaConectado;
 export const ConversorDeCoordenadaPlugin = assign(ConversorDeCoordenadaConectado, {
-            Toolbar: {
-                name: "ConversorDeCoordenada",
-                position: 8,
-                tooltip: "Conversor de Coordenada",
-                icon: <p>X Y</p>, // <Glyphicon glyph="resize-full"/>
-                help: <Message msgId="share.title"/>, //MUDAR
-                action: () => geraAlternaAtivacao()
-            }
-        });
+    Toolbar: {
+        name: "ConversorDeCoordenada",
+        position: 8,
+        tooltip: "Conversor de Coordenada",
+        icon: <p>X Y</p>, // <Glyphicon glyph="resize-full"/>
+        help: <Message msgId="share.title"/>, // MUDAR
+        action: () => geraAlternaAtivacao()
+    }
+});
 export const reducers = {conversordecoordenada};
 export const epics = conversordecoordenadaEpics;

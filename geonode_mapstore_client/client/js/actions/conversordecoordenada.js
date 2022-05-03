@@ -41,6 +41,6 @@ export function geraDefineAtivacao(ativado) {
 // troca o estado de ativacao o plugin
 export function geraAlternaAtivacao() {
     return {
-        type: ALTERNA_ATIVACAO,
+        type: ALTERNA_ATIVACAO
     };
 }
