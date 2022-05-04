@@ -23,7 +23,10 @@ import { geraCapturaCoordenada, geraEscreveCoordenada, geraAlternaAtivacao } fro
 // Botar Marcador
 // importar kml
 // datum
+
+// Refatorar os components na pasta components
 // Polir mais a aplicacao
+
 // MELHORAR "esconder e mostrar plugin"
 
 function validaCoordenada(coordenadas, notacao) {
@@ -254,7 +257,7 @@ function CamposDeCoordenada(props) {
                         value={props.coordenadas[0]}
                         onChange={event => props.setCoordenadas(props.coordenadas.map((a, i) => (i === 0) ? event.target.value : a))}
                         onBlur={validaEMuda}
-                        maxLength={3}
+                        maxLength={4}
                     /> º
                     <input
                         type="text"
@@ -301,7 +304,7 @@ function CamposDeCoordenada(props) {
                         value={props.coordenadas[0]}
                         onChange={event => props.setCoordenadas(props.coordenadas.map((a, i) => (i === 0) ? event.target.value : a))}
                         onBlur={validaEMuda}
-                        maxLength={3}
+                        maxLength={4}
                     /> º
                     <input
                         type="text"
@@ -492,23 +495,6 @@ ConversorDeCoordenadaComponent.propTypes = {
     changeMapInfoState: PropTypes.func,
     mudaEstadoCoordenada: PropTypes.func // estado do plugin
 };
-
-// export default {
-//     ConversorDeCoordenadaPlugin: assign(ConversorDeCoordenadaConectado, {
-//         Toolbar: {
-//             name: "ConversorDeCoordenada",
-//             position: 8,
-//             tooltip: "zoombuttons.zoomAllTooltip",
-//             icon: <Glyphicon glyph="resize-full"/>,
-//             help: <Message msgId="share.title"/>,
-//             // tool:true,
-//             priority: 1,
-//             action: () => geraAlternaAtivacao()
-//         }
-//     }),
-//     reducers: {conversordecoordenada},
-//     epics: conversordecoordenadaEpics
-// };
 
 // export const ConversorDeCoordenadaPlugin = ConversorDeCoordenadaConectado;
 export const ConversorDeCoordenadaPlugin = assign(ConversorDeCoordenadaConectado, {
