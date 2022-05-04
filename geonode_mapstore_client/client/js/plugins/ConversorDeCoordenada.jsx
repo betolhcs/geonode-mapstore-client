@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { get } from 'lodash';
@@ -6,6 +6,7 @@ import proj4 from 'proj4';
 import Point from 'ol/geom/Point';
 import Feature from 'ol/Feature';
 import KML from 'ol/format/KML';
+import { Style, RegularShape } from 'ol/style'
 import { panTo } from '@mapstore/framework/actions/map';
 import { saveAs } from "file-saver";
 import { setControlProperty } from '@mapstore/framework/actions/controls';
@@ -378,6 +379,98 @@ function FormularioDeCoordenada(props) {
         setCoordenadas(formataCoordenada(parseFloat(props.x), parseFloat(props.y), notacao));
     }, [props.x, props.y]);
 
+
+
+
+    const uploadInput = useRef(null);
+
+    // cuida do evento
+    const handleImportarKml = (event) => {
+        if (lerArquivoKml(event.target.files)) {
+            console.log("deu certo");
+        }
+    }
+
+    // gera a leitura do arquivo e cuida de erros
+    const lerArquivoKml = (files) => {
+        let codigoDoLeitor = criaLeitorDeArquivo(files, mostraInformacaoDoArquivo, (event) => {
+            console.log('Falha ao ler o arquivo.Ocorreu um erro ao ler o arquivo. Codigo de erro: ' + event.target.error.code);
+        })
+        if (codigoDoLeitor === -1) {
+            console.log('Falha ao ler arquivo.Erro. O seu browser nao é compativel com leitura de arquivos.');
+        } else if (codigoDoLeitor === -2) {
+            console.log('Falha ao ler arquivo.Erro. Arquivo corrompido ou inválido.');
+        } else if (codigoDoLeitor === -3) {
+            console.log('Falha ao ler arquivo.Erro. Envie somente 1 arquivo.');
+        } else if (codigoDoLeitor === -4) {
+            console.log('Falha ao ler arquivo.Erro. O arquivo deve ser no formato KML.');
+        }
+        return codigoDoLeitor === 0
+    }
+
+    // cria o leitor de arquivos e inicia leitura
+    const criaLeitorDeArquivo = (files, onReadEnd, onReadError) => {
+        let filetype = /application\/vnd\.google-earth\.kml\+xml/
+        if (!(window.File && window.FileReader && window.FileList && window.Blob)) {
+            return -1
+        }
+        if (files === undefined || files.length === 0) {
+            return -2
+        }
+        if (files.length > 1) {
+            return -3
+        }
+        if (files[0].type !== '' && !filetype.test(files[0].type)) {
+            return -4
+        }
+        let reader = new FileReader()
+        reader.onload = onReadEnd
+        reader.onerror = onReadError
+        reader.readAsText(files[0])
+        return 0
+    }
+
+    // lida com as informacoes lidas do arquivo
+    const mostraInformacaoDoArquivo = (evt) => {
+        let fileContent = evt.target.result;
+        let a = new KML();
+        let featuresFile = a.readFeatures(fileContent, {
+            dataProjection: 'EPSG:4326'
+        });
+        if (!((featuresFile.length === 1) && (featuresFile[0].getGeometry() instanceof Point))) {
+            console.log('Falha ao carregar arquivo.', 'Erro. O arquivo deve ser no formato KML e conter um unico ponto.');
+        } else {
+            limpaFeature(featuresFile[0]);
+            let b = featuresFile[0].getGeometry().getCoordinates();
+            console.log(b);
+            let c = validaCoordenada([b[0], b[1]], "gDecimal");
+            if (c[0] && c[1]){
+                props.mudaEstadoCoordenada(b[0], b[1]);
+            }
+
+            // this.updateCoordinates(transform(featuresFile[0].getGeometry().getCoordinates(), 'EPSG:3857', 'EPSG:4326'), this.datum, this.notation);
+            // this.changeMarkerPosition(this.markers.markerCoordinates, featuresFile[0].getGeometry().getCoordinates(), this.view.getProjection().getCode())
+            // this.view.fit(featuresFile[0].getGeometry()) // center map view on the geometry that was uploaded
+        }
+    }
+
+    // limpa as informacoes retiradas do arquivo
+    const limpaFeature = (feature) => {
+        let styleParams = {image: new RegularShape({})}
+        feature.setStyle(new Style(styleParams))
+    }
+
+
+
+
+
+
+
+
+
+
+
+
     const handleSubmit = (event) => { // centraliza no ponto
         event.preventDefault();
         props.vaiProPonto([props.x, props.y]);
@@ -440,10 +533,15 @@ function FormularioDeCoordenada(props) {
                             <option value="EPSG:3857">EPSG:3857</option>
                         </select>
                     </label>
-
+                </tr>
+                <tr>
                     <button type="button" onClick={botaoSelecionar}>Selecionar do Mapa</button>
+
+                    <button type="button" onClick={() => uploadInput.current.click()}>Importar .kml</button>
+                    <input type="file" ref={uploadInput} style={{display:'none'}} onChange={handleImportarKml}/>
+
                     <button type="button" onClick={botaoExportar}>Exportar .kml</button>
-                    <button type="submit">Mostrar Ponto</button>
+                    <button type="submit">Ir para o Ponto</button>
                 </tr>
             </tbody>
         </table>
