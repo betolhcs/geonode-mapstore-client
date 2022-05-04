@@ -8,7 +8,6 @@ import { closeFeatureGrid } from '@mapstore/framework/actions/featuregrid';
 import { purgeMapInfoResults, hideMapinfoMarker, toggleMapInfoState } from '@mapstore/framework/actions/mapInfo';
 // import uuid from 'uuid';
 
-
 import { geraPassaCoordenada, PASSA_COORDENADA, geraDefineAtivacao } from '../actions/conversordecoordenada';
 
 // Checa se é pra capturar o clique no mapa e suprime o identify(comportamento padrao de clique no mapa)
@@ -41,7 +40,7 @@ export const reativaComportamentoDoIdentifyEpic = (action$, store) =>
     action$.ofType(PASSA_COORDENADA)
         .filter(() => store.getState().mapInfo.enabled === false)
         .switchMap(() => {
-            return Rx.Observable.of(toggleMapInfoState()).delay(1); //delay necessario para que a captura seja feita antes da reativacao
+            return Rx.Observable.of(toggleMapInfoState()).delay(1); // delay necessario para que a captura seja feita antes da reativacao
         });
 
 export default {
