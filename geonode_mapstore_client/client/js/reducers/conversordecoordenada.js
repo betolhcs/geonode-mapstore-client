@@ -1,7 +1,7 @@
 import { CAPTURA_COORDENADA, ESCREVE_COORDENADA, PASSA_COORDENADA, ALTERNA_ATIVACAO, DEFINE_ATIVACAO } from '../actions/conversordecoordenada';
 
 const defaultState = {
-    enabled: true,
+    enabled: false,
     x: 0,
     y: 0,
     crs: "EPSG:4326",
