@@ -6,7 +6,7 @@ import proj4 from 'proj4';
 import Point from 'ol/geom/Point';
 import Feature from 'ol/Feature';
 import KML from 'ol/format/KML';
-import { Style, RegularShape } from 'ol/style'
+import { Style, RegularShape } from 'ol/style';
 import { panTo } from '@mapstore/framework/actions/map';
 import { saveAs } from "file-saver";
 import { setControlProperty } from '@mapstore/framework/actions/controls';
@@ -22,12 +22,11 @@ import { geraCapturaCoordenada, geraEscreveCoordenada, geraAlternaAtivacao } fro
 
 // TODO
 // Botar Marcador
-// importar kml
 // datum
 
 // Refatorar os components na pasta components
 // Polir mais a aplicacao
-
+// mostrar os erros importar kml
 // MELHORAR "esconder e mostrar plugin"
 
 function validaCoordenada(coordenadas, notacao) {
@@ -169,7 +168,7 @@ function MostraErro(props) {
     if (props.mostra) {
         return (<>
             <tr>
-                <p className="erro"> {props.valor} inválida.</p>
+                <p className="erro">{props.texto}</p>
             </tr>
         </>);
     }
@@ -209,7 +208,7 @@ function CamposDeCoordenada(props) {
                     /> º
                 </label>
             </tr>
-            <MostraErro mostra={mostra[1]} valor="Latitude"/>
+            <MostraErro mostra={mostra[1]} texto="Latitude inválida."/>
             <tr>
                 <label>
                     Lon:
@@ -221,7 +220,7 @@ function CamposDeCoordenada(props) {
                     /> º
                 </label>
             </tr>
-            <MostraErro mostra={mostra[0]} valor="Longitude"/></>);
+            <MostraErro mostra={mostra[0]} texto="Longitude inválida."/></>);
     case "gMinutoSegundo":
         return (<>
             <tr>
@@ -249,7 +248,7 @@ function CamposDeCoordenada(props) {
                     /> "
                 </label>
             </tr>
-            <MostraErro mostra={mostra[1]} valor="Latitude"/>
+            <MostraErro mostra={mostra[1]} texto="Latitude inválida."/>
             <tr>
                 <label>
                     Lon:
@@ -275,7 +274,7 @@ function CamposDeCoordenada(props) {
                     /> "
                 </label>
             </tr>
-            <MostraErro mostra={mostra[0]} valor="Longitude"/></>);
+            <MostraErro mostra={mostra[0]} texto="Longitude inválida."/></>);
     case "gMinutoDecimal":
         return (<>
             <tr>
@@ -296,7 +295,7 @@ function CamposDeCoordenada(props) {
                     /> '
                 </label>
             </tr>
-            <MostraErro mostra={mostra[1]} valor="Latitude"/>
+            <MostraErro mostra={mostra[1]} texto="Latitude inválida."/>
             <tr>
                 <label>
                     Lon:
@@ -315,7 +314,7 @@ function CamposDeCoordenada(props) {
                     /> '
                 </label>
             </tr>
-            <MostraErro mostra={mostra[0]} valor="Longitude"/></>);
+            <MostraErro mostra={mostra[0]} texto="Longitude inválida."/></>);
     case "utm":
         return (<>
             <tr>
@@ -330,7 +329,7 @@ function CamposDeCoordenada(props) {
                     />
                 </label>
             </tr>
-            <MostraErro mostra={mostra[1]} valor="Latitude"/>
+            <MostraErro mostra={mostra[1]} texto="Latitude inválida."/>
             <tr>
                 <label>
                     Lon:
@@ -343,7 +342,7 @@ function CamposDeCoordenada(props) {
                     />
                 </label>
             </tr>
-            <MostraErro mostra={mostra[0]} valor="Longitude"/>
+            <MostraErro mostra={mostra[0]} texto="Longitude inválida."/>
             <tr>
                 <label>
                     Fuso:
@@ -374,62 +373,20 @@ function FormularioDeCoordenada(props) {
     const [notacao, setNotacao] = useState("gDecimal");
     const [datum, setDatum] = useState("EPSG:4326");
     const [coordenadas, setCoordenadas] = useState([0, 0]);
+    const [erroUpload, setErroUpload] = useState([false, "Erro"]);
 
     useEffect(() => {
         setCoordenadas(formataCoordenada(parseFloat(props.x), parseFloat(props.y), notacao));
     }, [props.x, props.y]);
 
-
-
-
     const uploadInput = useRef(null);
 
-    // cuida do evento
-    const handleImportarKml = (event) => {
-        if (lerArquivoKml(event.target.files)) {
-            console.log("deu certo");
-        }
-    }
 
-    // gera a leitura do arquivo e cuida de erros
-    const lerArquivoKml = (files) => {
-        let codigoDoLeitor = criaLeitorDeArquivo(files, mostraInformacaoDoArquivo, (event) => {
-            console.log('Falha ao ler o arquivo.Ocorreu um erro ao ler o arquivo. Codigo de erro: ' + event.target.error.code);
-        })
-        if (codigoDoLeitor === -1) {
-            console.log('Falha ao ler arquivo.Erro. O seu browser nao é compativel com leitura de arquivos.');
-        } else if (codigoDoLeitor === -2) {
-            console.log('Falha ao ler arquivo.Erro. Arquivo corrompido ou inválido.');
-        } else if (codigoDoLeitor === -3) {
-            console.log('Falha ao ler arquivo.Erro. Envie somente 1 arquivo.');
-        } else if (codigoDoLeitor === -4) {
-            console.log('Falha ao ler arquivo.Erro. O arquivo deve ser no formato KML.');
-        }
-        return codigoDoLeitor === 0
-    }
-
-    // cria o leitor de arquivos e inicia leitura
-    const criaLeitorDeArquivo = (files, onReadEnd, onReadError) => {
-        let filetype = /application\/vnd\.google-earth\.kml\+xml/
-        if (!(window.File && window.FileReader && window.FileList && window.Blob)) {
-            return -1
-        }
-        if (files === undefined || files.length === 0) {
-            return -2
-        }
-        if (files.length > 1) {
-            return -3
-        }
-        if (files[0].type !== '' && !filetype.test(files[0].type)) {
-            return -4
-        }
-        let reader = new FileReader()
-        reader.onload = onReadEnd
-        reader.onerror = onReadError
-        reader.readAsText(files[0])
-        return 0
-    }
-
+    // limpa as informacoes retiradas do arquivo
+    const limpaFeature = (feature) => {
+        let styleParams = {image: new RegularShape({})};
+        feature.setStyle(new Style(styleParams));
+    };
     // lida com as informacoes lidas do arquivo
     const mostraInformacaoDoArquivo = (evt) => {
         let fileContent = evt.target.result;
@@ -438,13 +395,12 @@ function FormularioDeCoordenada(props) {
             dataProjection: 'EPSG:4326'
         });
         if (!((featuresFile.length === 1) && (featuresFile[0].getGeometry() instanceof Point))) {
-            console.log('Falha ao carregar arquivo.', 'Erro. O arquivo deve ser no formato KML e conter um unico ponto.');
+            setErroUpload([true, 'Falha ao carregar arquivo. O arquivo deve ser no formato KML e conter um unico ponto.']);
         } else {
             limpaFeature(featuresFile[0]);
             let b = featuresFile[0].getGeometry().getCoordinates();
-            console.log(b);
             let c = validaCoordenada([b[0], b[1]], "gDecimal");
-            if (c[0] && c[1]){
+            if (c[0] && c[1]) {
                 props.mudaEstadoCoordenada(b[0], b[1]);
             }
 
@@ -452,25 +408,50 @@ function FormularioDeCoordenada(props) {
             // this.changeMarkerPosition(this.markers.markerCoordinates, featuresFile[0].getGeometry().getCoordinates(), this.view.getProjection().getCode())
             // this.view.fit(featuresFile[0].getGeometry()) // center map view on the geometry that was uploaded
         }
-    }
+    };
+    // cria o leitor de arquivos e inicia leitura
+    const criaLeitorDeArquivo = (files, onReadEnd, onReadError) => {
+        let filetype = /application\/vnd\.google-earth\.kml\+xml/;
+        if (!(window.File && window.FileReader && window.FileList && window.Blob)) {
+            return -1;
+        }
+        if (files === undefined || files.length === 0) {
+            return -2;
+        }
+        if (files.length > 1) {
+            return -3;
+        }
+        if (files[0].type !== '' && !filetype.test(files[0].type)) {
+            return -4;
+        }
+        let reader = new FileReader();
+        reader.onload = onReadEnd;
+        reader.onerror = onReadError;
+        reader.readAsText(files[0]);
+        return 0;
+    };
+    // gera a leitura do arquivo e cuida de erros
+    const lerArquivoKml = (files) => {
+        let codigoDoLeitor = criaLeitorDeArquivo(files, mostraInformacaoDoArquivo, (event) => {
+            setErroUpload([true, 'Falha ao ler o arquivo. Ocorreu um erro ao ler o arquivo. Codigo de erro: ' + event.target.error.code]);
+        });
+        if (codigoDoLeitor === -1) {
+            setErroUpload([true, 'Falha ao ler arquivo. O seu browser nao é compativel com leitura de arquivos.']);
+        } else if (codigoDoLeitor === -2) {
+            setErroUpload([true, 'Falha ao ler arquivo. Arquivo corrompido ou inválido.']);
+        } else if (codigoDoLeitor === -3) {
+            setErroUpload([true, 'Falha ao ler arquivo. Envie somente 1 arquivo.']);
+        } else if (codigoDoLeitor === -4) {
+            setErroUpload([true, 'Falha ao ler arquivo. O arquivo deve ser no formato KML.']);
+        }
+        return codigoDoLeitor === 0;
+    };
 
-    // limpa as informacoes retiradas do arquivo
-    const limpaFeature = (feature) => {
-        let styleParams = {image: new RegularShape({})}
-        feature.setStyle(new Style(styleParams))
-    }
-
-
-
-
-
-
-
-
-
-
-
-
+    const handleImportarKml = (event) => {
+        if (lerArquivoKml(event.target.files)) {
+            setErroUpload([false, "Erro"]);
+        }
+    };
     const handleSubmit = (event) => { // centraliza no ponto
         event.preventDefault();
         props.vaiProPonto([props.x, props.y]);
@@ -538,11 +519,14 @@ function FormularioDeCoordenada(props) {
                     <button type="button" onClick={botaoSelecionar}>Selecionar do Mapa</button>
 
                     <button type="button" onClick={() => uploadInput.current.click()}>Importar .kml</button>
-                    <input type="file" ref={uploadInput} style={{display:'none'}} onChange={handleImportarKml}/>
+                    <input type="file" ref={uploadInput} style={{display: 'none'}} onChange={handleImportarKml}/>
 
                     <button type="button" onClick={botaoExportar}>Exportar .kml</button>
                     <button type="submit">Ir para o Ponto</button>
                 </tr>
+                {(erroUpload[0]) ? (<tr>
+                    <MostraErro mostra="true" texto={erroUpload[1]}/>
+                </tr>) : null}
             </tbody>
         </table>
     </form>);
