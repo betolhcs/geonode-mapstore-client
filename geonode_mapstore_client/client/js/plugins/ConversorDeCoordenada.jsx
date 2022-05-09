@@ -24,10 +24,20 @@ import { geraCapturaCoordenada, geraEscreveCoordenada, geraAlternaAtivacao } fro
 // Botar Marcador
 // datum
 
+
 // Refatorar os components na pasta components
 // Polir mais a aplicacao
 // mostrar os erros importar kml
 // MELHORAR "esconder e mostrar plugin"
+
+
+// Proj4 strings para os diferentes datums. Fonte: https://wiki.osgeo.org/wiki/Brazilian_Coordinate_Reference_Systems
+const projecoes = {
+    projsirgas: " +ellps=GRS80 +towgs84=0,0,0 +no_defs",
+    projsad69: " +ellps=aust_SA +towgs84=-67.35,3.88,-38.22",
+    projcorregoalegre: " +ellps=intl +towgs84=-205.57,168.77,-4.12",
+    projsicad: " +ellps=intl +towgs84=-144.35,242.88,-33.22"
+};
 
 function validaCoordenada(coordenadas, notacao) {
     let aux = [false, false];
@@ -69,22 +79,30 @@ function validaCoordenada(coordenadas, notacao) {
     return aux;
 }
 
-// Funcao que muda o formato de grau decimal para a notacao escolhida.
-function formataCoordenada(x, y, notacao) {
-    let hx = (x >= 0) ? 'E' : 'W'; // Acho que nao e usado pra nada
+// Funcao que muda o formato de grau decimal para a notacao e datum escolhidos.
+function formataCoordenada(x, y, notacao, datum) {
+    let longlatString = "+proj=longlat" + projecoes[datum];
+    let convx = 0;
+    let convy = 0;
+    if (notacao !== "utm") {
+        [convx, convy] = proj4("EPSG:4326", longlatString, [x, y]);
+        convx = convx.toFixed(6);
+        convy = convy.toFixed(6);
+    }
+    let hx = (x >= 0) ? 'E' : 'W'; // SEPARAR MELHOR OS CALCULOS PRA EVITAR FAZER CALCULOS DESNECESSÁRIOS
     let hy = (y >= 0) ? 'N' : 'S';
-    let auxx = Math.abs(x);
+    let auxx = Math.abs(convx);
     let xg = Math.trunc(auxx);
     let xmd = ((auxx - xg) * 60);
     let xm = Math.trunc(xmd);
     let xs = (xmd - xm) * 60;
-    let auxy = Math.abs(y);
+    let auxy = Math.abs(convy);
     let yg = Math.trunc(auxy);
     let ymd = (auxy - yg) * 60;
     let ym = Math.trunc(ymd);
     let ys = (ymd - ym) * 60;
     let zona = Math.ceil((x + 180) / 6);
-    let utmString = "+proj=utm +zone=" + zona;
+    let utmString = "+proj=utm +units=m +zone=" + zona + projecoes[datum];
     xmd = xmd.toFixed(4);
     ymd = ymd.toFixed(4);
     xs = xs.toFixed(2);
@@ -102,7 +120,7 @@ function formataCoordenada(x, y, notacao) {
 
     switch (notacao) {
     case "gDecimal":
-        return [x, y];
+        return [convx, convy];
     case "gMinutoSegundo":
         return [xg, xm, xs, yg, ym, ys];
     case "gMinutoDecimal":
@@ -119,18 +137,21 @@ function formataCoordenada(x, y, notacao) {
     }
 }
 
-// funcao que pega a coordenada em alguma notacao e converte de volta para grau decimal para armazenar no estado.
-function voltaCoordenada(coordenadas, notacao) {
+// funcao que pega a coordenada em alguma notacao e datum e converte de volta para grau decimal e o datum padrão para armazenar no estado.
+function voltaCoordenada(coordenadas, notacao, datum) {
     let x;
     let y;
     let aux;
     let sinalx;
     let sinaly;
-    let utmString = "+proj=utm +zone=";
+    let longlatString = "+proj=longlat" + projecoes[datum];
+
+    let utmString = "+proj=utm +units=m +zone=";
 
     switch (notacao) {
     case "gDecimal":
-        return [coordenadas[0], coordenadas[1]];
+        [x, y] = proj4(longlatString, "EPSG:4326", [parseFloat(coordenadas[0]), parseFloat(coordenadas[1])]);
+        return [x.toFixed(6), y.toFixed(6)];
     case "gMinutoSegundo":
         aux = coordenadas.map((coordenada) => parseFloat(coordenada));
         sinalx = (aux[0] >= 0) ? 'L' : 'W';
@@ -139,6 +160,7 @@ function voltaCoordenada(coordenadas, notacao) {
         y = Math.abs(aux[3]) + (aux[4] + aux[5] / 60.0) / 60.0;
         x = (sinalx === 'W') ? -x : x;
         y = (sinaly === 'S') ? -y : y;
+        [x, y] = proj4(longlatString, "EPSG:4326", [x, y]);
         return [x.toFixed(6), y.toFixed(6)];
     case "gMinutoDecimal":
         aux = coordenadas.map((coordenada) => parseFloat(coordenada));
@@ -148,9 +170,11 @@ function voltaCoordenada(coordenadas, notacao) {
         y = Math.abs(aux[2]) + aux[3] / 60.0;
         x = (sinalx === 'W') ? -x : x;
         y = (sinaly === 'S') ? -y : y;
+        [x, y] = proj4(longlatString, "EPSG:4326", [x, y]);
         return [x.toFixed(6), y.toFixed(6)];
     case "utm":
         utmString += Math.trunc(coordenadas[2]);
+        utmString += projecoes[datum];
         if (coordenadas[3] === 'N') {
             utmString += ' +north';
         } else {
@@ -184,9 +208,9 @@ function CamposDeCoordenada(props) {
     }, [props.formato]);
 
     const validaEMuda = () =>{
-        let valido = validaCoordenada(props.coordenadas, props.formato);
+        let valido = validaCoordenada(props.coordenadas, props.formato, props.datum);
         if (valido[0] === true && valido[1] === true) {
-            let aux = voltaCoordenada(props.coordenadas, props.formato);
+            let aux = voltaCoordenada(props.coordenadas, props.formato, props.datum);
             props.mudaEstadoGlobal(aux[0], aux[1]);
             setMostra(false, false);
         } else {
@@ -371,12 +395,12 @@ function CamposDeCoordenada(props) {
 // Componente principal
 function FormularioDeCoordenada(props) {
     const [notacao, setNotacao] = useState("gDecimal");
-    const [datum, setDatum] = useState("EPSG:4326");
     const [coordenadas, setCoordenadas] = useState([0, 0]);
+    const [datum, setDatum] = useState("projsirgas");
     const [erroUpload, setErroUpload] = useState([false, "Erro"]);
 
     useEffect(() => {
-        setCoordenadas(formataCoordenada(parseFloat(props.x), parseFloat(props.y), notacao));
+        setCoordenadas(formataCoordenada(parseFloat(props.x), parseFloat(props.y), notacao, datum));
     }, [props.x, props.y]);
 
     const uploadInput = useRef(null);
@@ -403,8 +427,6 @@ function FormularioDeCoordenada(props) {
             if (c[0] && c[1]) {
                 props.mudaEstadoCoordenada(b[0], b[1]);
             }
-
-            // this.updateCoordinates(transform(featuresFile[0].getGeometry().getCoordinates(), 'EPSG:3857', 'EPSG:4326'), this.datum, this.notation);
             // this.changeMarkerPosition(this.markers.markerCoordinates, featuresFile[0].getGeometry().getCoordinates(), this.view.getProjection().getCode())
             // this.view.fit(featuresFile[0].getGeometry()) // center map view on the geometry that was uploaded
         }
@@ -470,7 +492,7 @@ function FormularioDeCoordenada(props) {
         let a = new KML();
         let kmlData = a.writeFeatures([ponto], {
             dataProjection: 'EPSG:4326',
-            featureProjection: 'EPSG:4326'
+            featureProjection: 'EPSG:4326' // mudar para os datuns especificos
         });
         kmlData = kmlData.replace('</Placemark>', '</Placemark></Document>').replace('<Placemark>', '<Document><Placemark>');
         let blob = new Blob([kmlData], { type: 'text/plain;charset=utf-8' });
@@ -478,12 +500,11 @@ function FormularioDeCoordenada(props) {
     };
     const handleNotacao = (event) => {
         setNotacao(event.target.value);
-        setCoordenadas(formataCoordenada(parseFloat(props.x), parseFloat(props.y), event.target.value));
+        setCoordenadas(formataCoordenada(parseFloat(props.x), parseFloat(props.y), event.target.value, datum));
     };
     const handleDatum = (event) => {
-        // let a = transform([parseFloat(props.x), parseFloat(props.y)], datum, event.target.value);
-        // console.log(a);
         setDatum(event.target.value);
+        setCoordenadas(formataCoordenada(parseFloat(props.x), parseFloat(props.y), notacao, event.target.value));
     };
 
     // organizar html com tables
@@ -494,7 +515,7 @@ function FormularioDeCoordenada(props) {
                     <p>Lat:{props.y} Lon:{props.x}</p>
                 </tr>
                 <tr>
-                    <CamposDeCoordenada formato={notacao} coordenadas={coordenadas} setCoordenadas={setCoordenadas} mudaEstadoGlobal={props.mudaEstadoCoordenada}/>
+                    <CamposDeCoordenada formato={notacao} datum={datum} coordenadas={coordenadas} setCoordenadas={setCoordenadas} mudaEstadoGlobal={props.mudaEstadoCoordenada}/>
                 </tr>
                 <tr>
                     <label>
@@ -510,8 +531,10 @@ function FormularioDeCoordenada(props) {
                     <label>
                         Datum:
                         <select value={datum} onChange={handleDatum}>
-                            <option value="EPSG:4326">EPSG:4326</option>
-                            <option value="EPSG:3857">EPSG:3857</option>
+                            <option value="projsirgas">SIRGAS 2000 ou WGS84</option>
+                            <option value="projsad69">SAD 69</option>
+                            <option value="projcorregoalegre">Córrego Alegre</option>
+                            <option value="projsicad">Astro Chuá ou SICAD (DF)</option>
                         </select>
                     </label>
                 </tr>
@@ -538,7 +561,7 @@ class ConversorDeCoordenadaComponent extends React.Component {
         return (this.props.enabled) ? (
             <div id="principal">
                 <button type="button" onClick={() => this.props.escondeOuMostra()}> X </button>
-                {(this.props.enabled) ? <FormularioDeCoordenada x={this.props.lon} y={this.props.lat} vaiProPonto={this.props.vaiProPonto} mudaEstadoCoordenada={this.props.mudaEstadoCoordenada} habilitaCapturaDePonto={this.props.habilitaCapturaDePonto} suprimeIdentificacaoDePonto={this.props.suprimeIdentificacaoDePonto} changeMapInfoState={this.props.changeMapInfoState}/> : null}
+                {(this.props.enabled) ? <FormularioDeCoordenada x={this.props.lon} y={this.props.lat} datum={this.props.datum} vaiProPonto={this.props.vaiProPonto} mudaEstadoCoordenada={this.props.mudaEstadoCoordenada} habilitaCapturaDePonto={this.props.habilitaCapturaDePonto} suprimeIdentificacaoDePonto={this.props.suprimeIdentificacaoDePonto} changeMapInfoState={this.props.changeMapInfoState}/> : null}
             </div>
         ) : null;
     }
@@ -552,6 +575,7 @@ const ConversorDeCoordenadaConectado = connect((state) =>{
     var aux2 = get(state, 'conversordecoordenada.x');
     return {
         enabled: get(state, 'conversordecoordenada.enabled'),
+        datum: get(state, 'conversordecoordenada.datum'),
         lat: (aux1 === undefined) ? 0 : aux1,
         lon: (aux2 === undefined) ? 0 : aux2
     };
@@ -578,7 +602,7 @@ ConversorDeCoordenadaComponent.propTypes = {
     mudaEstadoCoordenada: PropTypes.func // estado do plugin
 };
 
-// export const ConversorDeCoordenadaPlugin = ConversorDeCoordenadaConectado;
+// Coloca o plugin na toolbar do mapa
 export const ConversorDeCoordenadaPlugin = assign(ConversorDeCoordenadaConectado, {
     Toolbar: {
         name: "ConversorDeCoordenada",

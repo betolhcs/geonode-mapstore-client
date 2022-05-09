@@ -1,10 +1,10 @@
-import { CAPTURA_COORDENADA, ESCREVE_COORDENADA, PASSA_COORDENADA, ALTERNA_ATIVACAO, DEFINE_ATIVACAO } from '../actions/conversordecoordenada';
+import { CAPTURA_COORDENADA, ESCREVE_COORDENADA, PASSA_COORDENADA, ALTERNA_ATIVACAO, DEFINE_ATIVACAO, MUDA_DATUM } from '../actions/conversordecoordenada';
 
 const defaultState = {
     enabled: false,
     x: 0,
     y: 0,
-    crs: "EPSG:4326",
+    datum: "EPSG:4326",
     capturarcoordenada: false
 };
 
@@ -17,7 +17,7 @@ export default function(state = defaultState, action) { // colocar default state
                 ...state,
                 x: action.x,
                 y: action.y,
-                crs: "EPSG:4326",
+                datum: "EPSG:4326",
                 capturarcoordenada: false
             };
         }
@@ -44,6 +44,11 @@ export default function(state = defaultState, action) { // colocar default state
         return {
             ...state,
             enabled: !state.enabled
+        };
+    case MUDA_DATUM:
+        return {
+            ...state,
+            datum: action.datum
         };
     default:
         return state;

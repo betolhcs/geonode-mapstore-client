@@ -4,8 +4,8 @@ import Rx from 'rxjs';
 import { CLICK_ON_MAP } from '@mapstore/framework/actions/map';
 // import { addPopup, cleanPopups, removePopup, REMOVE_MAP_POPUP } from '@mapstore/framework/actions/mapPopups';
 import { SET_CONTROL_PROPERTY, toggleControl} from '@mapstore/framework/actions/controls';
-import { closeFeatureGrid } from '@mapstore/framework/actions/featuregrid';
-import { purgeMapInfoResults, hideMapinfoMarker, toggleMapInfoState } from '@mapstore/framework/actions/mapInfo';
+// import { closeFeatureGrid } from '@mapstore/framework/actions/featuregrid';
+import { toggleMapInfoState } from '@mapstore/framework/actions/mapInfo'; // purgeMapInfoResults, hideMapinfoMarker,
 // import uuid from 'uuid';
 
 import { geraPassaCoordenada, PASSA_COORDENADA, geraDefineAtivacao } from '../actions/conversordecoordenada';
@@ -16,7 +16,7 @@ export const pegarCoordenadaEpic = (action$, store) =>
         .filter(() => store.getState().conversordecoordenada.capturarcoordenada === true)
         .switchMap((action) => {
             const coordenadas = action.point?.latlng || {};
-            return Rx.Observable.of(geraPassaCoordenada(coordenadas.lng.toFixed(6), coordenadas.lat.toFixed(6)), toggleControl("capturacoordenada", "enabled"), closeFeatureGrid(), purgeMapInfoResults(), hideMapinfoMarker());
+            return Rx.Observable.of(geraPassaCoordenada(coordenadas.lng.toFixed(6), coordenadas.lat.toFixed(6)), toggleControl("capturacoordenada", "enabled"));
         });
 
 // fecha o conversor de coordenada quando abre o plugin de measure
