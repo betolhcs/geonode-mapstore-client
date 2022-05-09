@@ -22,12 +22,10 @@ import { geraCapturaCoordenada, geraEscreveCoordenada, geraAlternaAtivacao } fro
 
 // TODO
 // Botar Marcador
-// datum
 
 
 // Refatorar os components na pasta components
-// Polir mais a aplicacao
-// mostrar os erros importar kml
+// Diferenciar component de funcao usando arrow function?
 // MELHORAR "esconder e mostrar plugin"
 
 
@@ -187,7 +185,7 @@ function voltaCoordenada(coordenadas, notacao, datum) {
     }
 }
 
-// Componente de texto de erro
+// Componente de texto de erro // COMPONENT
 function MostraErro(props) {
     if (props.mostra) {
         return (<>
@@ -199,7 +197,7 @@ function MostraErro(props) {
     return null;
 }
 
-// Componente com os campos de coordenada, muda conforme o formato de coordenada muda.
+// Componente com os campos de coordenada, muda conforme o formato de coordenada muda. // COMPONENT
 function CamposDeCoordenada(props) {
     const [mostra, setMostra] = useState([false, false]);
 
@@ -208,7 +206,7 @@ function CamposDeCoordenada(props) {
     }, [props.formato]);
 
     const validaEMuda = () =>{
-        let valido = validaCoordenada(props.coordenadas, props.formato, props.datum);
+        let valido = validaCoordenada(props.coordenadas, props.formato);
         if (valido[0] === true && valido[1] === true) {
             let aux = voltaCoordenada(props.coordenadas, props.formato, props.datum);
             props.mudaEstadoGlobal(aux[0], aux[1]);
