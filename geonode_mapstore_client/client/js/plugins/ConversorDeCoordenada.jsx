@@ -390,7 +390,7 @@ function CamposDeCoordenada(props) {
     }
 }
 
-// Componente principal
+// Componente com a lógica e os formulários
 function FormularioDeCoordenada(props) {
     const [notacao, setNotacao] = useState("gDecimal");
     const [coordenadas, setCoordenadas] = useState([0, 0]);
@@ -537,7 +537,7 @@ function FormularioDeCoordenada(props) {
                     </label>
                 </tr>
                 <tr>
-                    <button type="button" onClick={botaoSelecionar}>Selecionar do Mapa</button>
+                    <button type="button" style={(props.captura) ? ({backgroundColor: 'green', color: 'white'}) : null} onClick={botaoSelecionar}>Selecionar do Mapa</button>
 
                     <button type="button" onClick={() => uploadInput.current.click()}>Importar .kml</button>
                     <input type="file" ref={uploadInput} style={{display: 'none'}} onChange={handleImportarKml}/>
@@ -558,8 +558,8 @@ class ConversorDeCoordenadaComponent extends React.Component {
     render() {
         return (this.props.enabled) ? (
             <div id="principal">
-                <button type="button" onClick={() => this.props.escondeOuMostra()}> X </button>
-                {(this.props.enabled) ? <FormularioDeCoordenada x={this.props.lon} y={this.props.lat} datum={this.props.datum} vaiProPonto={this.props.vaiProPonto} mudaEstadoCoordenada={this.props.mudaEstadoCoordenada} habilitaCapturaDePonto={this.props.habilitaCapturaDePonto} suprimeIdentificacaoDePonto={this.props.suprimeIdentificacaoDePonto} changeMapInfoState={this.props.changeMapInfoState}/> : null}
+                <button className="fechar" type="button" onClick={() => this.props.escondeOuMostra()}> X </button>
+                {(this.props.enabled) ? <FormularioDeCoordenada x={this.props.lon} y={this.props.lat} captura={this.props.captura} vaiProPonto={this.props.vaiProPonto} mudaEstadoCoordenada={this.props.mudaEstadoCoordenada} habilitaCapturaDePonto={this.props.habilitaCapturaDePonto} suprimeIdentificacaoDePonto={this.props.suprimeIdentificacaoDePonto} changeMapInfoState={this.props.changeMapInfoState}/> : null}
             </div>
         ) : null;
     }
@@ -573,7 +573,7 @@ const ConversorDeCoordenadaConectado = connect((state) =>{
     var aux2 = get(state, 'conversordecoordenada.x');
     return {
         enabled: get(state, 'conversordecoordenada.enabled'),
-        datum: get(state, 'conversordecoordenada.datum'),
+        captura: get(state, 'conversordecoordenada.capturarcoordenada'),
         lat: (aux1 === undefined) ? 0 : aux1,
         lon: (aux2 === undefined) ? 0 : aux2
     };

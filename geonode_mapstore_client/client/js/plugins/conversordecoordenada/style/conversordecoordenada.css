@@ -10,5 +10,26 @@
 }
 
 .erro {
-    color: crimson;
+    color: red;
+}
+
+.fechar {
+    position: absolute;
+    right: 10px;
+    background-color: lightgray;
+    opacity: 0.8; 
+    border: none;
+    color: black;
+    font-size: 14px;
+    padding: 4px 8px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    transition-duration: 0.1s;
+}
+
+.fechar:hover{
+    background-color: red; /* Green */
+    opacity: 0.8;
+    color: white;
 }
