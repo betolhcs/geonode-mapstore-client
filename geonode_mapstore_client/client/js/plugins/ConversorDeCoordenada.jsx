@@ -199,20 +199,25 @@ function MostraErro(props) {
 
 // Componente com os campos de coordenada, muda conforme o formato de coordenada muda. // COMPONENT
 function CamposDeCoordenada(props) {
-    const [mostra, setMostra] = useState([false, false]);
+    const [mostraErro, setMostraErro] = useState([false, false]);
+    const [validaAgora, setValidaAgora] = useState(false); //usado para validar o campo select imediatamente
 
     useEffect(() => {
-        setMostra([false, false]);
+        setMostraErro([false, false]);
     }, [props.formato]);
+
+    useEffect(() => {
+        validaEMuda();
+    }, [validaAgora]);
 
     const validaEMuda = () =>{
         let valido = validaCoordenada(props.coordenadas, props.formato);
         if (valido[0] === true && valido[1] === true) {
             let aux = voltaCoordenada(props.coordenadas, props.formato, props.datum);
             props.mudaEstadoGlobal(aux[0], aux[1]);
-            setMostra(false, false);
+            setMostraErro(false, false);
         } else {
-            setMostra([!valido[0], !valido[1]]);
+            setMostraErro([!valido[0], !valido[1]]);
         }
     };
 
@@ -230,7 +235,7 @@ function CamposDeCoordenada(props) {
                     /> º
                 </label>
             </tr>
-            <MostraErro mostra={mostra[1]} texto="Latitude inválida."/>
+            <MostraErro mostraErro={mostraErro[1]} texto="Latitude inválida."/>
             <tr>
                 <label>
                     Lon:
@@ -242,7 +247,7 @@ function CamposDeCoordenada(props) {
                     /> º
                 </label>
             </tr>
-            <MostraErro mostra={mostra[0]} texto="Longitude inválida."/></>);
+            <MostraErro mostraErro={mostraErro[0]} texto="Longitude inválida."/></>);
     case "gMinutoSegundo":
         return (<>
             <tr>
@@ -270,7 +275,7 @@ function CamposDeCoordenada(props) {
                     /> "
                 </label>
             </tr>
-            <MostraErro mostra={mostra[1]} texto="Latitude inválida."/>
+            <MostraErro mostraErro={mostraErro[1]} texto="Latitude inválida."/>
             <tr>
                 <label>
                     Lon:
@@ -296,7 +301,7 @@ function CamposDeCoordenada(props) {
                     /> "
                 </label>
             </tr>
-            <MostraErro mostra={mostra[0]} texto="Longitude inválida."/></>);
+            <MostraErro mostraErro={mostraErro[0]} texto="Longitude inválida."/></>);
     case "gMinutoDecimal":
         return (<>
             <tr>
@@ -317,7 +322,7 @@ function CamposDeCoordenada(props) {
                     /> '
                 </label>
             </tr>
-            <MostraErro mostra={mostra[1]} texto="Latitude inválida."/>
+            <MostraErro mostraErro={mostraErro[1]} texto="Latitude inválida."/>
             <tr>
                 <label>
                     Lon:
@@ -336,7 +341,7 @@ function CamposDeCoordenada(props) {
                     /> '
                 </label>
             </tr>
-            <MostraErro mostra={mostra[0]} texto="Longitude inválida."/></>);
+            <MostraErro mostraErro={mostraErro[0]} texto="Longitude inválida."/></>);
     case "utm":
         return (<>
             <tr>
@@ -351,7 +356,7 @@ function CamposDeCoordenada(props) {
                     />
                 </label>
             </tr>
-            <MostraErro mostra={mostra[1]} texto="Latitude inválida."/>
+            <MostraErro mostraErro={mostraErro[1]} texto="Latitude inválida."/>
             <tr>
                 <label>
                     Lon:
@@ -364,7 +369,7 @@ function CamposDeCoordenada(props) {
                     />
                 </label>
             </tr>
-            <MostraErro mostra={mostra[0]} texto="Longitude inválida."/>
+            <MostraErro mostraErro={mostraErro[0]} texto="Longitude inválida."/>
             <tr>
                 <label>
                     Fuso:
@@ -377,9 +382,10 @@ function CamposDeCoordenada(props) {
                     />
                     <select
                         value={props.coordenadas[3]}
-                        onChange={event =>
-                            props.setCoordenadas(props.coordenadas.map((a, i) => (i === 3) ? event.target.value : a))}
-                        onBlur={validaEMuda}>
+                        onChange={event => {
+                            props.setCoordenadas(props.coordenadas.map((a, i) => (i === 3) ? event.target.value : a));
+                            setValidaAgora(!validaAgora);
+                        }}>
                         <option value="N">N</option>
                         <option value="S">S</option>
                     </select>
