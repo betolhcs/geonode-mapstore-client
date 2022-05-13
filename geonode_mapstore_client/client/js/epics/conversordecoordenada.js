@@ -2,8 +2,8 @@ import Rx from 'rxjs';
 
 import { CLICK_ON_MAP } from '@mapstore/framework/actions/map';
 import { SET_CONTROL_PROPERTY } from '@mapstore/framework/actions/controls';
-// import { closeFeatureGrid } from '@mapstore/framework/actions/featuregrid';
-import { toggleMapInfoState, changeMapInfoState } from '@mapstore/framework/actions/mapInfo'; // purgeMapInfoResults, hideMapinfoMarker,
+import { closeFeatureGrid } from '@mapstore/framework/actions/featuregrid';
+import { toggleMapInfoState, changeMapInfoState, purgeMapInfoResults, hideMapinfoMarker,} from '@mapstore/framework/actions/mapInfo';
 import uuidv1 from 'uuid/v1';
 import { addLayer, removeLayer } from "@mapstore/framework/actions/layers";
 import { cleanHighlight } from '@mapstore/framework/actions/annotations';
@@ -65,7 +65,7 @@ export const pegarCoordenadaEpic = (action$, store) =>
             );
         });
 
-// Limpa o marcador antigo, e prepara algumas coisas pra captura de coordenada
+// Limpa o marcador antigo, e prepara algumas coisas pra captura de coordenada TALVEZ SEJA EXTINTO
 export const a = (action$, store) =>
     action$.ofType(CAPTURA_COORDENADA)
         // .filter((action) => action.ativado === true )//&& store.getState().conversordecoordenada.capturarcoordenada === false
@@ -101,7 +101,7 @@ export const configuraAtivaDesativaEpic = (action$, store) =>
             if(store.getState().conversordecoordenada.enabled){
                 return Rx.Observable.of(closeFeatureGrid(), purgeMapInfoResults(), hideMapinfoMarker(), cleanHighlight()) //DAR UM JEITO DE FECHAR O MEASURE
             }else{
-                return Rx.Observable.of(removeLayer("ConversorDeCoordenda"))
+                return Rx.Observable.of(removeLayer("ConversorDeCoordenada"))
             }
         });
 
