@@ -5,7 +5,8 @@ const defaultState = {
     x: 0,
     y: 0,
     datum: "EPSG:4326",
-    capturarcoordenada: false
+    capturarcoordenada: false,
+    marcado: false
 };
 
 export default function(state = defaultState, action) { // colocar default state
@@ -18,7 +19,8 @@ export default function(state = defaultState, action) { // colocar default state
                 x: action.x,
                 y: action.y,
                 datum: "EPSG:4326",
-                capturarcoordenada: false
+                capturarcoordenada: false,
+                marcado: true
             };
         }
         return state;
@@ -29,21 +31,21 @@ export default function(state = defaultState, action) { // colocar default state
             y: action.y
         };
     case CAPTURA_COORDENADA:
-        let ativado = action.ativado;
         return {
             ...state,
-            capturarcoordenada: ativado
+            capturarcoordenada: action.ativado
         };
     case DEFINE_ATIVACAO:
-        ativado = action.ativado;
         return {
             ...state,
-            enabled: ativado
+            enabled: action.ativado,
+            marcado: false
         };
     case ALTERNA_ATIVACAO:
         return {
             ...state,
-            enabled: !state.enabled
+            enabled: !state.enabled,
+            marcado: false
         };
     case MUDA_DATUM:
         return {

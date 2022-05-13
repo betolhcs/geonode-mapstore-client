@@ -12,8 +12,7 @@ import { saveAs } from "file-saver";
 import { setControlProperty } from '@mapstore/framework/actions/controls';
 import { changeMapInfoState } from '@mapstore/framework/actions/mapInfo';
 import assign from 'object-assign';
-// import { Glyphicon } from 'react-bootstrap';
-import Message from '@mapstore/framework/components/I18N/Message';
+// import { Glyphicon } from 'react-bootstrap'; //Caso queira substituir o icone do botao de ativar na toolbar
 
 import './conversordecoordenada/style/conversordecoordenada.css';
 import conversordecoordenada from '../reducers/conversordecoordenada';
@@ -135,7 +134,7 @@ function formataCoordenada(x, y, notacao, datum) {
     }
 }
 
-// funcao que pega a coordenada em alguma notacao e datum e converte de volta para grau decimal e o datum padrão para armazenar no estado.
+// funcao que pega a coordenada em alguma notacao e datum e converte de volta para grau decimal e o datum padrao para armazenar no estado.
 function voltaCoordenada(coordenadas, notacao, datum) {
     let x;
     let y;
@@ -396,7 +395,7 @@ function CamposDeCoordenada(props) {
     }
 }
 
-// Componente com a lógica e os formulários
+// Componente com a logica e os formularios
 function FormularioDeCoordenada(props) {
     const [notacao, setNotacao] = useState("gDecimal");
     const [coordenadas, setCoordenadas] = useState([0, 0]);
@@ -485,8 +484,6 @@ function FormularioDeCoordenada(props) {
     const botaoSelecionar = (event) =>{ // seleciona ponto do mapa
         event.preventDefault();
         props.habilitaCapturaDePonto(true);
-        props.changeMapInfoState(false);
-        props.suprimeIdentificacaoDePonto("capturacoordenada", "enabled", true);
     };
     const botaoExportar = (event) => { // exporta o ponto como kml
         event.preventDefault();
@@ -613,7 +610,6 @@ export const ConversorDeCoordenadaPlugin = assign(ConversorDeCoordenadaConectado
         position: 8,
         tooltip: "Conversor de Coordenada",
         icon: <p>X Y</p>, // <Glyphicon glyph="resize-full"/>
-        help: <Message msgId="share.title"/>, // MUDAR
         action: () => geraAlternaAtivacao()
     }
 });
