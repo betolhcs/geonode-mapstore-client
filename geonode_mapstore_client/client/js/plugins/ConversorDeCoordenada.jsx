@@ -12,7 +12,6 @@ import { saveAs } from "file-saver";
 import { setControlProperty } from '@mapstore/framework/actions/controls';
 import { changeMapInfoState } from '@mapstore/framework/actions/mapInfo';
 import assign from 'object-assign';
-// import { Glyphicon } from 'react-bootstrap'; //Caso queira substituir o icone do botao de ativar na toolbar
 
 import './conversordecoordenada/style/conversordecoordenada.css';
 import conversordecoordenada from '../reducers/conversordecoordenada';
@@ -20,13 +19,11 @@ import conversordecoordenadaEpics from '../epics/conversordecoordenada';
 import { geraCapturaCoordenada, geraEscreveCoordenada, geraAlternaAtivacao } from "../actions/conversordecoordenada";
 
 // TODO
-// Botar Marcador
+// Resolver o problema de formatacao float/string causado por parseFloat/toFixed
 
-
+// REFATORACAO
 // Refatorar os components na pasta components
 // Diferenciar component de funcao usando arrow function?
-// MELHORAR "esconder e mostrar plugin"
-
 
 // Proj4 strings para os diferentes datums. Fonte: https://wiki.osgeo.org/wiki/Brazilian_Coordinate_Reference_Systems
 const projecoes = {
@@ -78,16 +75,29 @@ function validaCoordenada(coordenadas, notacao) {
 
 // Funcao que muda o formato de grau decimal para a notacao e datum escolhidos.
 function formataCoordenada(x, y, notacao, datum) {
-    let longlatString = "+proj=longlat" + projecoes[datum];
-    let convx = 0;
-    let convy = 0;
-    if (notacao !== "utm") {
-        [convx, convy] = proj4("EPSG:4326", longlatString, [x, y]);
-        convx = convx.toFixed(6);
-        convy = convy.toFixed(6);
-    }
-    let hx = (x >= 0) ? 'E' : 'W'; // SEPARAR MELHOR OS CALCULOS PRA EVITAR FAZER CALCULOS DESNECESSÁRIOS
+    let hx = (x >= 0) ? 'E' : 'W';
     let hy = (y >= 0) ? 'N' : 'S';
+
+    if (notacao === "utm") {
+        let zona = Math.ceil((x + 180) / 6);
+        let utmString = "+proj=utm +units=m +zone=" + zona + projecoes[datum];
+        if (hy === 'N') {
+            utmString += ' +north';
+        } else {
+            utmString += ' +south';
+        }
+        let auxutm = proj4("EPSG:4326", utmString, [x, y]);
+        auxutm[0] = auxutm[0].toFixed(1);
+        auxutm[1] = auxutm[1].toFixed(1);
+        auxutm.push(zona);
+        auxutm.push(hy);
+        return auxutm;
+    }
+
+    let longlatString = "+proj=longlat" + projecoes[datum];
+    let [convx, convy] = proj4("EPSG:4326", longlatString, [x, y]);
+    convx = convx.toFixed(6);
+    convy = convy.toFixed(6);
     let auxx = Math.abs(convx);
     let xg = Math.trunc(auxx);
     let xmd = ((auxx - xg) * 60);
@@ -98,17 +108,12 @@ function formataCoordenada(x, y, notacao, datum) {
     let ymd = (auxy - yg) * 60;
     let ym = Math.trunc(ymd);
     let ys = (ymd - ym) * 60;
-    let zona = Math.ceil((x + 180) / 6);
-    let utmString = "+proj=utm +units=m +zone=" + zona + projecoes[datum];
     xmd = xmd.toFixed(4);
     ymd = ymd.toFixed(4);
     xs = xs.toFixed(2);
     ys = ys.toFixed(2);
 
-    if (hy === 'N') {
-        utmString += ' +north';
-    } else {
-        utmString += ' +south';
+    if (hy === 'S') {
         yg = -yg;
     }
     if (hx === 'W') {
@@ -122,13 +127,6 @@ function formataCoordenada(x, y, notacao, datum) {
         return [xg, xm, xs, yg, ym, ys];
     case "gMinutoDecimal":
         return [xg, xmd, yg, ymd];
-    case "utm":
-        let auxutm = proj4("EPSG:4326", utmString, [x, y]);
-        auxutm[0] = auxutm[0].toFixed(1);
-        auxutm[1] = auxutm[1].toFixed(1);
-        auxutm.push(zona);
-        auxutm.push(hy);
-        return auxutm;
     default:
         return [0, 0];
     }
@@ -142,7 +140,6 @@ function voltaCoordenada(coordenadas, notacao, datum) {
     let sinalx;
     let sinaly;
     let longlatString = "+proj=longlat" + projecoes[datum];
-
     let utmString = "+proj=utm +units=m +zone=";
 
     switch (notacao) {
@@ -199,15 +196,7 @@ function MostraErro(props) {
 // Componente com os campos de coordenada, muda conforme o formato de coordenada muda. // COMPONENT
 function CamposDeCoordenada(props) {
     const [mostraErro, setMostraErro] = useState([false, false]);
-    const [validaAgora, setValidaAgora] = useState(false); //usado para validar o campo select imediatamente
-
-    useEffect(() => {
-        setMostraErro([false, false]);
-    }, [props.formato]);
-
-    useEffect(() => {
-        validaEMuda();
-    }, [validaAgora]);
+    const [validaAgora, setValidaAgora] = useState(false); // usado para validar o campo select imediatamente
 
     const validaEMuda = () =>{
         let valido = validaCoordenada(props.coordenadas, props.formato);
@@ -219,6 +208,15 @@ function CamposDeCoordenada(props) {
             setMostraErro([!valido[0], !valido[1]]);
         }
     };
+
+    useEffect(() => {
+        setMostraErro([false, false]);
+    }, [props.formato]);
+
+    useEffect(() => {
+        validaEMuda();
+    }, [validaAgora]);
+
 
     switch (props.formato) {
     case "gDecimal":
@@ -571,7 +569,6 @@ class ConversorDeCoordenadaComponent extends React.Component {
 
 // Conecta o componente principal com o estado geral da aplicação e pega as variaveis que serão necessárias.
 const ConversorDeCoordenadaConectado = connect((state) =>{
-    // console.log(state);
     var aux1 = get(state, 'conversordecoordenada.y');
     var aux2 = get(state, 'conversordecoordenada.x');
     return {
@@ -609,7 +606,8 @@ export const ConversorDeCoordenadaPlugin = assign(ConversorDeCoordenadaConectado
         name: "ConversorDeCoordenada",
         position: 8,
         tooltip: "Conversor de Coordenada",
-        icon: <p>X Y</p>, // <Glyphicon glyph="resize-full"/>
+        icon: <p>X Y</p>, // melhorar posicionamento do icone
+        // message: ?
         action: () => geraAlternaAtivacao()
     }
 });

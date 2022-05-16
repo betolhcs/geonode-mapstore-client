@@ -3,19 +3,27 @@ import Rx from 'rxjs';
 import { CLICK_ON_MAP } from '@mapstore/framework/actions/map';
 import { SET_CONTROL_PROPERTY } from '@mapstore/framework/actions/controls';
 import { closeFeatureGrid } from '@mapstore/framework/actions/featuregrid';
-import { toggleMapInfoState, changeMapInfoState, purgeMapInfoResults, hideMapinfoMarker,} from '@mapstore/framework/actions/mapInfo';
+import { toggleMapInfoState, changeMapInfoState, purgeMapInfoResults, hideMapinfoMarker } from '@mapstore/framework/actions/mapInfo';
 import uuidv1 from 'uuid/v1';
 import { addLayer, removeLayer } from "@mapstore/framework/actions/layers";
-import { cleanHighlight } from '@mapstore/framework/actions/annotations';
 
-import { geraPassaCoordenada, PASSA_COORDENADA, geraDefineAtivacao, CAPTURA_COORDENADA, MOVE_MARCADOR, geraMoveMarcador, ALTERNA_ATIVACAO } from '../actions/conversordecoordenada';
+import {
+    geraPassaCoordenada,
+    geraMoveMarcador,
+    geraDefineAtivacao,
+    PASSA_COORDENADA,
+    CAPTURA_COORDENADA,
+    MOVE_MARCADOR,
+    ALTERNA_ATIVACAO,
+    ESCREVE_COORDENADA
+} from '../actions/conversordecoordenada';
 
 
 const STYLE_DO_PONTO = {
-    iconGlyph: 'comment',
-    iconShape: 'square',
-    iconColor: 'blue',
-    iconAnchor: [0.5, 0.5],
+    iconGlyph: 'map-marker'
+    // iconShape: 'square',
+    // iconColor: 'blue',
+    // iconAnchor: [0.5, 0.5],
 };
 
 function criaFeatureDoMarcador(position) {
@@ -33,7 +41,7 @@ function criaFeatureDoMarcador(position) {
                     "id": uuidv1()
                 },
                 "style": {
-                    ...STYLE_DO_PONTO,
+                    ...STYLE_DO_PONTO
                 }
             }
         ],
@@ -53,56 +61,57 @@ export const pegarCoordenadaEpic = (action$, store) =>
         .filter(() => store.getState().conversordecoordenada.capturarcoordenada === true)
         .switchMap((action) => {
             const coordenadas = action.point?.latlng || {};
-            return Rx.Observable.of(geraPassaCoordenada(coordenadas.lng.toFixed(6), coordenadas.lat.toFixed(6)), // geraMoveMarcador(coordenadas.lng, coordenadas.lat)
+            return Rx.Observable.of(geraPassaCoordenada(coordenadas.lng.toFixed(6), coordenadas.lat.toFixed(6)),
+                geraMoveMarcador(coordenadas.lng, coordenadas.lat)
+            );
+        });
+
+// Limpa o marcador antigo, e prepara algumas coisas pra captura de coordenada TALVEZ SEJA EXTINTO
+export const desativaComportamentoDoIndentify = (action$) =>
+    action$.ofType(CAPTURA_COORDENADA)
+        .switchMap(() => {
+            return Rx.Observable.of(changeMapInfoState(false));
+        });
+
+// Move o marcador de um ponto ao outro.
+export const moveMarcadorEpic = (action$) =>
+    action$.ofType(MOVE_MARCADOR)
+        .switchMap((action) => {
+            return Rx.Observable.of(removeLayer("ConversorDeCoordenada"),
                 addLayer({
                     "type": "vector",
                     "id": "ConversorDeCoordenada",
                     "name": "MarcadorDoConversor",
                     "hideLoading": true,
-                    "features": [criaFeatureDoMarcador([coordenadas.lng, coordenadas.lat])],
+                    "features": [criaFeatureDoMarcador([action.x, action.y])],
                     "visibility": true
                 })
             );
         });
-
-// Limpa o marcador antigo, e prepara algumas coisas pra captura de coordenada TALVEZ SEJA EXTINTO
-export const a = (action$, store) =>
-    action$.ofType(CAPTURA_COORDENADA)
-        // .filter((action) => action.ativado === true )//&& store.getState().conversordecoordenada.capturarcoordenada === false
-        .switchMap(() => {
-            return Rx.Observable.of(removeLayer("ConversorDeCoordenada"), changeMapInfoState(false));
-        });
-
-// export const moveMarcadorEpic = (action$) =>
-//         action$.ofType(MOVE_MARCADOR)
-//         .switchMap((action) => {
-//             return from([()=>removeLayer("ConversorDeCoordenada"),()=>addLayer({
-//                 "type": "vector",
-//                 "id": "ConversorDeCoordenada",
-//                 "name": "MarcadorDoConversor",
-//                 "hideLoading": true,
-//                 "features": [criaFeatureDoMarcador([action.x, action.y])],
-//                 "visibility": true
-//             })]).pipe(concatMap(item => Rx.Observable.of(item).pipe(delay(100))))
-//         });
 
 // fecha o conversor de coordenada quando abre o plugin de measure
 export const fechaPluginQuandoMeasureAbreEpic = (action$) =>
     action$.ofType(SET_CONTROL_PROPERTY)
         .filter((action) => action.control === "measure" && action.value)
         .switchMap(() => {
-            return Rx.Observable.of(geraDefineAtivacao(false));
+            return Rx.Observable.of(geraDefineAtivacao(false), removeLayer("ConversorDeCoordenada"));
         });
 
 // funcao que fecharia os outros plugins ao abrir o conversor e remove os marcadores caso esteja fechando o plugin
 export const configuraAtivaDesativaEpic = (action$, store) =>
     action$.ofType(ALTERNA_ATIVACAO)
         .switchMap(() => {
-            if(store.getState().conversordecoordenada.enabled){
-                return Rx.Observable.of(closeFeatureGrid(), purgeMapInfoResults(), hideMapinfoMarker(), cleanHighlight()) //DAR UM JEITO DE FECHAR O MEASURE
-            }else{
-                return Rx.Observable.of(removeLayer("ConversorDeCoordenada"))
+            if (store.getState().conversordecoordenada.enabled) {
+                return Rx.Observable.of(closeFeatureGrid(), purgeMapInfoResults(), hideMapinfoMarker()); // DAR UM JEITO DE FECHAR O MEASURE
             }
+            return Rx.Observable.of(removeLayer("ConversorDeCoordenada"));
+        });
+
+// move o marcador pra coordenada que foi inserida no formulario de input
+export const atualizaMarcadorComCoordenadaEpic = (action$) =>
+    action$.ofType(ESCREVE_COORDENADA)
+        .switchMap((action) => {
+            return Rx.Observable.of(geraMoveMarcador(parseFloat(action.x), parseFloat(action.y)));
         });
 
 // Reativa o comportamento padrao de clique no mapa depois da captura
@@ -115,8 +124,9 @@ export const reativaComportamentoDoIdentifyEpic = (action$, store) =>
 
 export default {
     configuraAtivaDesativaEpic,
-    // moveMarcadorEpic,
-    a,
+    moveMarcadorEpic,
+    atualizaMarcadorComCoordenadaEpic,
+    desativaComportamentoDoIndentify,
     pegarCoordenadaEpic,
     fechaPluginQuandoMeasureAbreEpic,
     reativaComportamentoDoIdentifyEpic
