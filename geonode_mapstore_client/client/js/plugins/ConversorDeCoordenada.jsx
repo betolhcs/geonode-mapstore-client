@@ -13,17 +13,16 @@ import { setControlProperty } from '@mapstore/framework/actions/controls';
 import { changeMapInfoState } from '@mapstore/framework/actions/mapInfo';
 import assign from 'object-assign';
 
+// Codigo desenvolvido para o plugin
 import './conversordecoordenada/style/conversordecoordenada.css';
 import conversordecoordenada from '../reducers/conversordecoordenada';
 import conversordecoordenadaEpics from '../epics/conversordecoordenada';
 import { geraCapturaCoordenada, geraEscreveCoordenada, geraAlternaAtivacao } from "../actions/conversordecoordenada";
+import MensagemDeErro from '../components/conversordecoordenada/MensagemDeErro';
+import CamposDeCoordenada from '../components/conversordecoordenada/CamposDeCoordenada';
 
 // TODO
 // Resolver o problema de formatacao float/string causado por parseFloat/toFixed
-
-// REFATORACAO
-// Refatorar os components na pasta components
-// Diferenciar component de funcao usando arrow function?
 
 // Proj4 strings para os diferentes datums. Fonte: https://wiki.osgeo.org/wiki/Brazilian_Coordinate_Reference_Systems
 const projecoes = {
@@ -181,218 +180,6 @@ function voltaCoordenada(coordenadas, notacao, datum) {
     }
 }
 
-// Componente de texto de erro // COMPONENT
-const MostraErro = ({ mostraErro, texto }) => {
-    if (mostraErro) {
-        return (<>
-            <tr>
-                <p className="erro">{texto}</p>
-            </tr>
-        </>);
-    }
-    return null;
-}
-
-// Componente com os campos de coordenada, muda conforme o formato de coordenada muda. // COMPONENT
-const CamposDeCoordenada = (props) => {
-    const [mostraErro, setMostraErro] = useState([false, false]);
-    const [validaAgora, setValidaAgora] = useState(false); // usado para validar o campo select imediatamente
-
-    const validaEMuda = () =>{
-        let valido = validaCoordenada(props.coordenadas, props.formato);
-        if (valido[0] === true && valido[1] === true) {
-            let aux = voltaCoordenada(props.coordenadas, props.formato, props.datum);
-            props.mudaEstadoGlobal(aux[0], aux[1]);
-            setMostraErro(false, false);
-        } else {
-            setMostraErro([!valido[0], !valido[1]]);
-        }
-    };
-
-    useEffect(() => {
-        setMostraErro([false, false]);
-    }, [props.formato]);
-
-    useEffect(() => {
-        validaEMuda();
-    }, [validaAgora]);
-
-
-    switch (props.formato) {
-    case "gDecimal":
-        return (<>
-            <tr>
-                <label>
-                    Lat:
-                    <input
-                        type="text"
-                        value={props.coordenadas[1]}
-                        onChange={event => props.setCoordenadas(props.coordenadas.map((a, i) => (i === 1) ? event.target.value : a))}
-                        onBlur={validaEMuda}
-                    /> º
-                </label>
-            </tr>
-            <MostraErro mostraErro={mostraErro[1]} texto="Latitude inválida."/>
-            <tr>
-                <label>
-                    Lon:
-                    <input
-                        type="text"
-                        value={props.coordenadas[0]}
-                        onChange={event => props.setCoordenadas(props.coordenadas.map((a, i) => (i === 0) ? event.target.value : a))}
-                        onBlur={validaEMuda}
-                    /> º
-                </label>
-            </tr>
-            <MostraErro mostraErro={mostraErro[0]} texto="Longitude inválida."/></>);
-    case "gMinutoSegundo":
-        return (<>
-            <tr>
-                <label>
-                    Lat:
-                    <input
-                        type="text"
-                        value={props.coordenadas[3]}
-                        onChange={event => props.setCoordenadas(props.coordenadas.map((a, i) => (i === 3) ? event.target.value : a))}
-                        onBlur={validaEMuda}
-                        maxLength={3}
-                    /> º
-                    <input
-                        type="text"
-                        value={props.coordenadas[4]}
-                        onChange={event => props.setCoordenadas(props.coordenadas.map((a, i) => (i === 4) ? event.target.value : a))}
-                        onBlur={validaEMuda}
-                        maxLength={2}
-                    /> '
-                    <input
-                        type="text"
-                        value={props.coordenadas[5]}
-                        onChange={event => props.setCoordenadas(props.coordenadas.map((a, i) => (i === 5) ? event.target.value : a))}
-                        onBlur={validaEMuda}
-                    /> "
-                </label>
-            </tr>
-            <MostraErro mostraErro={mostraErro[1]} texto="Latitude inválida."/>
-            <tr>
-                <label>
-                    Lon:
-                    <input
-                        type="text"
-                        value={props.coordenadas[0]}
-                        onChange={event => props.setCoordenadas(props.coordenadas.map((a, i) => (i === 0) ? event.target.value : a))}
-                        onBlur={validaEMuda}
-                        maxLength={4}
-                    /> º
-                    <input
-                        type="text"
-                        value={props.coordenadas[1]}
-                        onChange={event => props.setCoordenadas(props.coordenadas.map((a, i) => (i === 1) ? event.target.value : a))}
-                        onBlur={validaEMuda}
-                        maxLength={2}
-                    /> '
-                    <input
-                        type="text"
-                        value={props.coordenadas[2]}
-                        onChange={event => props.setCoordenadas(props.coordenadas.map((a, i) => (i === 2) ? event.target.value : a))}
-                        onBlur={validaEMuda}
-                    /> "
-                </label>
-            </tr>
-            <MostraErro mostraErro={mostraErro[0]} texto="Longitude inválida."/></>);
-    case "gMinutoDecimal":
-        return (<>
-            <tr>
-                <label>
-                    Lat:
-                    <input
-                        type="text"
-                        value={props.coordenadas[2]}
-                        onChange={event => props.setCoordenadas(props.coordenadas.map((a, i) => (i === 2) ? event.target.value : a))}
-                        onBlur={validaEMuda}
-                        maxLength={3}
-                    /> º
-                    <input
-                        type="text"
-                        value={props.coordenadas[3]}
-                        onChange={event => props.setCoordenadas(props.coordenadas.map((a, i) => (i === 3) ? event.target.value : a))}
-                        onBlur={validaEMuda}
-                    /> '
-                </label>
-            </tr>
-            <MostraErro mostraErro={mostraErro[1]} texto="Latitude inválida."/>
-            <tr>
-                <label>
-                    Lon:
-                    <input
-                        type="text"
-                        value={props.coordenadas[0]}
-                        onChange={event => props.setCoordenadas(props.coordenadas.map((a, i) => (i === 0) ? event.target.value : a))}
-                        onBlur={validaEMuda}
-                        maxLength={4}
-                    /> º
-                    <input
-                        type="text"
-                        value={props.coordenadas[1]}
-                        onChange={event => props.setCoordenadas(props.coordenadas.map((a, i) => (i === 1) ? event.target.value : a))}
-                        onBlur={validaEMuda}
-                    /> '
-                </label>
-            </tr>
-            <MostraErro mostraErro={mostraErro[0]} texto="Longitude inválida."/></>);
-    case "utm":
-        return (<>
-            <tr>
-                <label>
-                    Lat:
-                    <input
-                        type="text"
-                        value={props.coordenadas[1]}
-                        onChange={event => props.setCoordenadas(props.coordenadas.map((a, i) => (i === 1) ? event.target.value : a))}
-                        onBlur={validaEMuda}
-                        maxLength={9}
-                    />
-                </label>
-            </tr>
-            <MostraErro mostraErro={mostraErro[1]} texto="Latitude inválida."/>
-            <tr>
-                <label>
-                    Lon:
-                    <input
-                        type="text"
-                        value={props.coordenadas[0]}
-                        onChange={event => props.setCoordenadas(props.coordenadas.map((a, i) => (i === 0) ? event.target.value : a))}
-                        onBlur={validaEMuda}
-                        maxLength={9}
-                    />
-                </label>
-            </tr>
-            <MostraErro mostraErro={mostraErro[0]} texto="Longitude inválida."/>
-            <tr>
-                <label>
-                    Fuso:
-                    <input
-                        type="text"
-                        value={props.coordenadas[2]}
-                        onChange={event => props.setCoordenadas(props.coordenadas.map((a, i) => (i === 2) ? event.target.value : a))}
-                        onBlur={validaEMuda}
-                        maxLength={2}
-                    />
-                    <select
-                        value={props.coordenadas[3]}
-                        onChange={event => {
-                            props.setCoordenadas(props.coordenadas.map((a, i) => (i === 3) ? event.target.value : a));
-                            setValidaAgora(!validaAgora);
-                        }}>
-                        <option value="N">N</option>
-                        <option value="S">S</option>
-                    </select>
-                </label>
-            </tr></>);
-    default:
-        return <p>erro</p>;
-    }
-}
-
 // Componente com a logica e os formularios
 const FormularioDeCoordenada = (props) => {
     const [notacao, setNotacao] = useState("gDecimal");
@@ -406,14 +193,12 @@ const FormularioDeCoordenada = (props) => {
 
     const uploadInput = useRef(null);
 
-
-    // limpa as informacoes retiradas do arquivo
-    const limpaFeature = (feature) => {
+    // conjunto de funcoes que cuidam do upload e leitura de kml
+    const limpaFeature = (feature) => { // 1 - limpa as informacoes retiradas do arquivo
         let styleParams = {image: new RegularShape({})};
         feature.setStyle(new Style(styleParams));
     };
-    // lida com as informacoes lidas do arquivo
-    const mostraInformacaoDoArquivo = (evt) => {
+    const mostraInformacaoDoArquivo = (evt) => { // 2 - lida com as informacoes lidas do arquivo
         let fileContent = evt.target.result;
         let a = new KML();
         let featuresFile = a.readFeatures(fileContent, {
@@ -427,13 +212,11 @@ const FormularioDeCoordenada = (props) => {
             let c = validaCoordenada([b[0], b[1]], "gDecimal");
             if (c[0] && c[1]) {
                 props.mudaEstadoCoordenada(b[0], b[1]);
+                props.vaiProPonto([b[0], b[1]]);
             }
-            // this.changeMarkerPosition(this.markers.markerCoordinates, featuresFile[0].getGeometry().getCoordinates(), this.view.getProjection().getCode())
-            // this.view.fit(featuresFile[0].getGeometry()) // center map view on the geometry that was uploaded
         }
     };
-    // cria o leitor de arquivos e inicia leitura
-    const criaLeitorDeArquivo = (files, onReadEnd, onReadError) => {
+    const criaLeitorDeArquivo = (files, onReadEnd, onReadError) => { // 3 - cria o leitor de arquivos e inicia leitura
         let filetype = /application\/vnd\.google-earth\.kml\+xml/;
         if (!(window.File && window.FileReader && window.FileList && window.Blob)) {
             return -1;
@@ -453,8 +236,7 @@ const FormularioDeCoordenada = (props) => {
         reader.readAsText(files[0]);
         return 0;
     };
-    // gera a leitura do arquivo e cuida de erros
-    const lerArquivoKml = (files) => {
+    const lerArquivoKml = (files) => { // 4 - gera a leitura do arquivo e cuida de erros
         let codigoDoLeitor = criaLeitorDeArquivo(files, mostraInformacaoDoArquivo, (event) => {
             setErroUpload([true, 'Falha ao ler o arquivo. Ocorreu um erro ao ler o arquivo. Codigo de erro: ' + event.target.error.code]);
         });
@@ -469,6 +251,7 @@ const FormularioDeCoordenada = (props) => {
         }
         return codigoDoLeitor === 0;
     };
+
 
     const handleImportarKml = (event) => {
         if (lerArquivoKml(event.target.files)) {
@@ -506,16 +289,13 @@ const FormularioDeCoordenada = (props) => {
         setCoordenadas(formataCoordenada(parseFloat(props.x), parseFloat(props.y), notacao, event.target.value));
     };
 
-    // organizar html com tables
     return (<form onSubmit={handleSubmit}>
         <table>
             <tbody>
                 <tr>
                     <p>Lat:{props.y} Lon:{props.x}</p>
                 </tr>
-                <tr>
-                    <CamposDeCoordenada formato={notacao} datum={datum} coordenadas={coordenadas} setCoordenadas={setCoordenadas} mudaEstadoGlobal={props.mudaEstadoCoordenada}/>
-                </tr>
+                <CamposDeCoordenada formato={notacao} datum={datum} coordenadas={coordenadas} setCoordenadas={setCoordenadas} mudaEstadoGlobal={props.mudaEstadoCoordenada} valida={validaCoordenada} voltaCoordenada={voltaCoordenada}/>
                 <tr>
                     <label>
                         Notação:
@@ -538,16 +318,16 @@ const FormularioDeCoordenada = (props) => {
                     </label>
                 </tr>
                 <tr>
-                    <button type="button" style={(props.captura) ? ({backgroundColor: 'green', color: 'white'}) : null} onClick={botaoSelecionar}>Selecionar do Mapa</button>
+                    <button type="button" className={(props.captura) ? "botao-ativado" : "botoes-do-plugin"} onClick={botaoSelecionar}>Selecionar do Mapa</button>
 
-                    <button type="button" onClick={() => uploadInput.current.click()}>Importar .kml</button>
+                    <button type="button" className="botoes-do-plugin" onClick={() => uploadInput.current.click()}>Importar .kml</button>
                     <input type="file" ref={uploadInput} style={{display: 'none'}} onChange={handleImportarKml}/>
 
-                    <button type="button" onClick={botaoExportar}>Exportar .kml</button>
-                    <button type="submit">Ir para o Ponto</button>
+                    <button type="button" className="botoes-do-plugin" onClick={botaoExportar}>Exportar .kml</button>
+                    <button type="submit" className="botoes-do-plugin">Ir para o Ponto</button>
                 </tr>
                 {(erroUpload[0]) ? (<tr>
-                    <MostraErro mostra="true" texto={erroUpload[1]}/>
+                    <MensagemDeErro mostraErro="true" texto={erroUpload[1]}/>
                 </tr>) : null}
             </tbody>
         </table>
@@ -579,7 +359,7 @@ const ConversorDeCoordenadaConectado = connect((state) =>{
     };
 },
 {
-    vaiProPonto: panTo, // suporta escolha de projecao
+    vaiProPonto: panTo,
     mudaEstadoCoordenada: geraEscreveCoordenada,
     habilitaCapturaDePonto: geraCapturaCoordenada,
     suprimeIdentificacaoDePonto: setControlProperty,
@@ -588,7 +368,7 @@ const ConversorDeCoordenadaConectado = connect((state) =>{
 })(ConversorDeCoordenadaComponent);
 
 
-// validacao de tipo dos props
+// validacao de tipo dos props VER COMO FUNCIONA
 ConversorDeCoordenadaComponent.propTypes = {
     lat: PropTypes.number,
     lon: PropTypes.number,

@@ -3,8 +3,7 @@
     bottom: 60px; 
     right: 500px;
     z-index: 1000; 
-    background-color: white;
-    opacity: 0.8; 
+    background-color: rgba(255, 255, 255, 0.8);
     border-radius: 8px;
     padding: 10px;
 }
@@ -31,5 +30,34 @@
 .fechar:hover{
     background-color: red; /* Green */
     opacity: 0.8;
+    color: white;
+}
+
+.botoes-do-plugin{
+    background-color: #2c689c;
+    font-size: 14px;
+    margin-right: 1px;
+    border: 1px solid lightgray;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    padding: 4px 8px;
+    color: white;
+}
+
+.botoes-do-plugin:hover{
+    background-color: rgb(30, 74, 117);
+    color: white;
+}
+
+.botao-ativado{
+    background-color: green;
+    font-size: 14px;
+    margin-right: 1px;
+    border: 1px solid lightgray;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    padding: 4px 8px;
     color: white;
 }
