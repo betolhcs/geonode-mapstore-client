@@ -182,11 +182,11 @@ function voltaCoordenada(coordenadas, notacao, datum) {
 }
 
 // Componente de texto de erro // COMPONENT
-function MostraErro(props) {
-    if (props.mostra) {
+const MostraErro = ({ mostraErro, texto }) => {
+    if (mostraErro) {
         return (<>
             <tr>
-                <p className="erro">{props.texto}</p>
+                <p className="erro">{texto}</p>
             </tr>
         </>);
     }
@@ -194,7 +194,7 @@ function MostraErro(props) {
 }
 
 // Componente com os campos de coordenada, muda conforme o formato de coordenada muda. // COMPONENT
-function CamposDeCoordenada(props) {
+const CamposDeCoordenada = (props) => {
     const [mostraErro, setMostraErro] = useState([false, false]);
     const [validaAgora, setValidaAgora] = useState(false); // usado para validar o campo select imediatamente
 
@@ -394,7 +394,7 @@ function CamposDeCoordenada(props) {
 }
 
 // Componente com a logica e os formularios
-function FormularioDeCoordenada(props) {
+const FormularioDeCoordenada = (props) => {
     const [notacao, setNotacao] = useState("gDecimal");
     const [coordenadas, setCoordenadas] = useState([0, 0]);
     const [datum, setDatum] = useState("projsirgas");
@@ -606,9 +606,13 @@ export const ConversorDeCoordenadaPlugin = assign(ConversorDeCoordenadaConectado
         name: "ConversorDeCoordenada",
         position: 8,
         tooltip: "Conversor de Coordenada",
-        icon: <p>X Y</p>, // melhorar posicionamento do icone
+        icon: <p>X Y</p>, 
         // message: ?
-        action: () => geraAlternaAtivacao()
+        action: geraAlternaAtivacao,
+        selector: (state) => ({ // Muda a cor do botao quando ativado
+            bsStyle: state.conversordecoordenada && state.conversordecoordenada.enabled ? "success" : "primary",
+            active: !!(state.conversordecoordenada && state.conversordecoordenada.enabled)
+        })
     }
 });
 export const reducers = {conversordecoordenada};

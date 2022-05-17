@@ -20,10 +20,11 @@ import {
 
 
 const STYLE_DO_PONTO = {
-    iconGlyph: 'map-marker'
-    // iconShape: 'square',
-    // iconColor: 'blue',
-    // iconAnchor: [0.5, 0.5],
+    // iconGlyph: 'map-marker'
+    iconShape: 'circle',
+    iconColor: 'blue',
+    iconAnchor: [0.5, 0.5],
+    scale: 0.5
 };
 
 function criaFeatureDoMarcador(position) {
