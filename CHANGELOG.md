@@ -1,5 +1,9 @@
 # Change Log
 
+## 3.2.4 [2022-05-09]
+
+<li> Wed Feb 23 14:57:10 2022 +0100: afabiani <a href=https://github.com/GeoNode/geonode-mapstore-client/commit/a709ddfcce292a2b8abdc9e16a0aec47c09dcd62 target=blank>Bump to version 3.2.4</a></li>
+
 ## 3.2.3 [2021-02-22]
 
 <li> Mon Feb 14 18:28:35 2022 +0100: stefano bovio <a href=https://github.com/GeoNode/geonode-mapstore-client/commit/1c300ce6cdf95fe0a25689333d4853e44d81ce06 target=blank>[Backport 3.2.x][Fixes #828] Flickering of map widgets while using the get feature info (#831)</a></li>
