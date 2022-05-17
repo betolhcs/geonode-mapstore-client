@@ -20,6 +20,7 @@ import conversordecoordenadaEpics from '../epics/conversordecoordenada';
 import { geraCapturaCoordenada, geraEscreveCoordenada, geraAlternaAtivacao } from "../actions/conversordecoordenada";
 import MensagemDeErro from '../components/conversordecoordenada/MensagemDeErro';
 import CamposDeCoordenada from '../components/conversordecoordenada/CamposDeCoordenada';
+import TextoDeCoordenada from "../components/conversordecoordenada/TextoDeCoordenada";
 
 // TODO
 // Resolver o problema de formatacao float/string causado por parseFloat/toFixed
@@ -292,9 +293,7 @@ const FormularioDeCoordenada = (props) => {
     return (<form onSubmit={handleSubmit}>
         <table>
             <tbody>
-                <tr>
-                    <p>Lat:{props.y} Lon:{props.x}</p>
-                </tr>
+                <TextoDeCoordenada formato={notacao} datum={datum} coordenadas={formataCoordenada(parseFloat(props.x), parseFloat(props.y), notacao, datum)}></TextoDeCoordenada>
                 <CamposDeCoordenada formato={notacao} datum={datum} coordenadas={coordenadas} setCoordenadas={setCoordenadas} mudaEstadoGlobal={props.mudaEstadoCoordenada} valida={validaCoordenada} voltaCoordenada={voltaCoordenada}/>
                 <tr>
                     <label>
