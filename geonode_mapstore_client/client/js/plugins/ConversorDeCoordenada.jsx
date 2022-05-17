@@ -326,9 +326,9 @@ const FormularioDeCoordenada = (props) => {
                     <button type="button" className="botoes-do-plugin" onClick={botaoExportar}>Exportar .kml</button>
                     <button type="submit" className="botoes-do-plugin">Ir para o Ponto</button>
                 </tr>
-                {(erroUpload[0]) ? (<tr>
-                    <MensagemDeErro mostraErro="true" texto={erroUpload[1]}/>
-                </tr>) : null}
+                <tr>
+                    <MensagemDeErro mostraErro={erroUpload[0]} texto={erroUpload[1]}/>
+                </tr>
             </tbody>
         </table>
     </form>);
