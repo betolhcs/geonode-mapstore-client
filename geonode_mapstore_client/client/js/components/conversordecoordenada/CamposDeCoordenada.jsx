@@ -201,6 +201,6 @@ const CamposDeCoordenada = (props) => {
     default:
         return <p>erro</p>;
     }
-}
+};
 
-export default CamposDeCoordenada
+export default CamposDeCoordenada;

@@ -3,7 +3,7 @@ import React from 'react';
 // Componente com as coordenadas formatadas de maneira elegante
 const TextoDeCoordenada = ({ formato, datum, coordenadas }) => {
     let texto;
-    
+
     switch (formato) {
     case "gDecimal":
         texto = `${Math.abs(coordenadas[1])}º${(coordenadas[1] >= 0) ? 'N' : 'S'} ${Math.abs(coordenadas[0])}º${(coordenadas[0] >= 0) ? 'E' : 'W'}`;
@@ -16,6 +16,8 @@ const TextoDeCoordenada = ({ formato, datum, coordenadas }) => {
         break;
     case "utm":
         texto = `UTM fuso ${coordenadas[2]} ${(coordenadas[3] === 'N') ? "Norte" : "Sul"} ${coordenadas[0]} ${coordenadas[1]}`;
+        break;
+    default:
         break;
     }
 
@@ -32,6 +34,8 @@ const TextoDeCoordenada = ({ formato, datum, coordenadas }) => {
     case "projsicad":
         texto += " datum Astro Chuá";
         break;
+    default:
+        break;
     }
 
     return (<>
@@ -39,6 +43,6 @@ const TextoDeCoordenada = ({ formato, datum, coordenadas }) => {
             <p>{texto.replaceAll(".", ",")}</p>
         </tr>
     </>);
-}
+};
 
 export default TextoDeCoordenada;

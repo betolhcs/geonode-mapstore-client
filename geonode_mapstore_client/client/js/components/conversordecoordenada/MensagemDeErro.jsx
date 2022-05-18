@@ -10,6 +10,6 @@ const MensagemDeErro = ({ mostraErro, texto }) => {
         </>);
     }
     return null;
-}
+};
 
 export default MensagemDeErro;

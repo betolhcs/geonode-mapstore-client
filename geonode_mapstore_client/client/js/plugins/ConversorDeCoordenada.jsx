@@ -293,7 +293,7 @@ const FormularioDeCoordenada = (props) => {
     return (<form onSubmit={handleSubmit}>
         <table>
             <tbody>
-                <TextoDeCoordenada formato={notacao} datum={datum} coordenadas={formataCoordenada(parseFloat(props.x), parseFloat(props.y), notacao, datum)}></TextoDeCoordenada>
+                <TextoDeCoordenada formato={notacao} datum={datum} coordenadas={formataCoordenada(parseFloat(props.x), parseFloat(props.y), notacao, datum)}/>
                 <CamposDeCoordenada formato={notacao} datum={datum} coordenadas={coordenadas} setCoordenadas={setCoordenadas} mudaEstadoGlobal={props.mudaEstadoCoordenada} valida={validaCoordenada} voltaCoordenada={voltaCoordenada}/>
                 <tr>
                     <label>
@@ -331,7 +331,7 @@ const FormularioDeCoordenada = (props) => {
             </tbody>
         </table>
     </form>);
-}
+};
 
 // Componente principal
 class ConversorDeCoordenadaComponent extends React.Component {
@@ -369,8 +369,10 @@ const ConversorDeCoordenadaConectado = connect((state) =>{
 
 // validacao de tipo dos props VER COMO FUNCIONA
 ConversorDeCoordenadaComponent.propTypes = {
-    lat: PropTypes.number,
-    lon: PropTypes.number,
+    enabled: PropTypes.bool,
+    captura: PropTypes.bool,
+    lat: PropTypes.string,
+    lon: PropTypes.string,
     vaiProPonto: PropTypes.func, // centraliza no ponto
     escondeOuMostra: PropTypes.func,
     habilitaCapturaDePonto: PropTypes.func, // ativa a captura do ponto direto do mapa
@@ -385,7 +387,7 @@ export const ConversorDeCoordenadaPlugin = assign(ConversorDeCoordenadaConectado
         name: "ConversorDeCoordenada",
         position: 8,
         tooltip: "Conversor de Coordenada",
-        icon: <p>X Y</p>, 
+        icon: <p>X Y</p>,
         // message: ?
         action: geraAlternaAtivacao,
         selector: (state) => ({ // Muda a cor do botao quando ativado
