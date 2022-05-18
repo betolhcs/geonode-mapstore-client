@@ -9,8 +9,8 @@ import {
 
 const defaultState = {
     enabled: false,
-    x: 0,
-    y: 0,
+    x: "0.000000",
+    y: "0.000000",
     datum: "EPSG:4326",
     capturarcoordenada: false
 };
@@ -44,12 +44,11 @@ export default function(state = defaultState, action) { // colocar default state
         return {
             ...state,
             enabled: action.ativado,
-            marcado: false
         };
     case ALTERNA_ATIVACAO:
         return {
             ...state,
-            enabled: !state.enabled
+            enabled: !state.enabled,
         };
     case MUDA_DATUM:
         return {

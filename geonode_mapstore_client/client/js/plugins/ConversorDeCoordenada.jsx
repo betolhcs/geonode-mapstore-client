@@ -348,13 +348,11 @@ class ConversorDeCoordenadaComponent extends React.Component {
 
 // Conecta o componente principal com o estado geral da aplicação e pega as variaveis que serão necessárias.
 const ConversorDeCoordenadaConectado = connect((state) =>{
-    var aux1 = get(state, 'conversordecoordenada.y');
-    var aux2 = get(state, 'conversordecoordenada.x');
     return {
         enabled: get(state, 'conversordecoordenada.enabled'),
         captura: get(state, 'conversordecoordenada.capturarcoordenada'),
-        lat: (aux1 === undefined) ? 0 : aux1,
-        lon: (aux2 === undefined) ? 0 : aux2
+        lat: get(state, 'conversordecoordenada.y'),
+        lon: get(state, 'conversordecoordenada.x')
     };
 },
 {
@@ -388,7 +386,7 @@ export const ConversorDeCoordenadaPlugin = assign(ConversorDeCoordenadaConectado
         position: 8,
         tooltip: "Conversor de Coordenada",
         icon: <p>X Y</p>,
-        // message: ?
+        // message: ? Coisa dos locales/traducao
         action: geraAlternaAtivacao,
         selector: (state) => ({ // Muda a cor do botao quando ativado
             bsStyle: state.conversordecoordenada && state.conversordecoordenada.enabled ? "success" : "primary",
