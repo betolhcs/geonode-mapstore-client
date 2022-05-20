@@ -26,15 +26,15 @@ class LinksExternosComponent extends React.Component {
         var nokiaherelink = `https://wego.here.com/?map=${this.props.y},${this.props.x},${this.props.zoom},satelite`;
         // var planetexplorerlink = `https://www.planet.com/`; // Precisa de Autenticacao?
         var foursquarelink = `https://foursquare.com/explore?mode=url&amp;ne=${this.props.ne[1]}%2C${this.props.ne[0]}&amp;sw=${this.props.sw[1]}%2C${this.props.sw[0]}`;
-        var linklocal = window.location.href;
+        var linklocal = window.location.protocol + "//" + window.location.host + "/maps/" + this.props.id + "/view";
 
         // html do componente
         return (<div style={linksbar}>
             <table>
                 <tbody>
-                    <tr >
+                    {(this.props.id !== null) ? (<tr >
                         <td colSpan={6}><a href={linklocal} target="_blank" style={{fontSize: "18px"}}>Link para essa página</a></td>
-                    </tr>
+                    </tr>) : null}
                     <tr >
                         <td colSpan={6}> Link externos: </td>
                     </tr>
