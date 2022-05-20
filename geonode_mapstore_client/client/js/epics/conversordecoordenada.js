@@ -1,9 +1,15 @@
 import Rx from 'rxjs';
 
 import { CLICK_ON_MAP } from '@mapstore/framework/actions/map';
-import { SET_CONTROL_PROPERTY } from '@mapstore/framework/actions/controls';
+import { SET_CONTROL_PROPERTY, setControlProperty } from '@mapstore/framework/actions/controls';
 import { closeFeatureGrid } from '@mapstore/framework/actions/featuregrid';
-import { toggleMapInfoState, changeMapInfoState, purgeMapInfoResults, hideMapinfoMarker } from '@mapstore/framework/actions/mapInfo';
+import {
+    toggleMapInfoState,
+    changeMapInfoState,
+    purgeMapInfoResults,
+    hideMapinfoMarker,
+    TOGGLE_MAPINFO_STATE
+} from '@mapstore/framework/actions/mapInfo';
 import uuidv1 from 'uuid/v1';
 import { addLayer, removeLayer } from "@mapstore/framework/actions/layers";
 
@@ -11,8 +17,6 @@ import {
     geraPassaCoordenada,
     geraMoveMarcador,
     geraDefineAtivacao,
-    PASSA_COORDENADA,
-    CAPTURA_COORDENADA,
     MOVE_MARCADOR,
     ALTERNA_ATIVACAO,
     ESCREVE_COORDENADA
@@ -67,13 +71,6 @@ export const pegarCoordenadaEpic = (action$, store) =>
             );
         });
 
-// Limpa o marcador antigo, e prepara algumas coisas pra captura de coordenada TALVEZ SEJA EXTINTO
-export const desativaComportamentoDoIndentify = (action$) =>
-    action$.ofType(CAPTURA_COORDENADA)
-        .switchMap(() => {
-            return Rx.Observable.of(changeMapInfoState(false));
-        });
-
 // Move o marcador de um ponto ao outro.
 export const moveMarcadorEpic = (action$) =>
     action$.ofType(MOVE_MARCADOR)
@@ -95,7 +92,7 @@ export const fechaPluginQuandoMeasureAbreEpic = (action$) =>
     action$.ofType(SET_CONTROL_PROPERTY)
         .filter((action) => action.control === "measure" && action.value)
         .switchMap(() => {
-            return Rx.Observable.of(geraDefineAtivacao(false), removeLayer("ConversorDeCoordenada"));
+            return Rx.Observable.of(geraDefineAtivacao(false), removeLayer("ConversorDeCoordenada"), changeMapInfoState(true));
         });
 
 // funcao que fecharia os outros plugins ao abrir o conversor e remove os marcadores caso esteja fechando o plugin
@@ -103,9 +100,13 @@ export const configuraAtivaDesativaEpic = (action$, store) =>
     action$.ofType(ALTERNA_ATIVACAO)
         .switchMap(() => {
             if (store.getState().conversordecoordenada.enabled) {
-                return Rx.Observable.of(closeFeatureGrid(), purgeMapInfoResults(), hideMapinfoMarker()); // DAR UM JEITO DE FECHAR O MEASURE
+                return Rx.Observable.of(closeFeatureGrid(),
+                    purgeMapInfoResults(),
+                    hideMapinfoMarker(),
+                    changeMapInfoState(false),
+                    setControlProperty("measure", "enabled", false));
             }
-            return Rx.Observable.of(removeLayer("ConversorDeCoordenada"));
+            return Rx.Observable.of(removeLayer("ConversorDeCoordenada"), toggleMapInfoState());
         });
 
 // move o marcador pra coordenada que foi inserida no formulario de input
@@ -115,20 +116,19 @@ export const atualizaMarcadorComCoordenadaEpic = (action$) =>
             return Rx.Observable.of(geraMoveMarcador(parseFloat(action.x), parseFloat(action.y)));
         });
 
-// Reativa o comportamento padrao de clique no mapa depois da captura
-export const reativaComportamentoDoIdentifyEpic = (action$, store) =>
-    action$.ofType(PASSA_COORDENADA)
-        .filter(() => store.getState().mapInfo.enabled === false)
+// fecha o conversor de coordenada quando abre o plugin do identify
+export const fechaPluginQuandoIdentifyAbreEpic = (action$, store) =>
+    action$.ofType(TOGGLE_MAPINFO_STATE)
+        .filter(() => store.getState().mapInfo.enabled === true && store.getState().conversordecoordenada.enabled === true)
         .switchMap(() => {
-            return Rx.Observable.of(toggleMapInfoState()).delay(1); // delay necessario para que a captura seja feita antes da reativacao
+            return Rx.Observable.of(geraDefineAtivacao(false), removeLayer("ConversorDeCoordenada"));
         });
 
 export default {
     configuraAtivaDesativaEpic,
     moveMarcadorEpic,
     atualizaMarcadorComCoordenadaEpic,
-    desativaComportamentoDoIndentify,
     pegarCoordenadaEpic,
     fechaPluginQuandoMeasureAbreEpic,
-    reativaComportamentoDoIdentifyEpic
+    fechaPluginQuandoIdentifyAbreEpic
 };

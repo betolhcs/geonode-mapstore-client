@@ -43,12 +43,12 @@ export default function(state = defaultState, action) { // colocar default state
     case DEFINE_ATIVACAO:
         return {
             ...state,
-            enabled: action.ativado,
+            enabled: action.ativado
         };
     case ALTERNA_ATIVACAO:
         return {
             ...state,
-            enabled: !state.enabled,
+            enabled: !state.enabled
         };
     case MUDA_DATUM:
         return {
