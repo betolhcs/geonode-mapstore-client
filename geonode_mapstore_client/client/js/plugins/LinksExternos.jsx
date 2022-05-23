@@ -1,8 +1,8 @@
 import React from 'react';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import {get} from 'lodash';
-import {toLonLat} from 'ol/proj';
+import { get } from 'lodash';
+import { toLonLat } from 'ol/proj';
 import { mapInfoSelector } from '@mapstore/framework/selectors/map';
 
 class LinksExternosComponent extends React.Component {
@@ -15,6 +15,7 @@ class LinksExternosComponent extends React.Component {
         id: PropTypes.number
     };
 
+    // Gera todos os links externos nas coordenadas e zoom certos
     render() {
         const linksbar = {position: "absolute", bottom: "60px", right: "100px", zIndex: 1000, backgroundColor: "white", opacity: 0.8, borderRadius: "8px", padding: "10px"};
         const image = {display: "inline", margin: "2 0px", height: "24px", width: "24px", opacity: 1};
@@ -27,6 +28,7 @@ class LinksExternosComponent extends React.Component {
         // var planetexplorerlink = `https://www.planet.com/`; // Precisa de Autenticacao?
         var foursquarelink = `https://foursquare.com/explore?mode=url&amp;ne=${this.props.ne[1]}%2C${this.props.ne[0]}&amp;sw=${this.props.sw[1]}%2C${this.props.sw[0]}`;
         var linklocal = window.location.protocol + "//" + window.location.host + "/maps/" + this.props.id + "/view";
+        linklocal += "?center=" + this.props.x + "," + this.props.y + "&zoom=" + this.props.zoom;
 
         // html do componente
         return (<div style={linksbar}>
