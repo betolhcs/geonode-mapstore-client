@@ -986,6 +986,9 @@
                 "name": "ConversorDeCoordenada"
             },
             {
+                "name": "LinkExpandido"
+            },
+            {
                 "name": "Cookie"
             },
             {
@@ -1807,6 +1810,9 @@
             },
             {
                 "name": "ConversorDeCoordenada"
+            },
+            {
+                "name": "LinkExpandido"
             },
             {
                 "name": "Cookie"
