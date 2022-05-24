@@ -1,8 +1,20 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 // Componente com as coordenadas formatadas de maneira elegante
 const TextoDeCoordenada = ({ formato, datum, coordenadas }) => {
+    const [mostraTextoCopia, setMostraTextoCopia] = useState(false);
     let texto;
+
+    useEffect(() => {
+        setMostraTextoCopia(false);
+    }, [formato, datum, coordenadas]);
+
+
+    const handleCopiar = (event) => {
+        event.preventDefault();
+        window.navigator.clipboard.writeText(texto);
+        setMostraTextoCopia(true);
+    };
 
     switch (formato) {
     case "gDecimal":
@@ -38,9 +50,15 @@ const TextoDeCoordenada = ({ formato, datum, coordenadas }) => {
         break;
     }
 
+    texto = texto.replaceAll(".", ",");
+
     return (<>
         <tr>
-            <p>{texto.replaceAll(".", ",")}</p>
+            <p style={{fontSize: "16px"}}>{texto}</p>
+            {(mostraTextoCopia) ? (<p style={{color: "blue"}}> Texto copiado.</p>) : null}
+            <div style={{marginBottom: "4px"}}>
+                <button type="button" className="botoes-do-plugin" onClick={handleCopiar}>Copiar texto</button>
+            </div>
         </tr>
     </>);
 };
