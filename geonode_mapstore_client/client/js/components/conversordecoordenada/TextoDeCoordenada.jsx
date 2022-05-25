@@ -3,13 +3,17 @@ import React, { useState } from 'react';
 // Componente com as coordenadas formatadas de maneira elegante
 const TextoDeCoordenada = ({ formato, datum, coordenadas }) => {
     const [mostraTextoCopia, setMostraTextoCopia] = useState(false);
+
+    const botaoDesabilitado = !window.isSecureContext;
+    const tooltipDesabilitado = "Funcionalidade disponível apenas para conexões seguras (HTTPS)";
+
     let texto;
 
     const handleCopiar = (event) => {
         event.preventDefault();
         window.navigator.clipboard.writeText(texto);
         setMostraTextoCopia(true);
-        setTimeout(() => setMostraTextoCopia(false), 2000);
+        setTimeout(() => setMostraTextoCopia(false), 1500);
     };
 
     switch (formato) {
@@ -53,7 +57,7 @@ const TextoDeCoordenada = ({ formato, datum, coordenadas }) => {
             <p style={{fontSize: "16px"}}>{texto}</p>
             {(mostraTextoCopia) ? (<p style={{color: "blue"}}> Texto copiado.</p>) : null}
             <div style={{marginBottom: "4px"}}>
-                <button type="button" className="botoes-do-plugin" onClick={handleCopiar}>Copiar texto</button>
+                <button type="button" title={(botaoDesabilitado) ? tooltipDesabilitado : null} disabled={botaoDesabilitado} className="botoes-do-plugin" onClick={handleCopiar}>Copiar texto</button>
             </div>
         </tr>
     </>);
