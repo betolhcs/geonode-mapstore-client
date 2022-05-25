@@ -1,19 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 // Componente com as coordenadas formatadas de maneira elegante
 const TextoDeCoordenada = ({ formato, datum, coordenadas }) => {
     const [mostraTextoCopia, setMostraTextoCopia] = useState(false);
     let texto;
 
-    useEffect(() => {
-        setMostraTextoCopia(false);
-    }, [formato, datum, coordenadas]);
-
-
     const handleCopiar = (event) => {
         event.preventDefault();
         window.navigator.clipboard.writeText(texto);
         setMostraTextoCopia(true);
+        setTimeout(() => setMostraTextoCopia(false), 2000);
     };
 
     switch (formato) {
