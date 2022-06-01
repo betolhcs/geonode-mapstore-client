@@ -12,7 +12,7 @@ import { saveAs } from "file-saver";
 import { setControlProperty } from '@mapstore/framework/actions/controls';
 import { changeMapInfoState } from '@mapstore/framework/actions/mapInfo';
 import assign from 'object-assign';
-import ExifReader from 'exifreader'
+import ExifReader from 'exifreader';
 
 // Codigo desenvolvido para o plugin
 import './conversordecoordenada/style/conversordecoordenada.css';
@@ -260,12 +260,9 @@ const FormularioDeCoordenada = (props) => {
 
     // conjunto de funcoes que cuidam do upload e leitura de jpegs
     const mostraInformacaoDoJpeg = (tags) => { // 3 - lida com as informacoes lidas do arquivo
-        let x;
-        let y;
-        if(tags['gps']){
-            x = (tags['gps'].Longitude);
-            y = (tags['gps'].Latitude);
-            console.log(x,y);
+        if (tags.gps) {
+            let x = (tags.gps.Longitude);
+            let y = (tags.gps.Latitude);
             let aux = validaCoordenada([x, y], "gDecimal");
             if (aux[0] && aux[1]) {
                 props.mudaEstadoCoordenada(x, y);
@@ -275,7 +272,6 @@ const FormularioDeCoordenada = (props) => {
             setErroUploadJpeg([true, 'A imagem não contém informações de localização']);
         }
     };
-    // upload e leitura de jpeg
     const criaLeitorDeJpeg = (files, onReadEnd, onReadError) => { // 2 - cria o leitor de arquivos e inicia leitura
         if (!(window.File && window.FileReader && window.FileList && window.Blob)) {
             return -1;
@@ -290,16 +286,16 @@ const FormularioDeCoordenada = (props) => {
             return -4;
         }
         ExifReader.load(files[0], {expanded: true})
-        .then((tags) => {
-            delete tags['MakerNote'];
-            onReadEnd(tags);
-        })
-        .catch((error) => {
-            onReadError(error)
-        });
+            .then((tags) => {
+                delete tags.MakerNote;
+                onReadEnd(tags);
+            })
+            .catch((error) => {
+                onReadError(error);
+            });
         return 0;
     };
-    const lerArquivoJpeg = (files) => {
+    const lerArquivoJpeg = (files) => { // 1 - gera a leitura do arquivo e cuida de erros
         let codigoDoLeitor = criaLeitorDeJpeg(files, mostraInformacaoDoJpeg, (error) => {
             setErroUploadJpeg([true, 'Falha ao ler o arquivo. Ocorreu um erro ao ler o arquivo. ' + error]);
         });
