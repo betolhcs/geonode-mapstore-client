@@ -12,6 +12,7 @@ import { saveAs } from "file-saver";
 import { setControlProperty } from '@mapstore/framework/actions/controls';
 import { changeMapInfoState } from '@mapstore/framework/actions/mapInfo';
 import assign from 'object-assign';
+import ExifReader from 'exifreader'
 
 // Codigo desenvolvido para o plugin
 import './conversordecoordenada/style/conversordecoordenada.css';
@@ -186,38 +187,41 @@ const FormularioDeCoordenada = (props) => {
     const [notacao, setNotacao] = useState("gDecimal");
     const [coordenadas, setCoordenadas] = useState([0, 0]);
     const [datum, setDatum] = useState("projsirgas");
-    const [erroUpload, setErroUpload] = useState([false, "Erro"]);
+    const [erroUploadKml, setErroUploadKml] = useState([false, "Erro"]);
+    const [erroUploadJpeg, setErroUploadJpeg] = useState([false, "Erro"]);
 
     useEffect(() => {
         setCoordenadas(formataCoordenada(parseFloat(props.x), parseFloat(props.y), notacao, datum));
     }, [props.x, props.y]);
 
-    const uploadInput = useRef(null);
+    const kmlUploadInput = useRef(null);
+    const jpegUploadInput = useRef(null);
+
 
     // conjunto de funcoes que cuidam do upload e leitura de kml
-    const limpaFeature = (feature) => { // 1 - limpa as informacoes retiradas do arquivo
+    const limpaFeature = (feature) => { // 4 - limpa as informacoes retiradas do arquivo
         let styleParams = {image: new RegularShape({})};
         feature.setStyle(new Style(styleParams));
     };
-    const mostraInformacaoDoArquivo = (evt) => { // 2 - lida com as informacoes lidas do arquivo
+    const mostraInformacaoDoKml = (evt) => { // 3 - lida com as informacoes lidas do arquivo
         let fileContent = evt.target.result;
-        let a = new KML();
-        let featuresFile = a.readFeatures(fileContent, {
+        let OlLeitor = new KML();
+        let featuresFile = OlLeitor.readFeatures(fileContent, {
             dataProjection: 'EPSG:4326'
         });
         if (!((featuresFile.length === 1) && (featuresFile[0].getGeometry() instanceof Point))) {
-            setErroUpload([true, 'Falha ao carregar arquivo. O arquivo deve ser no formato KML e conter um unico ponto.']);
+            setErroUploadKml([true, 'Falha ao carregar arquivo. O arquivo deve ser no formato KML e conter um unico ponto.']);
         } else {
             limpaFeature(featuresFile[0]);
-            let b = featuresFile[0].getGeometry().getCoordinates();
-            let c = validaCoordenada([b[0], b[1]], "gDecimal");
-            if (c[0] && c[1]) {
-                props.mudaEstadoCoordenada(b[0], b[1]);
-                props.vaiProPonto([b[0], b[1]]);
+            let aux1 = featuresFile[0].getGeometry().getCoordinates();
+            let aux2 = validaCoordenada([aux1[0], aux1[1]], "gDecimal");
+            if (aux2[0] && aux2[1]) {
+                props.mudaEstadoCoordenada(aux1[0], aux1[1]);
+                props.vaiProPonto([aux1[0], aux1[1]]);
             }
         }
     };
-    const criaLeitorDeArquivo = (files, onReadEnd, onReadError) => { // 3 - cria o leitor de arquivos e inicia leitura
+    const criaLeitorDeKml = (files, onReadEnd, onReadError) => { // 2 - cria o leitor de arquivos e inicia leitura
         let filetype = /application\/vnd\.google-earth\.kml\+xml/;
         if (!(window.File && window.FileReader && window.FileList && window.Blob)) {
             return -1;
@@ -237,26 +241,89 @@ const FormularioDeCoordenada = (props) => {
         reader.readAsText(files[0]);
         return 0;
     };
-    const lerArquivoKml = (files) => { // 4 - gera a leitura do arquivo e cuida de erros
-        let codigoDoLeitor = criaLeitorDeArquivo(files, mostraInformacaoDoArquivo, (event) => {
-            setErroUpload([true, 'Falha ao ler o arquivo. Ocorreu um erro ao ler o arquivo. Codigo de erro: ' + event.target.error.code]);
+    const lerArquivoKml = (files) => { // 1 - gera a leitura do arquivo e cuida de erros
+        let codigoDoLeitor = criaLeitorDeKml(files, mostraInformacaoDoKml, (event) => {
+            setErroUploadKml([true, 'Falha ao ler o arquivo. Ocorreu um erro ao ler o arquivo. Codigo de erro: ' + event.target.error.code]);
         });
         if (codigoDoLeitor === -1) {
-            setErroUpload([true, 'Falha ao ler arquivo. O seu browser nao é compativel com leitura de arquivos.']);
+            setErroUploadKml([true, 'Falha ao ler arquivo. O seu browser nao é compativel com leitura de arquivos.']);
         } else if (codigoDoLeitor === -2) {
-            setErroUpload([true, 'Falha ao ler arquivo. Arquivo corrompido ou inválido.']);
+            setErroUploadKml([true, 'Falha ao ler arquivo. Arquivo corrompido ou inválido.']);
         } else if (codigoDoLeitor === -3) {
-            setErroUpload([true, 'Falha ao ler arquivo. Envie somente 1 arquivo.']);
+            setErroUploadKml([true, 'Falha ao ler arquivo. Envie somente 1 arquivo.']);
         } else if (codigoDoLeitor === -4) {
-            setErroUpload([true, 'Falha ao ler arquivo. O arquivo deve ser no formato KML.']);
+            setErroUploadKml([true, 'Falha ao ler arquivo. O arquivo deve ser no formato KML.']);
         }
         return codigoDoLeitor === 0;
     };
 
 
+    // conjunto de funcoes que cuidam do upload e leitura de jpegs
+    const mostraInformacaoDoJpeg = (tags) => { // 3 - lida com as informacoes lidas do arquivo
+        let x;
+        let y;
+        if(tags['gps']){
+            x = (tags['gps'].Longitude);
+            y = (tags['gps'].Latitude);
+            console.log(x,y);
+            let aux = validaCoordenada([x, y], "gDecimal");
+            if (aux[0] && aux[1]) {
+                props.mudaEstadoCoordenada(x, y);
+                props.vaiProPonto([x, y]);
+            }
+        } else {
+            setErroUploadJpeg([true, 'A imagem não contém informações de localização']);
+        }
+    };
+    // upload e leitura de jpeg
+    const criaLeitorDeJpeg = (files, onReadEnd, onReadError) => { // 2 - cria o leitor de arquivos e inicia leitura
+        if (!(window.File && window.FileReader && window.FileList && window.Blob)) {
+            return -1;
+        }
+        if (files === undefined || files.length === 0) {
+            return -2;
+        }
+        if (files.length > 1) {
+            return -3;
+        }
+        if (files[0].type !== 'image/jpeg') {
+            return -4;
+        }
+        ExifReader.load(files[0], {expanded: true})
+        .then((tags) => {
+            delete tags['MakerNote'];
+            onReadEnd(tags);
+        })
+        .catch((error) => {
+            onReadError(error)
+        });
+        return 0;
+    };
+    const lerArquivoJpeg = (files) => {
+        let codigoDoLeitor = criaLeitorDeJpeg(files, mostraInformacaoDoJpeg, (error) => {
+            setErroUploadJpeg([true, 'Falha ao ler o arquivo. Ocorreu um erro ao ler o arquivo. ' + error]);
+        });
+        if (codigoDoLeitor === -1) {
+            setErroUploadJpeg([true, 'Falha ao ler arquivo. O seu browser nao é compativel com leitura de arquivos.']);
+        } else if (codigoDoLeitor === -2) {
+            setErroUploadJpeg([true, 'Falha ao ler arquivo. Arquivo corrompido ou inválido.']);
+        } else if (codigoDoLeitor === -3) {
+            setErroUploadJpeg([true, 'Falha ao ler arquivo. Envie somente 1 arquivo.']);
+        } else if (codigoDoLeitor === -4) {
+            setErroUploadJpeg([true, 'Falha ao ler arquivo. O arquivo deve ser no formato JPEG.']);
+        }
+        return codigoDoLeitor === 0;
+    };
+
+
+    const handleImportarJpeg = (event) => {
+        if (lerArquivoJpeg(event.target.files)) {
+            setErroUploadJpeg([false, "Erro"]);
+        }
+    };
     const handleImportarKml = (event) => {
         if (lerArquivoKml(event.target.files)) {
-            setErroUpload([false, "Erro"]);
+            setErroUploadKml([false, "Erro"]);
         }
     };
     const handleSubmit = (event) => { // centraliza no ponto
@@ -319,14 +386,20 @@ const FormularioDeCoordenada = (props) => {
                 <tr>
                     <button type="button" className={(props.captura) ? "botao-ativado" : "botoes-do-plugin"} onClick={botaoSelecionar}>Selecionar do Mapa</button>
 
-                    <button type="button" className="botoes-do-plugin" onClick={() => uploadInput.current.click()}>Importar .kml</button>
-                    <input type="file" ref={uploadInput} style={{display: 'none'}} onChange={handleImportarKml}/>
+                    <button type="button" className="botoes-do-plugin" onClick={() => jpegUploadInput.current.click()}>Localizar .jpeg</button>
+                    <input type="file" ref={jpegUploadInput} style={{display: 'none'}} onChange={handleImportarJpeg}/>
+
+                    <button type="button" className="botoes-do-plugin" onClick={() => kmlUploadInput.current.click()}>Importar .kml</button>
+                    <input type="file" ref={kmlUploadInput} style={{display: 'none'}} onChange={handleImportarKml}/>
 
                     <button type="button" className="botoes-do-plugin" onClick={botaoExportar}>Exportar .kml</button>
                     <button type="submit" className="botoes-do-plugin">Ir para o Ponto</button>
                 </tr>
                 <tr>
-                    <MensagemDeErro mostraErro={erroUpload[0]} texto={erroUpload[1]}/>
+                    <MensagemDeErro mostraErro={erroUploadKml[0]} texto={erroUploadKml[1]}/>
+                </tr>
+                <tr>
+                    <MensagemDeErro mostraErro={erroUploadJpeg[0]} texto={erroUploadJpeg[1]}/>
                 </tr>
             </tbody>
         </table>
