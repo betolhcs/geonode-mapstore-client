@@ -983,6 +983,9 @@
                 "name": "LinksExternos"
             },
             {
+                "name": "RelatorioDeBug"
+            },
+            {
                 "name": "ConversorDeCoordenada"
             },
             {
@@ -1809,6 +1812,9 @@
                 "name": "LinksExternos"
             },
             {
+                "name": "RelatorioDeBug"
+            },
+            {
                 "name": "ConversorDeCoordenada"
             },
             {
@@ -2092,6 +2098,9 @@
             },
             {
                 "name": "LinksExternos"
+            },
+            {
+                "name": "RelatorioDeBug"
             },
             {
                 "name": "Cookie"

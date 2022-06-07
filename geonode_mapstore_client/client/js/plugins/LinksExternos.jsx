@@ -31,7 +31,7 @@ class LinksExternosComponent extends React.Component {
         linklocal += "?center=" + this.props.x + "," + this.props.y + "&zoom=" + this.props.zoom;
 
         // html do componente
-        return (<div className='barra-de-links'>
+        return (<div className="barra-de-links">
             <table>
                 <tbody>
                     {(this.props.id !== null) ? (<tr >
@@ -43,42 +43,42 @@ class LinksExternosComponent extends React.Component {
                     <tr >
                         <td>
                             <a href={wikimapialink} target="_blank" >
-                                <img src="../../static/mapstore/img/LinksExternosPlugin/wikimapia.png" className='imagem'></img>
+                                <img src="../../static/mapstore/img/LinksExternosPlugin/wikimapia.png" className="imagem"></img>
                             </a>
                         </td>
                         <td>
                             <a href={googlemapslink} target="_blank" >
-                                <img src="../../static/mapstore/img/LinksExternosPlugin/googlemaps.png" className='imagem'></img>
+                                <img src="../../static/mapstore/img/LinksExternosPlugin/googlemaps.png" className="imagem"></img>
                             </a>
                         </td>
                         <td>
                             <a href={openstreetmaplink} target="_blank" >
-                                <img src="../../static/mapstore/img/LinksExternosPlugin/openstreetmap.svg" className='imagem'></img>
+                                <img src="../../static/mapstore/img/LinksExternosPlugin/openstreetmap.svg" className="imagem"></img>
                             </a>
                         </td>
                         <td>
                             <a href={wazelink} target="_blank" >
-                                <img src="../../static/mapstore/img/LinksExternosPlugin/waze.png" className='imagem'></img>
+                                <img src="../../static/mapstore/img/LinksExternosPlugin/waze.png" className="imagem"></img>
                             </a>
                         </td>
                         <td>
                             <a href={binglink} target="_blank" >
-                                <img src="../../static/mapstore/img/LinksExternosPlugin//bing.png" className='imagem'></img>
+                                <img src="../../static/mapstore/img/LinksExternosPlugin//bing.png" className="imagem"></img>
                             </a>
                         </td>
                         <td>
                             <a href={nokiaherelink} target="_blank" >
-                                <img src="../../static/mapstore/img/LinksExternosPlugin/nokiahere.png" className='imagem'></img>
+                                <img src="../../static/mapstore/img/LinksExternosPlugin/nokiahere.png" className="imagem"></img>
                             </a>
                         </td>
                         {/* <td>
                             <a href={planetexplorerlink} target="_blank" >
-                                <img src="../../static/mapstore/img/LinksExternosPlugin/planetexplorer.svg" className='imagem'></img>
+                                <img src="../../static/mapstore/img/LinksExternosPlugin/planetexplorer.svg" className="imagem"></img>
                             </a>
                         </td> */}
                         <td>
                             <a href={foursquarelink} target="_blank" >
-                                <img src="../../static/mapstore/img/LinksExternosPlugin/foursquare.png" className='imagem'></img>
+                                <img src="../../static/mapstore/img/LinksExternosPlugin/foursquare.png" className="imagem"></img>
                             </a>
                         </td>
                     </tr>
