@@ -1,9 +1,58 @@
-.aaah{
+.div-minimo{
     position: absolute;
-    top: 100px;
-    left: 100px;
+    top: 10px;
+    right: 570px;
     z-index: 1000;
     background-color: rgba(255, 255, 255, 0.75);
-    border-radius: 8px;
+    border-radius: 40%;
+}
+
+.div-grande{
+    position: absolute;
+    top: 10px;
+    right: 570px;
+    z-index: 1000;
+    background-color: rgba(255, 255, 255, 1);
     padding: 10px;
+    border-radius: 8px;
+    /* border-radius: 25%; */
+}
+
+.fechar {
+    position: absolute;
+    right: 10px;
+    background-color: lightgray;
+    opacity: 0.8; 
+    border: none;
+    color: black;
+    font-size: 14px;
+    padding: 4px 8px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    transition-duration: 0.1s;
+}
+
+.fechar:hover{
+    background-color: red; /* Green */
+    opacity: 0.8;
+    color: white;
+}
+
+.botao-iniciar{
+    display: block;
+    background-color: white;
+    border: 1px solid white;
+    border-radius: 40%;
+}
+
+.imagem-bug{
+    height: 32px;
+    width: 32px;
+}
+
+.formulario-de-bug{
+    resize: none;
+    width: 600px;
+    height: 600px;
 }
