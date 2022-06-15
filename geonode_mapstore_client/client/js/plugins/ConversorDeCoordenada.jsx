@@ -389,7 +389,7 @@ const FormularioDeCoordenada = (props) => {
                     <input type="file" ref={kmlUploadInput} style={{display: 'none'}} onChange={handleImportarKml}/>
 
                     <button type="button" className="botoes-do-plugin" onClick={botaoExportar}>Exportar .kml</button>
-                    <button type="submit" className="botoes-do-plugin">Ir para o Ponto</button>
+                    <button type="submit" className="botoes-do-plugin">Centralizar ponto</button>
                 </tr>
                 <tr>
                     <MensagemDeErro mostraErro={erroUploadKml[0]} texto={erroUploadKml[1]}/>

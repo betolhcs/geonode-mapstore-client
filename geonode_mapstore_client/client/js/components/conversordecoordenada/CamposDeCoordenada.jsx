@@ -34,7 +34,7 @@ const CamposDeCoordenada = (props) => {
             <tr>
                 <label>
                     Lat:
-                    <input
+                    <input className="forms-de-coordenada"
                         type="text"
                         value={props.coordenadas[1]}
                         onChange={event => props.setCoordenadas(props.coordenadas.map((a, i) => (i === 1) ? event.target.value : a))}
@@ -46,7 +46,7 @@ const CamposDeCoordenada = (props) => {
             <tr>
                 <label>
                     Lon:
-                    <input
+                    <input className="forms-de-coordenada"
                         type="text"
                         value={props.coordenadas[0]}
                         onChange={event => props.setCoordenadas(props.coordenadas.map((a, i) => (i === 0) ? event.target.value : a))}
@@ -60,21 +60,21 @@ const CamposDeCoordenada = (props) => {
             <tr>
                 <label>
                     Lat:
-                    <input
+                    <input className="forms-de-coordenada"
                         type="text"
                         value={props.coordenadas[3]}
                         onChange={event => props.setCoordenadas(props.coordenadas.map((a, i) => (i === 3) ? event.target.value : a))}
                         onBlur={validaEMuda}
                         maxLength={3}
                     /> º
-                    <input
+                    <input className="forms-de-coordenada"
                         type="text"
                         value={props.coordenadas[4]}
                         onChange={event => props.setCoordenadas(props.coordenadas.map((a, i) => (i === 4) ? event.target.value : a))}
                         onBlur={validaEMuda}
                         maxLength={2}
                     /> '
-                    <input
+                    <input className="forms-de-coordenada"
                         type="text"
                         value={props.coordenadas[5]}
                         onChange={event => props.setCoordenadas(props.coordenadas.map((a, i) => (i === 5) ? event.target.value : a))}
@@ -86,21 +86,21 @@ const CamposDeCoordenada = (props) => {
             <tr>
                 <label>
                     Lon:
-                    <input
+                    <input className="forms-de-coordenada"
                         type="text"
                         value={props.coordenadas[0]}
                         onChange={event => props.setCoordenadas(props.coordenadas.map((a, i) => (i === 0) ? event.target.value : a))}
                         onBlur={validaEMuda}
                         maxLength={4}
                     /> º
-                    <input
+                    <input className="forms-de-coordenada"
                         type="text"
                         value={props.coordenadas[1]}
                         onChange={event => props.setCoordenadas(props.coordenadas.map((a, i) => (i === 1) ? event.target.value : a))}
                         onBlur={validaEMuda}
                         maxLength={2}
                     /> '
-                    <input
+                    <input className="forms-de-coordenada"
                         type="text"
                         value={props.coordenadas[2]}
                         onChange={event => props.setCoordenadas(props.coordenadas.map((a, i) => (i === 2) ? event.target.value : a))}
@@ -114,14 +114,14 @@ const CamposDeCoordenada = (props) => {
             <tr>
                 <label>
                     Lat:
-                    <input
+                    <input className="forms-de-coordenada"
                         type="text"
                         value={props.coordenadas[2]}
                         onChange={event => props.setCoordenadas(props.coordenadas.map((a, i) => (i === 2) ? event.target.value : a))}
                         onBlur={validaEMuda}
                         maxLength={3}
                     /> º
-                    <input
+                    <input className="forms-de-coordenada"
                         type="text"
                         value={props.coordenadas[3]}
                         onChange={event => props.setCoordenadas(props.coordenadas.map((a, i) => (i === 3) ? event.target.value : a))}
@@ -133,14 +133,14 @@ const CamposDeCoordenada = (props) => {
             <tr>
                 <label>
                     Lon:
-                    <input
+                    <input className="forms-de-coordenada"
                         type="text"
                         value={props.coordenadas[0]}
                         onChange={event => props.setCoordenadas(props.coordenadas.map((a, i) => (i === 0) ? event.target.value : a))}
                         onBlur={validaEMuda}
                         maxLength={4}
                     /> º
-                    <input
+                    <input className="forms-de-coordenada"
                         type="text"
                         value={props.coordenadas[1]}
                         onChange={event => props.setCoordenadas(props.coordenadas.map((a, i) => (i === 1) ? event.target.value : a))}
@@ -154,7 +154,7 @@ const CamposDeCoordenada = (props) => {
             <tr>
                 <label>
                     Lat:
-                    <input
+                    <input className="forms-de-coordenada"
                         type="text"
                         value={props.coordenadas[1]}
                         onChange={event => props.setCoordenadas(props.coordenadas.map((a, i) => (i === 1) ? event.target.value : a))}
@@ -167,7 +167,7 @@ const CamposDeCoordenada = (props) => {
             <tr>
                 <label>
                     Lon:
-                    <input
+                    <input className="forms-de-coordenada"
                         type="text"
                         value={props.coordenadas[0]}
                         onChange={event => props.setCoordenadas(props.coordenadas.map((a, i) => (i === 0) ? event.target.value : a))}
@@ -181,6 +181,7 @@ const CamposDeCoordenada = (props) => {
                 <label>
                     Fuso:
                     <input
+                        style={{ width: "5ch", marginRight: "3px"}}
                         type="text"
                         value={props.coordenadas[2]}
                         onChange={event => props.setCoordenadas(props.coordenadas.map((a, i) => (i === 2) ? event.target.value : a))}
