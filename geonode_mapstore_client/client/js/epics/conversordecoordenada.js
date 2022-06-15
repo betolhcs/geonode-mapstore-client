@@ -14,7 +14,7 @@ import uuidv1 from 'uuid/v1';
 import { addLayer, removeLayer } from "@mapstore/framework/actions/layers";
 
 import {
-    geraPassaCoordenada,
+    geraEscreveCoordenada,
     geraMoveMarcador,
     geraDefineAtivacao,
     MOVE_MARCADOR,
@@ -63,12 +63,10 @@ function criaFeatureDoMarcador(position) {
 // Checa se é pra capturar o clique no mapa, captura a coordenada e marca o mapa
 export const pegarCoordenadaEpic = (action$, store) =>
     action$.ofType(CLICK_ON_MAP)
-        .filter(() => store.getState().conversordecoordenada.capturarcoordenada === true)
+        .filter(() => store.getState().conversordecoordenada.enabled === true)
         .switchMap((action) => {
             const coordenadas = action.point?.latlng || {};
-            return Rx.Observable.of(geraPassaCoordenada(coordenadas.lng.toFixed(6), coordenadas.lat.toFixed(6)),
-                geraMoveMarcador(coordenadas.lng, coordenadas.lat)
-            );
+            return Rx.Observable.of(geraEscreveCoordenada(coordenadas.lng.toFixed(6), coordenadas.lat.toFixed(6)));
         });
 
 // Move o marcador de um ponto ao outro.

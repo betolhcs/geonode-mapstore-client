@@ -18,7 +18,7 @@ import ExifReader from 'exifreader';
 import './conversordecoordenada/style/conversordecoordenada.css';
 import conversordecoordenada from '../reducers/conversordecoordenada';
 import conversordecoordenadaEpics from '../epics/conversordecoordenada';
-import { geraCapturaCoordenada, geraEscreveCoordenada, geraAlternaAtivacao } from "../actions/conversordecoordenada";
+import { geraEscreveCoordenada, geraAlternaAtivacao } from "../actions/conversordecoordenada";
 import MensagemDeErro from '../components/conversordecoordenada/MensagemDeErro';
 import CamposDeCoordenada from '../components/conversordecoordenada/CamposDeCoordenada';
 import TextoDeCoordenada from "../components/conversordecoordenada/TextoDeCoordenada";
@@ -326,10 +326,6 @@ const FormularioDeCoordenada = (props) => {
         event.preventDefault();
         props.vaiProPonto([props.x, props.y]);
     };
-    const botaoSelecionar = (event) =>{ // seleciona ponto do mapa
-        event.preventDefault();
-        props.habilitaCapturaDePonto(true);
-    };
     const botaoExportar = (event) => { // exporta o ponto como kml
         event.preventDefault();
         let ponto = new Feature({
@@ -380,8 +376,7 @@ const FormularioDeCoordenada = (props) => {
                     </label>
                 </tr>
                 <tr>
-                    <button type="button" className={(props.captura) ? "botao-ativado" : "botoes-do-plugin"} onClick={botaoSelecionar}>Selecionar do Mapa</button>
-
+                    <button type="submit" className="botoes-do-plugin">Centralizar ponto</button>
                     <button type="button" className="botoes-do-plugin" onClick={() => jpegUploadInput.current.click()}>Localizar .jpeg</button>
                     <input type="file" ref={jpegUploadInput} style={{display: 'none'}} onChange={handleImportarJpeg}/>
 
@@ -389,7 +384,6 @@ const FormularioDeCoordenada = (props) => {
                     <input type="file" ref={kmlUploadInput} style={{display: 'none'}} onChange={handleImportarKml}/>
 
                     <button type="button" className="botoes-do-plugin" onClick={botaoExportar}>Exportar .kml</button>
-                    <button type="submit" className="botoes-do-plugin">Centralizar ponto</button>
                 </tr>
                 <tr>
                     <MensagemDeErro mostraErro={erroUploadKml[0]} texto={erroUploadKml[1]}/>
@@ -408,7 +402,7 @@ class ConversorDeCoordenadaComponent extends React.Component {
         return (this.props.enabled) ? (
             <div id="principal">
                 <button className="fechar" type="button" onClick={() => this.props.escondeOuMostra()}> X </button>
-                {(this.props.enabled) ? <FormularioDeCoordenada x={this.props.lon} y={this.props.lat} captura={this.props.captura} vaiProPonto={this.props.vaiProPonto} mudaEstadoCoordenada={this.props.mudaEstadoCoordenada} habilitaCapturaDePonto={this.props.habilitaCapturaDePonto} suprimeIdentificacaoDePonto={this.props.suprimeIdentificacaoDePonto} changeMapInfoState={this.props.changeMapInfoState}/> : null}
+                {(this.props.enabled) ? <FormularioDeCoordenada x={this.props.lon} y={this.props.lat} vaiProPonto={this.props.vaiProPonto} mudaEstadoCoordenada={this.props.mudaEstadoCoordenada} suprimeIdentificacaoDePonto={this.props.suprimeIdentificacaoDePonto} changeMapInfoState={this.props.changeMapInfoState}/> : null}
             </div>
         ) : null;
     }
@@ -419,7 +413,6 @@ class ConversorDeCoordenadaComponent extends React.Component {
 const ConversorDeCoordenadaConectado = connect((state) =>{
     return {
         enabled: get(state, 'conversordecoordenada.enabled'),
-        captura: get(state, 'conversordecoordenada.capturarcoordenada'),
         lat: get(state, 'conversordecoordenada.y'),
         lon: get(state, 'conversordecoordenada.x')
     };
@@ -427,7 +420,6 @@ const ConversorDeCoordenadaConectado = connect((state) =>{
 {
     vaiProPonto: panTo,
     mudaEstadoCoordenada: geraEscreveCoordenada,
-    habilitaCapturaDePonto: geraCapturaCoordenada,
     suprimeIdentificacaoDePonto: setControlProperty,
     changeMapInfoState: changeMapInfoState,
     escondeOuMostra: geraAlternaAtivacao
@@ -437,12 +429,10 @@ const ConversorDeCoordenadaConectado = connect((state) =>{
 // validacao de tipo dos props VER COMO FUNCIONA
 ConversorDeCoordenadaComponent.propTypes = {
     enabled: PropTypes.bool,
-    captura: PropTypes.bool,
     lat: PropTypes.string,
     lon: PropTypes.string,
     vaiProPonto: PropTypes.func, // centraliza no ponto
     escondeOuMostra: PropTypes.func,
-    habilitaCapturaDePonto: PropTypes.func, // ativa a captura do ponto direto do mapa
     suprimeIdentificacaoDePonto: PropTypes.func, // desabilita o comportamento padrao de click no mapa
     changeMapInfoState: PropTypes.func,
     mudaEstadoCoordenada: PropTypes.func // estado do plugin
