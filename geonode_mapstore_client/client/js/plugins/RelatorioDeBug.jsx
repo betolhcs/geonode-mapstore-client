@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react"; // useEffect,
 // import { Glyphicon } from 'react-bootstrap';
 import { connect } from 'react-redux';
-import { Tooltip } from 'react-bootstrap'
-import { OverlayTrigger } from 'react-bootstrap';
+import { Tooltip, OverlayTrigger } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { get } from 'lodash';
 import { mapInfoSelector } from '@mapstore/framework/selectors/map';
@@ -15,21 +14,28 @@ import './relatoriodebug/style/relatoriodebug.css';
 const PrimeiraParte = (props) => {
     const [texto, setTexto] = useState("");
     const [habilitado, setHabilitado] = useState(false);
-    const tooltipLida = useRef(false) // Guardar em alguma variavel de estado redux
+    const tooltipLida = useRef(false); // Guardar em alguma variavel de estado redux
     // INFORMACAO DE CAMADAS TA EM layers no state
     // INFORMACAO DE USUARIO TA EM security no state
+    // INFORMACAO DE LOCALIZACAO NO MAPA 
 
     const handleReport = (event) => {
         event.preventDefault();
-        console.log(props.usuario);
-        console.log(props.camadas);
-        console.log(props.camadasAtivas);
-        console.log(texto);
-        console.log(window.location.href);
+        let relatorio = {
+            usuario: props.usuario,
+            camadasCarregadas: props.camadas,
+            camadasVisiveis: props.camadasAtivas,
+            linkAtual: window.location.href,
+            descricaoDoProblema: texto,
+            centroDoMapa: props.centro,
+            zoomDoMapa: props.zoom
+        }
+        console.log(relatorio);
         html2canvas(document.body, {useCORS: true, allowTaint: true}).then(canvas => {
-            canvas.toBlob((blob) => saveAs(blob, 'screenshot.jpeg'), 'image/jpeg', 0.95) // toDataURL('image/png', 1.0);
+            canvas.toBlob((blob) => saveAs(blob, 'screenshot.jpeg'), 'image/jpeg', 0.95); // toDataURL('image/png', 1.0);
         });
-    }
+        // request
+    };
 
     return (<div className={!habilitado ? "div-minimo" : "div-grande"} data-html2canvas-ignore="true">
         <table>
@@ -39,7 +45,7 @@ const PrimeiraParte = (props) => {
                         <button className="fechar" type="button" onClick={() => setHabilitado(false)}> X </button>
                     </tr>
                     <tr>
-                        <p>Descreva o problema:</p> 
+                        <p>Descreva o problema:</p>
                     </tr>
                     <tr>
                         <textarea
@@ -51,55 +57,53 @@ const PrimeiraParte = (props) => {
                     <tr>
                         <button type="button" className="botoes-do-plugin" onClick={handleReport}>Reportar Bug</button>
                     </tr></>) : (<><tr>
-                        <OverlayTrigger overlay={(
-                            <Tooltip>
-                                Encontrou algum problema? Nos informe!
-                            </Tooltip>
-                        )} placement="bottom" defaultOverlayShown={!tooltipLida.current} delayShow={600} onExit={() => tooltipLida.current = true} >
-                            <button type="button" className="botao-iniciar" onClick={() => setHabilitado(true)}>
-                                <img className="imagem-bug" src="../../static/mapstore/img/RelatorioDeBugPlugin/bug.svg"></img>
-                            </button>
-                        </OverlayTrigger>
-                    </tr></>)
-                    }
+                    <OverlayTrigger overlay={(
+                        <Tooltip>
+                            Encontrou algum problema? Nos informe!
+                        </Tooltip>
+                    )} placement="bottom" defaultOverlayShown={!tooltipLida.current} delayShow={600} onExit={() => {tooltipLida.current = true;}} >
+                        <button type="button" className="botao-iniciar" onClick={() => setHabilitado(true)}>
+                            <img className="imagem-bug" src="../../static/mapstore/img/RelatorioDeBugPlugin/bug.svg"/>
+                        </button>
+                    </OverlayTrigger>
+                </tr></>)
+                }
             </tbody>
         </table>
     </div>);
-}
-
+};
 
 
 class RelatorioDeBugComponent extends React.Component {
     static propTypes = { // validação de dados do componente
+        usuario: PropTypes.string,
+        camadasAtivas: PropTypes.array,
+        camadas: PropTypes.array,
+        id: PropTypes.number,
         zoom: PropTypes.number,
-        x: PropTypes.number,
-        y: PropTypes.number,
-        ne: PropTypes.array,
-        sw: PropTypes.array,
-        id: PropTypes.number
+        centro: PropTypes.array
     };
 
-    // Gera todos os links externos nas coordenadas e zoom certos
     render() {
-        // html do componente
         return (<div>
-            <PrimeiraParte usuario={this.props.usuario} camadas={this.props.camadas} camadasAtivas={this.props.camadasAtivas}/>
+            <PrimeiraParte {...this.props}/>
         </div>);
     }
 }
 
 const RelatorioDeBugConectado = connect((state) => { // Conecta o componente ao estado da aplicação no formato redux store
-    var mapInfo = mapInfoSelector(state);
-    var usuario = get(state, 'security.user');
-    var camadas = get(state, 'layers.flat');
-    var camadasAtivas = camadas.filter((elemento) => elemento.visibility);
+    let mapInfo = mapInfoSelector(state);
+    let usuario = get(state, 'security.user');
+    let camadas = get(state, 'layers.flat');
 
     // console.log(state);
     return {
         usuario: usuario === null ? "Usuario não logado" : usuario.username,
         camadas: camadas,
-        camadasAtivas: camadasAtivas,
+        camadasAtivas: camadas.filter((elemento) => elemento.visibility),
         id: mapInfo.id,
+        zoom: get(state, 'map.present.zoom'),
+        centro: [get(state, 'map.present.center.x'), get(state, 'map.present.center.y')]
     };
 })(RelatorioDeBugComponent);
 

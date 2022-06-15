@@ -56,9 +56,9 @@ const TextoDeCoordenada = ({ formato, datum, coordenadas }) => {
         <tr>
             <p style={{fontSize: "16px"}}>{texto}</p>
             {(mostraTextoCopia) ? (<p style={{color: "blue"}}> Texto copiado.</p>) : null}
-            <div style={{marginBottom: "4px"}}>
-                <button type="button" disabled={botaoDesabilitado} className="botoes-do-plugin" onClick={handleCopiar}>Copiar texto</button>
-                {botaoDesabilitado ? (<p style={{color: "#666666"}}>{tooltipDesabilitado}</p>) : null}
+            <div style={{marginBottom: "7px"}}>
+                <button style={{'float': "left", marginRight: "3px"}} type="button" disabled={botaoDesabilitado} className="botoes-do-plugin" onClick={handleCopiar}>Copiar texto</button>
+                {botaoDesabilitado ? (<p style={{color: "#666666", 'float': "left", paddingTop: "5px"}}>{tooltipDesabilitado}</p>) : null}
             </div>
         </tr>
     </>);
