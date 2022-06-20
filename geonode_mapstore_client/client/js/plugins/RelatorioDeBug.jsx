@@ -17,7 +17,7 @@ const PrimeiraParte = (props) => {
     const tooltipLida = useRef(false); // Guardar em alguma variavel de estado redux
     // INFORMACAO DE CAMADAS TA EM layers no state
     // INFORMACAO DE USUARIO TA EM security no state
-    // INFORMACAO DE LOCALIZACAO NO MAPA 
+    // INFORMACAO DE LOCALIZACAO NO MAPA
 
     const handleReport = (event) => {
         event.preventDefault();
@@ -29,7 +29,7 @@ const PrimeiraParte = (props) => {
             descricaoDoProblema: texto,
             centroDoMapa: props.centro,
             zoomDoMapa: props.zoom
-        }
+        };
         console.log(relatorio);
         html2canvas(document.body, {useCORS: true, allowTaint: true}).then(canvas => {
             canvas.toBlob((blob) => saveAs(blob, 'screenshot.jpeg'), 'image/jpeg', 0.95); // toDataURL('image/png', 1.0);

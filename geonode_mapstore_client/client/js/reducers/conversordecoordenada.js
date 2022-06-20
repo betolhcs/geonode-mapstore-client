@@ -6,9 +6,9 @@ import {
 
 const defaultState = {
     enabled: false,
-    x: "0.000000",
-    y: "0.000000",
-    datum: "EPSG:4326",
+    x: "-47.883400",
+    y: "-15.793400",
+    datum: "EPSG:4326"
 };
 
 export default function(state = defaultState, action) { // colocar default state

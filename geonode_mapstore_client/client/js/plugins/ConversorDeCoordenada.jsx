@@ -13,6 +13,7 @@ import { setControlProperty } from '@mapstore/framework/actions/controls';
 import { changeMapInfoState } from '@mapstore/framework/actions/mapInfo';
 import assign from 'object-assign';
 import ExifReader from 'exifreader';
+import { Tooltip, OverlayTrigger } from 'react-bootstrap';
 
 // Codigo desenvolvido para o plugin
 import './conversordecoordenada/style/conversordecoordenada.css';
@@ -185,7 +186,7 @@ function voltaCoordenada(coordenadas, notacao, datum) {
 // Componente com a logica e os formularios
 const FormularioDeCoordenada = (props) => {
     const [notacao, setNotacao] = useState("gDecimal");
-    const [coordenadas, setCoordenadas] = useState([0, 0]);
+    const [coordenadas, setCoordenadas] = useState([props.x, props.y]);
     const [datum, setDatum] = useState("projsirgas");
     const [erroUploadKml, setErroUploadKml] = useState([false, "Erro"]);
     const [erroUploadJpeg, setErroUploadJpeg] = useState([false, "Erro"]);
@@ -400,10 +401,16 @@ const FormularioDeCoordenada = (props) => {
 class ConversorDeCoordenadaComponent extends React.Component {
     render() {
         return (this.props.enabled) ? (
-            <div id="principal">
-                <button className="fechar" type="button" onClick={() => this.props.escondeOuMostra()}> X </button>
-                {(this.props.enabled) ? <FormularioDeCoordenada x={this.props.lon} y={this.props.lat} vaiProPonto={this.props.vaiProPonto} mudaEstadoCoordenada={this.props.mudaEstadoCoordenada} suprimeIdentificacaoDePonto={this.props.suprimeIdentificacaoDePonto} changeMapInfoState={this.props.changeMapInfoState}/> : null}
-            </div>
+            <OverlayTrigger overlay={(
+                <Tooltip>
+                    Selecione do mapa ou digite a coordenada.
+                </Tooltip>
+            )} placement="top" defaultOverlayShown="true" delayShow={600}>
+                <div id="principal">
+                    <button className="fechar" type="button" onClick={() => this.props.escondeOuMostra()}> X </button>
+                    {(this.props.enabled) ? <FormularioDeCoordenada x={this.props.lon} y={this.props.lat} vaiProPonto={this.props.vaiProPonto} mudaEstadoCoordenada={this.props.mudaEstadoCoordenada} suprimeIdentificacaoDePonto={this.props.suprimeIdentificacaoDePonto} changeMapInfoState={this.props.changeMapInfoState}/> : null}
+                </div>
+            </OverlayTrigger>
         ) : null;
     }
 }
@@ -426,7 +433,7 @@ const ConversorDeCoordenadaConectado = connect((state) =>{
 })(ConversorDeCoordenadaComponent);
 
 
-// validacao de tipo dos props VER COMO FUNCIONA
+// validacao de tipo dos props
 ConversorDeCoordenadaComponent.propTypes = {
     enabled: PropTypes.bool,
     lat: PropTypes.string,
