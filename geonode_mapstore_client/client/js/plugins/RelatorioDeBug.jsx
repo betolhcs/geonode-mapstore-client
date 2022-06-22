@@ -6,7 +6,8 @@ import PropTypes from 'prop-types';
 import { get } from 'lodash';
 import { mapInfoSelector } from '@mapstore/framework/selectors/map';
 import html2canvas from 'html2canvas';
-import { saveAs } from "file-saver";
+import { saveAs } from 'file-saver';
+import Draggable from 'react-draggable';
 
 import './relatoriodebug/style/relatoriodebug.css';
 
@@ -22,6 +23,7 @@ const PrimeiraParte = (props) => {
     const handleReport = (event) => {
         event.preventDefault();
         let relatorio = {
+            idDoMapa: props.id,
             usuario: props.usuario,
             camadasCarregadas: props.camadas,
             camadasVisiveis: props.camadasAtivas,
@@ -30,8 +32,8 @@ const PrimeiraParte = (props) => {
             centroDoMapa: props.centro,
             zoomDoMapa: props.zoom
         };
-        console.log(relatorio);
-        html2canvas(document.body, {useCORS: true, allowTaint: true}).then(canvas => {
+        // console.log(relatorio);
+        html2canvas(document.body, { useCORS: true }).then(canvas => {
             canvas.toBlob((blob) => saveAs(blob, 'screenshot.jpeg'), 'image/jpeg', 0.95); // toDataURL('image/png', 1.0);
         });
         // request
@@ -63,7 +65,7 @@ const PrimeiraParte = (props) => {
                         </Tooltip>
                     )} placement="bottom" defaultOverlayShown={!tooltipLida.current} delayShow={600} onExit={() => {tooltipLida.current = true;}} >
                         <button type="button" className="botao-iniciar" onClick={() => setHabilitado(true)}>
-                            <img className="imagem-bug" src="../../static/mapstore/img/RelatorioDeBugPlugin/bug.svg"/>
+                            <img className="imagem-bug" src="../../static/mapstore/img/RelatorioDeBugPlugin/bug.svg" draggable="false"/>
                         </button>
                     </OverlayTrigger>
                 </tr></>)
@@ -85,9 +87,13 @@ class RelatorioDeBugComponent extends React.Component {
     };
 
     render() {
-        return (<div>
-            <PrimeiraParte {...this.props}/>
-        </div>);
+        return (
+            <Draggable>
+                <div>
+                    <PrimeiraParte {...this.props}/>
+                </div>
+            </Draggable>
+        );
     }
 }
 
@@ -99,11 +105,11 @@ const RelatorioDeBugConectado = connect((state) => { // Conecta o componente ao 
     // console.log(state);
     return {
         usuario: usuario === null ? "Usuario não logado" : usuario.username,
-        camadas: camadas,
-        camadasAtivas: camadas.filter((elemento) => elemento.visibility),
-        id: mapInfo.id,
-        zoom: get(state, 'map.present.zoom'),
-        centro: [get(state, 'map.present.center.x'), get(state, 'map.present.center.y')]
+        camadas: camadas === undefined ? null : camadas,
+        camadasAtivas: camadas === undefined ? null : camadas.filter((elemento) => elemento.visibility),
+        id: camadas === undefined ? null : mapInfo.id,
+        zoom: camadas === undefined ? null : get(state, 'map.present.zoom'),
+        centro: camadas === undefined ? null : [get(state, 'map.present.center.x'), get(state, 'map.present.center.y')]
     };
 })(RelatorioDeBugComponent);
 
