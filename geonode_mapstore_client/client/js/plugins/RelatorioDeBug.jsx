@@ -32,7 +32,7 @@ const PrimeiraParte = (props) => {
             centroDoMapa: props.centro,
             zoomDoMapa: props.zoom
         };
-        // console.log(relatorio);
+        console.log(relatorio);
         html2canvas(document.body, { useCORS: true }).then(canvas => {
             canvas.toBlob((blob) => saveAs(blob, 'screenshot.jpeg'), 'image/jpeg', 0.95); // toDataURL('image/png', 1.0);
         });
