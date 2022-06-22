@@ -377,14 +377,14 @@ const FormularioDeCoordenada = (props) => {
                     </label>
                 </tr>
                 <tr>
-                    <button type="submit" className="botoes-do-plugin">Centralizar ponto</button>
+                    <button type="submit" className="botoes-do-plugin">Centralizar coordenada</button>
                     <button type="button" className="botoes-do-plugin" onClick={() => jpegUploadInput.current.click()}>Localizar .jpeg</button>
                     <input type="file" ref={jpegUploadInput} style={{display: 'none'}} onChange={handleImportarJpeg}/>
 
-                    <button type="button" className="botoes-do-plugin" onClick={() => kmlUploadInput.current.click()}>Importar .kml</button>
+                    <button type="button" className="botoes-do-plugin" onClick={() => kmlUploadInput.current.click()}>Abrir .kml</button>
                     <input type="file" ref={kmlUploadInput} style={{display: 'none'}} onChange={handleImportarKml}/>
 
-                    <button type="button" className="botoes-do-plugin" onClick={botaoExportar}>Exportar .kml</button>
+                    <button type="button" className="botoes-do-plugin" onClick={botaoExportar}>Baixar .kml</button>
                 </tr>
                 <tr>
                     <MensagemDeErro mostraErro={erroUploadKml[0]} texto={erroUploadKml[1]}/>
@@ -403,7 +403,7 @@ class ConversorDeCoordenadaComponent extends React.Component {
         return (this.props.enabled) ? (
             <OverlayTrigger overlay={(
                 <Tooltip>
-                    Selecione do mapa ou digite a coordenada.
+                    Clique no mapa ou digite a coordenada.
                 </Tooltip>
             )} placement="top" defaultOverlayShown="true" delayShow={600}>
                 <div id="principal">

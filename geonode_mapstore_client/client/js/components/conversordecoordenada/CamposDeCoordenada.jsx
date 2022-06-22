@@ -39,7 +39,7 @@ const CamposDeCoordenada = (props) => {
                         value={props.coordenadas[1]}
                         onChange={event => props.setCoordenadas(props.coordenadas.map((a, i) => (i === 1) ? event.target.value : a))}
                         onBlur={validaEMuda}
-                    /> º
+                    /> °
                 </label>
             </tr>
             <MensagemDeErro mostraErro={mostraErro[1]} texto="Latitude inválida."/>
@@ -51,7 +51,7 @@ const CamposDeCoordenada = (props) => {
                         value={props.coordenadas[0]}
                         onChange={event => props.setCoordenadas(props.coordenadas.map((a, i) => (i === 0) ? event.target.value : a))}
                         onBlur={validaEMuda}
-                    /> º
+                    /> °
                 </label>
             </tr>
             <MensagemDeErro mostraErro={mostraErro[0]} texto="Longitude inválida."/></>);
@@ -66,7 +66,7 @@ const CamposDeCoordenada = (props) => {
                         onChange={event => props.setCoordenadas(props.coordenadas.map((a, i) => (i === 3) ? event.target.value : a))}
                         onBlur={validaEMuda}
                         maxLength={3}
-                    /> º
+                    /> °
                     <input className="forms-de-coordenada"
                         type="text"
                         value={props.coordenadas[4]}
@@ -92,7 +92,7 @@ const CamposDeCoordenada = (props) => {
                         onChange={event => props.setCoordenadas(props.coordenadas.map((a, i) => (i === 0) ? event.target.value : a))}
                         onBlur={validaEMuda}
                         maxLength={4}
-                    /> º
+                    /> °
                     <input className="forms-de-coordenada"
                         type="text"
                         value={props.coordenadas[1]}
@@ -120,7 +120,7 @@ const CamposDeCoordenada = (props) => {
                         onChange={event => props.setCoordenadas(props.coordenadas.map((a, i) => (i === 2) ? event.target.value : a))}
                         onBlur={validaEMuda}
                         maxLength={3}
-                    /> º
+                    /> °
                     <input className="forms-de-coordenada"
                         type="text"
                         value={props.coordenadas[3]}
@@ -139,7 +139,7 @@ const CamposDeCoordenada = (props) => {
                         onChange={event => props.setCoordenadas(props.coordenadas.map((a, i) => (i === 0) ? event.target.value : a))}
                         onBlur={validaEMuda}
                         maxLength={4}
-                    /> º
+                    /> °
                     <input className="forms-de-coordenada"
                         type="text"
                         value={props.coordenadas[1]}
