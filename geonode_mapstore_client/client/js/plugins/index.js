@@ -269,8 +269,8 @@ export const plugins = {
     HelloWorldPlugin: require(/* webpackChunkName: 'plugins/hello-world-plugin' */ '@js/plugins/HelloWorld'),
     LinksExternosPlugin: require('@js/plugins/LinksExternos'),
     ConversorDeCoordenadaPlugin: require('@js/plugins/ConversorDeCoordenada'),
-    LinkExpandidoPlugin: require('@js/plugins/LinkExpandido'),
-    RelatorioDeBugPlugin: require('@js/plugins/RelatorioDeBug')
+    LinkExpandidoPlugin: require('@js/plugins/LinkExpandido') // ,
+    // RelatorioDeBugPlugin: require('@js/plugins/RelatorioDeBug')
 };
 
 const pluginsDefinition = {
