@@ -254,9 +254,13 @@ export const plugins = {
         'Playback',
         import(/* webpackChunkName: 'plugins/playback-plugin' */ '@mapstore/framework/plugins/Playback')
     ),
-    LocatePlugin: toLazyPlugin(
-        'Locate',
-        import(/* webpackChunkName: 'plugins/locate-plugin' */ '@mapstore/framework/plugins/Locate')
+    // LocatePlugin: toLazyPlugin(
+    //     'Locate',
+    //     import(/* webpackChunkName: 'plugins/locate-plugin' */ '@mapstore/framework/plugins/Locate')
+    // ),
+    CustomLocatePlugin: toLazyPlugin(
+        'CustomLocate',
+        import(/* webpackChunkName: 'plugins/locate-plugin' */ '@js/plugins/CustomLocate')
     ),
     TOCPlugin: toLazyPlugin(
         'TOC',
@@ -269,8 +273,8 @@ export const plugins = {
     HelloWorldPlugin: require(/* webpackChunkName: 'plugins/hello-world-plugin' */ '@js/plugins/HelloWorld'),
     LinksExternosPlugin: require('@js/plugins/LinksExternos'),
     ConversorDeCoordenadaPlugin: require('@js/plugins/ConversorDeCoordenada'),
-    LinkExpandidoPlugin: require('@js/plugins/LinkExpandido') // ,
-    // RelatorioDeBugPlugin: require('@js/plugins/RelatorioDeBug')
+    LinkExpandidoPlugin: require('@js/plugins/LinkExpandido'),
+    RelatorioDeBugPlugin: require('@js/plugins/RelatorioDeBug')
 };
 
 const pluginsDefinition = {

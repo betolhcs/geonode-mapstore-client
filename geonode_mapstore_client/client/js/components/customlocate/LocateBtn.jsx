@@ -10,11 +10,11 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import {Glyphicon, Tooltip} from 'react-bootstrap';
 
-import Message from '../../I18N/Message';
-import OverlayTrigger from '../../misc/OverlayTrigger';
-import defaultIcon from '../../misc/spinners/InlineSpinner/img/spinner.gif';
-import Button from '../../misc/Button';
-import('./css/locate.css');
+import Message from '@mapstore/framework/components/I18N/Message';
+import OverlayTrigger from '@mapstore/framework/components/misc/OverlayTrigger';
+import defaultIcon from '@mapstore/framework/components/misc/spinners/InlineSpinner/img/spinner.gif';
+import Button from '@mapstore/framework/components/misc/Button';
+import('./css/customlocate.css');
 
 let checkingGeoLocation = false;
 let geoLocationAllowed = false;
