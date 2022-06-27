@@ -21,4 +21,3 @@ export function onLocateError(error) {
         error: error
     };
 }
-

@@ -1,9 +1,10 @@
 import {useEffect, useRef} from 'react';
-import useMapTool from "@mapstore/framework/map/hooks/useMapTool";
+// import useMapTool from "@mapstore/framework/map/hooks/useMapTool";
+import useCustomLocateTool from '../../hooks/useCustomLocateTool';
 
 const LocateTool = ({map, mapType, status, messages, maxZoom, changeLocateState, onLocateError, rateControl}) => {
     const locateInstance = useRef();
-    const [loaded, Impl, error] = useMapTool(mapType, 'locate');
+    const [loaded, Impl, error] = useCustomLocateTool(mapType);
     useEffect(() => {
         if (error) {
             onLocateError(error);

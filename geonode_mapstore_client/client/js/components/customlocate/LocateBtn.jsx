@@ -16,8 +16,6 @@ import defaultIcon from '@mapstore/framework/components/misc/spinners/InlineSpin
 import Button from '@mapstore/framework/components/misc/Button';
 import('./css/customlocate.css');
 
-let checkingGeoLocation = false;
-let geoLocationAllowed = false;
 
 class LocateBtn extends React.Component {
     static propTypes = {
@@ -48,42 +46,28 @@ class LocateBtn extends React.Component {
     };
 
     onClick = () => {
-        if (this.props.locate !== 'PERMISSION_DENIED' && !checkingGeoLocation && !geoLocationAllowed) {
-            // check if we are allowed to use geolocation feature
-            checkingGeoLocation = true;
-            navigator.geolocation.getCurrentPosition(() => {
-                checkingGeoLocation = false;
-                geoLocationAllowed = true;
-                this.props.onClick("ENABLED");
-            }, (error) => {
-                checkingGeoLocation = false;
-                if (error.code === 1) {
-                    this.props.onClick("PERMISSION_DENIED");
-                }
-            });
-        } else {
-            let status;
-            switch (this.props.locate) {
-            case "FOLLOWING":
-                status = "DISABLED";
-                break;
-            case "ENABLED":
-                status = "DISABLED";
-                break;
-            case "DISABLED":
-                status = "ENABLED";
-                break;
-            case "LOCATING":
-                status = "DISABLED";
-                break;
-            case "PERMISSION_DENIED":
-                status = "PERMISSION_DENIED";
-                break;
-            default:
-                break;
-            }
-            this.props.onClick(status);
+        let status;
+        switch (this.props.locate) {
+        case "FOLLOWING":
+            status = "DISABLED";
+            break;
+        case "ENABLED":
+            status = "DISABLED";
+            break;
+        case "DISABLED":
+            status = "ENABLED";
+            break;
+        case "LOCATING":
+            status = "PERMISSION_DENIED";
+            break;
+        case "PERMISSION_DENIED":
+            status = "PERMISSION_DENIED";
+            break;
+        default:
+            break;
         }
+        this.props.onClick(status);
+        // }
     };
 
     renderButton = () => {
@@ -120,22 +104,6 @@ class LocateBtn extends React.Component {
             </OverlayTrigger>
         );
     };
-
-    // UNSAFE_componentWillMount() {
-    //     if (this.props.locate !== 'PERMISSION_DENIED' && !checkingGeoLocation && !geoLocationAllowed) {
-    //         // check if we are allowed to use geolocation feature
-    //         checkingGeoLocation = true;
-    //         navigator.geolocation.getCurrentPosition(() => {
-    //             checkingGeoLocation = false;
-    //             geoLocationAllowed = true;
-    //         }, (error) => {
-    //             checkingGeoLocation = false;
-    //             if (error.code === 1) {
-    //                 this.props.onClick("PERMISSION_DENIED");
-    //             }
-    //         });
-    //     }
-    // }
 
     render() {
         var retval;

@@ -39,13 +39,13 @@ import LocateTool from "../components/customlocate/LocateTool";
   */
 
 const CustomLocatePlugin = connect((state) => ({
-    locate: state.locate && state.locate.state || 'DISABLED',
-    tooltip: state.locate && state.locate.state === 'FOLLOWING' ? "locate.tooltipDeactivate" : "locate.tooltip"
+    locate: state.customlocate && state.customlocate.state || 'DISABLED',
+    tooltip: state.customlocate && state.customlocate.state === 'FOLLOWING' ? "locate.tooltipDeactivate" : "locate.tooltip"
 }), {
     onClick: changeLocateState
 })(LocateBtn);
 
-export default createPlugin('Locate', {
+export default createPlugin('CustomLocate', {
     component: CustomLocatePlugin,
     options: {
         disablePluginIf: "{state('mapType') === 'cesium'}"
@@ -62,7 +62,7 @@ export default createPlugin('Locate', {
         Map: {
             name: "Locate",
             Tool: connect((state) => ({
-                status: state.locate && state.locate.state,
+                status: state.customlocate && state.customlocate.state,
                 messages: state.locale && state.locale.messages ? state.locale.messages.locate : undefined
             }), {
                 changeLocateState,

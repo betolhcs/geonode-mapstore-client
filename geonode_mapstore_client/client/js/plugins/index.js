@@ -260,7 +260,7 @@ export const plugins = {
     // ),
     CustomLocatePlugin: toLazyPlugin(
         'CustomLocate',
-        import(/* webpackChunkName: 'plugins/locate-plugin' */ '@js/plugins/CustomLocate')
+        import(/* webpackChunkName: 'plugins/custom-locate-plugin' */ '@js/plugins/CustomLocate')
     ),
     TOCPlugin: toLazyPlugin(
         'TOC',

@@ -983,6 +983,9 @@
                 "name": "LinksExternos"
             },
             {
+                "name": "RelatorioDeBug"
+            },
+            {
                 "name": "ConversorDeCoordenada"
             },
             {
@@ -1809,6 +1812,9 @@
                 "name": "LinksExternos"
             },
             {
+                "name": "RelatorioDeBug"
+            },
+            {
                 "name": "ConversorDeCoordenada"
             },
             {
@@ -2011,7 +2017,7 @@
                 "name": "Swipe"
             },
             {
-                "name": "Locate"
+                "name": "CustomLocate"
             }
         ],
         "map_edit": [
@@ -2092,6 +2098,9 @@
             },
             {
                 "name": "LinksExternos"
+            },
+            {
+                "name": "RelatorioDeBug"
             },
             {
                 "name": "Cookie"
@@ -2284,7 +2293,7 @@
                 "name": "Swipe"
             },
             {
-                "name": "Locate"
+                "name": "CustomLocate"
             },
             {
                 "name": "WidgetsBuilder"
@@ -2418,6 +2427,9 @@
             },
             {
                 "name": "Share"
+            },
+            {
+                "name": "RelatorioDeBug"
             }
         ],
         "geostory_embed": [
