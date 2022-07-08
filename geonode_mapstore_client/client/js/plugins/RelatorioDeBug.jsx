@@ -5,9 +5,6 @@ import { get } from 'lodash';
 import { mapInfoSelector } from '@mapstore/framework/selectors/map';
 
 
-import './relatoriodebug/style/relatoriodebug.css';
-
-
 // O componente visual foi definido no geonode project no template (base.html) para que funcione globalmente na aplicacao.
 const DisponibilizaInformacao = (props) => {
     window.ReduxRelBug = {};
