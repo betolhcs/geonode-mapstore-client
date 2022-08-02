@@ -37,7 +37,7 @@ const RelatorioDeBugConectado = connect((state) => { // Conecta o componente ao 
     return {
         camadas: camadas === undefined ? null : camadas
             .map(camada => ({ // filtra apenas os campos usados no relatorio de bug
-                group: camada.group ?? null, 
+                group: camada.group ?? null,
                 id: camada.id ?? null,
                 loadingError: camada.loadingError ?? null,
                 previousLoadingError: camada.previousLoadingError ?? null,
