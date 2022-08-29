@@ -10,7 +10,7 @@ const DisponibilizaInformacao = (props) => {
     window.ReduxRelBug = {};
     window.ReduxRelBug.idDoMapa = props.id;
     window.ReduxRelBug.camadasCarregadas = props.camadas;
-    window.ReduxRelBug.localizacaoNoMapa = props.centro;
+    window.ReduxRelBug.posicaoNoMapa = props.centro;
     window.ReduxRelBug.zoomDoMapa = props.zoom;
     return (null);
 };

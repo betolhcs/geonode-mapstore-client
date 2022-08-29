@@ -22,6 +22,7 @@ import conversordecoordenadaEpics from '../epics/conversordecoordenada';
 import { geraEscreveCoordenada, geraAlternaAtivacao } from "../actions/conversordecoordenada";
 import MensagemDeErro from '../components/conversordecoordenada/MensagemDeErro';
 import CamposDeCoordenada from '../components/conversordecoordenada/CamposDeCoordenada';
+import DragAndDropDeArquivo from '../components/conversordecoordenada/DragAndDropDeArquivo';
 import TextoDeCoordenada from "../components/conversordecoordenada/TextoDeCoordenada";
 
 // TODO
@@ -198,7 +199,6 @@ const FormularioDeCoordenada = (props) => {
     const kmlUploadInput = useRef(null);
     const jpegUploadInput = useRef(null);
 
-
     // conjunto de funcoes que cuidam do upload e leitura de kml
     const limpaFeature = (feature) => { // 4 - limpa as informacoes retiradas do arquivo
         let styleParams = {image: new RegularShape({})};
@@ -312,8 +312,12 @@ const FormularioDeCoordenada = (props) => {
         return codigoDoLeitor === 0;
     };
 
-
-    const handleImportarJpeg = (event) => {
+    const handleImportarJpegDrag = (files) => {
+        if (lerArquivoJpeg(files)) {
+            setErroUploadJpeg([false, "Erro"]);
+        }
+    };
+    const handleImportarJpegButton = (event) => {
         if (lerArquivoJpeg(event.target.files)) {
             setErroUploadJpeg([false, "Erro"]);
         }
@@ -350,51 +354,54 @@ const FormularioDeCoordenada = (props) => {
         setCoordenadas(formataCoordenada(parseFloat(props.x), parseFloat(props.y), notacao, event.target.value));
     };
 
-    return (<form onSubmit={handleSubmit}>
-        <table>
-            <tbody>
-                <TextoDeCoordenada formato={notacao} datum={datum} coordenadas={formataCoordenada(parseFloat(props.x), parseFloat(props.y), notacao, datum)}/>
-                <CamposDeCoordenada formato={notacao} datum={datum} coordenadas={coordenadas} setCoordenadas={setCoordenadas} mudaEstadoGlobal={props.mudaEstadoCoordenada} valida={validaCoordenada} voltaCoordenada={voltaCoordenada}/>
-                <tr>
-                    <label>
-                        Notação:
-                        <select value={notacao} onChange={handleNotacao}>
-                            <option value="gMinutoSegundo">Graus, minutos, segundos</option>
-                            <option value="gDecimal">Graus decimais</option>
-                            <option value="gMinutoDecimal">Graus, minutos decimais</option>
-                            <option value="utm">UTM</option>
-                        </select>
-                    </label>
+    return (<DragAndDropDeArquivo onUpload={(files) => handleImportarJpegDrag(files)}>
+        <form onSubmit={handleSubmit}>
+            <table>
+                <tbody>
+                    <TextoDeCoordenada formato={notacao} datum={datum} coordenadas={formataCoordenada(parseFloat(props.x), parseFloat(props.y), notacao, datum)}/>
+                    <CamposDeCoordenada formato={notacao} datum={datum} coordenadas={coordenadas} setCoordenadas={setCoordenadas} mudaEstadoGlobal={props.mudaEstadoCoordenada} valida={validaCoordenada} voltaCoordenada={voltaCoordenada}/>
+                    <tr>
+                        <label>
+                            Notação:
+                            <select value={notacao} onChange={handleNotacao}>
+                                <option value="gMinutoSegundo">Graus, minutos, segundos</option>
+                                <option value="gDecimal">Graus decimais</option>
+                                <option value="gMinutoDecimal">Graus, minutos decimais</option>
+                                <option value="utm">UTM</option>
+                            </select>
+                        </label>
 
-                    <label>
-                        Datum:
-                        <select value={datum} onChange={handleDatum}>
-                            <option value="projsirgas">SIRGAS 2000 ou WGS84</option>
-                            <option value="projsad69">SAD 69</option>
-                            <option value="projcorregoalegre">Córrego Alegre</option>
-                            <option value="projsicad">Astro Chuá ou SICAD (DF)</option>
-                        </select>
-                    </label>
-                </tr>
-                <tr>
-                    <button type="submit" className="botoes-do-plugin">Centralizar coordenada</button>
-                    <button type="button" className="botoes-do-plugin" onClick={() => jpegUploadInput.current.click()}>Localizar .jpeg</button>
-                    <input type="file" ref={jpegUploadInput} style={{display: 'none'}} onChange={handleImportarJpeg}/>
+                        <label>
+                            Datum:
+                            <select value={datum} onChange={handleDatum}>
+                                <option value="projsirgas">SIRGAS 2000 ou WGS84</option>
+                                <option value="projsad69">SAD 69</option>
+                                <option value="projcorregoalegre">Córrego Alegre</option>
+                                <option value="projsicad">Astro Chuá ou SICAD (DF)</option>
+                            </select>
+                        </label>
+                    </tr>
+                    <tr>
+                        <button type="submit" className="botoes-do-plugin">Centralizar coordenada</button>
 
-                    <button type="button" className="botoes-do-plugin" onClick={() => kmlUploadInput.current.click()}>Abrir .kml</button>
-                    <input type="file" ref={kmlUploadInput} style={{display: 'none'}} onChange={handleImportarKml}/>
+                        <button type="button" className="botoes-do-plugin" onClick={() => kmlUploadInput.current.click()}>Abrir .kml</button>
+                        <input type="file" ref={kmlUploadInput} style={{display: 'none'}} onChange={handleImportarKml}/>
 
-                    <button type="button" className="botoes-do-plugin" onClick={botaoExportar}>Baixar .kml</button>
-                </tr>
-                <tr>
-                    <MensagemDeErro mostraErro={erroUploadKml[0]} texto={erroUploadKml[1]}/>
-                </tr>
-                <tr>
-                    <MensagemDeErro mostraErro={erroUploadJpeg[0]} texto={erroUploadJpeg[1]}/>
-                </tr>
-            </tbody>
-        </table>
-    </form>);
+                        <button type="button" className="botoes-do-plugin" onClick={botaoExportar}>Baixar .kml</button>
+
+                        <button type="button" className="drag-and-drop-imagem" onClick={() => jpegUploadInput.current.click()}>Arraste ou clique para localizar .jpeg</button>
+                        <input type="file" ref={jpegUploadInput} style={{display: 'none'}} onChange={handleImportarJpegButton}/>
+                    </tr>
+                    <tr>
+                        <MensagemDeErro mostraErro={erroUploadKml[0]} texto={erroUploadKml[1]}/>
+                    </tr>
+                    <tr>
+                        <MensagemDeErro mostraErro={erroUploadJpeg[0]} texto={erroUploadJpeg[1]}/>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </DragAndDropDeArquivo>);
 };
 
 // Componente principal
@@ -406,7 +413,7 @@ class ConversorDeCoordenadaComponent extends React.Component {
                     Clique no mapa ou digite a coordenada.
                 </Tooltip>
             )} placement="top" defaultOverlayShown="true" delayShow={600}>
-                <div id="principal">
+                <div className = "clearfix" id="principal">
                     <button className="fechar" type="button" onClick={() => this.props.escondeOuMostra()}> X </button>
                     {(this.props.enabled) ? <FormularioDeCoordenada x={this.props.lon} y={this.props.lat} vaiProPonto={this.props.vaiProPonto} mudaEstadoCoordenada={this.props.mudaEstadoCoordenada} suprimeIdentificacaoDePonto={this.props.suprimeIdentificacaoDePonto} changeMapInfoState={this.props.changeMapInfoState}/> : null}
                 </div>

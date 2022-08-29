@@ -1,0 +1,21 @@
+.drag-and-drop-container {
+  width: 565px;
+  min-height: 220px;
+  border: none;
+  position: relative;
+  padding: 5px;
+  z-index: 1000;
+}
+
+.drag-and-drop-hover {
+  width: 563px;
+  height: 220px;
+  border: 2px dashed #c0c0c0;
+  border-radius: 8px;
+  position: fixed;
+  padding-top: 48px;
+  text-align: center;
+  font-size: 46px;
+  background: rgba(255, 255, 255, 0.60);
+  z-index: 1100;
+}
