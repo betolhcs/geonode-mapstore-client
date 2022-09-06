@@ -413,7 +413,7 @@ class ConversorDeCoordenadaComponent extends React.Component {
                     Clique no mapa ou digite a coordenada.
                 </Tooltip>
             )} placement="top" defaultOverlayShown="true" delayShow={600}>
-                <div className = "clearfix" id="principal">
+                <div id="principal">
                     <button className="fechar" type="button" onClick={() => this.props.escondeOuMostra()}> X </button>
                     {(this.props.enabled) ? <FormularioDeCoordenada x={this.props.lon} y={this.props.lat} vaiProPonto={this.props.vaiProPonto} mudaEstadoCoordenada={this.props.mudaEstadoCoordenada} suprimeIdentificacaoDePonto={this.props.suprimeIdentificacaoDePonto} changeMapInfoState={this.props.changeMapInfoState}/> : null}
                 </div>
@@ -434,7 +434,7 @@ const ConversorDeCoordenadaConectado = connect((state) =>{
 {
     vaiProPonto: panTo,
     mudaEstadoCoordenada: geraEscreveCoordenada,
-    suprimeIdentificacaoDePonto: setControlProperty,
+    suprimeIdentificacaoDePonto: setControlProperty, // TODO: Remover?
     changeMapInfoState: changeMapInfoState,
     escondeOuMostra: geraAlternaAtivacao
 })(ConversorDeCoordenadaComponent);

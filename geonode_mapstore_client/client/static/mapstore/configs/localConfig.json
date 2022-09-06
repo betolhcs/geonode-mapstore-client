@@ -989,6 +989,9 @@
                 "name": "ConversorDeCoordenada"
             },
             {
+                "name": "BasemapTest"
+            },
+            {
                 "name": "LinkExpandido"
             },
             {
@@ -1816,6 +1819,9 @@
             },
             {
                 "name": "ConversorDeCoordenada"
+            },
+            {
+                "name": "BasemapTest"
             },
             {
                 "name": "LinkExpandido"

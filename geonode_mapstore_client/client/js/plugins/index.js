@@ -273,7 +273,8 @@ export const plugins = {
     LinksExternosPlugin: require('@js/plugins/LinksExternos'),
     ConversorDeCoordenadaPlugin: require('@js/plugins/ConversorDeCoordenada'),
     LinkExpandidoPlugin: require('@js/plugins/LinkExpandido'),
-    RelatorioDeBugPlugin: require('@js/plugins/RelatorioDeBug')
+    RelatorioDeBugPlugin: require('@js/plugins/RelatorioDeBug'),
+    BasemapTestPlugin: require('@js/plugins/BasemapTest')
 };
 
 const pluginsDefinition = {
