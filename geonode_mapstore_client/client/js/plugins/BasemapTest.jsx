@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import axios from 'axios';
+import { get } from 'lodash';
 
 // Actions usadas pelo background selector para mudar o background
 import { setCurrentBackgroundLayer } from '@mapstore/framework/actions/backgroundselector';
@@ -77,7 +78,7 @@ const PlanetSelector = (props) => {
 
 class BasemapTestComponent extends React.Component {
     render() {
-        return (<div style={{position: "absolute", bottom: "175px", left: "5px", background: "rgba(255, 255, 255, 0.75)", padding: "5px", borderRadius: "8px"}}><PlanetSelector {...this.props}/></div>);
+        return (this.props.userToken ? <div style={{position: "absolute", bottom: "175px", left: "5px", background: "rgba(255, 255, 255, 0.75)", padding: "5px", borderRadius: "8px"}}><PlanetSelector {...this.props}/></div> : null);
     }
 }
 
@@ -89,7 +90,14 @@ BasemapTestComponent.propTypes = {
     removeLayer: PropTypes.func
 };
 
-const BasemapTestConectado = connect(null, {
+const BasemapTestConectado = connect((state) =>{
+    let userObject = get(state, 'security.user');
+    return {
+        user: userObject,
+        userToken: userObject ? get(state, 'security.token') : null
+    };
+},
+{
     setCurrentBackgroundLayer,
     toggleControl,
     changeLayerProperties,
