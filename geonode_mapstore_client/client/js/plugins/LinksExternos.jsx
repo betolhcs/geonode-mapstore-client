@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { get } from 'lodash';
 import { toLonLat } from 'ol/proj';
 import { mapInfoSelector } from '@mapstore/framework/selectors/map';
+import { Tooltip, OverlayTrigger } from 'react-bootstrap';
 
 import './linksexternos/style/linksexternos.css';
 
@@ -25,17 +26,27 @@ class LinksExternosComponent extends React.Component {
         var wazelink = `https://www.waze.com/pt-BR/livemap?zoom=${this.props.zoom}&lat=${this.props.y}&lon=${this.props.x}`;
         var binglink = `https://www.bing.com/maps/default.aspx?cp=${this.props.y}~${this.props.x}&lvl=${this.props.zoom}&style=a`;
         var nokiaherelink = `https://wego.here.com/?map=${this.props.y},${this.props.x},${this.props.zoom},satelite`;
-        // var planetexplorerlink = `https://www.planet.com/`; // Precisa de Autenticacao?
-        var foursquarelink = `https://foursquare.com/explore?mode=url&amp;ne=${this.props.ne[1]}%2C${this.props.ne[0]}&amp;sw=${this.props.sw[1]}%2C${this.props.sw[0]}`;
         var linklocal = window.location.protocol + "//" + window.location.host + "/maps/" + this.props.id + "/view";
         linklocal += "?center=" + this.props.x + "," + this.props.y + "&zoom=" + this.props.zoom;
+
+        const handleCopiar = (event) => {
+            event.preventDefault();
+            window.navigator.clipboard.writeText(linklocal);
+        };
 
         // html do componente
         return (<div className="barra-de-links">
             <table>
                 <tbody>
                     {(this.props.id !== null) ? (<tr >
-                        <td colSpan={6}><a href={linklocal} target="_blank" style={{fontSize: "18px", opacity: 0.95}}>Link para essa página</a></td>
+                        <td colSpan={6}>
+                            <a href={linklocal} target="_blank" style={{fontSize: "18px", opacity: 0.95}}>Link para essa página</a>
+                            <OverlayTrigger overlay={<Tooltip>Copiar link</Tooltip>} placement="top" delayShow={350}>
+                                <button className="botao-de-copia" onClick={handleCopiar}>
+                                    <img src="../../static/mapstore/img/LinksExternosPlugin/files.svg" style={{paddingBottom: "4px"}}></img>
+                                </button>
+                            </OverlayTrigger>
+                        </td>
                     </tr>) : null}
                     <tr >
                         <td colSpan={6}> Link externos: </td>
@@ -69,16 +80,6 @@ class LinksExternosComponent extends React.Component {
                         <td>
                             <a href={nokiaherelink} target="_blank" >
                                 <img src="../../static/mapstore/img/LinksExternosPlugin/nokiahere.png" className="imagem"></img>
-                            </a>
-                        </td>
-                        {/* <td>
-                            <a href={planetexplorerlink} target="_blank" >
-                                <img src="../../static/mapstore/img/LinksExternosPlugin/planetexplorer.svg" className="imagem"></img>
-                            </a>
-                        </td> */}
-                        <td>
-                            <a href={foursquarelink} target="_blank" >
-                                <img src="../../static/mapstore/img/LinksExternosPlugin/foursquare.png" className="imagem"></img>
                             </a>
                         </td>
                     </tr>
