@@ -1,6 +1,6 @@
 export const ESCREVE_COORDENADA = 'CONVERSORDECOORDENADA:ESCREVE_COORDENADA';
-export const DEFINE_ATIVACAO = 'CONVERSORDECOORDENADA:DEFINE_ATIVACAO';
-export const ALTERNA_ATIVACAO = 'CONVERSORDECOORDENADA:ALTERNA_ATIVACAO';
+export const DEFINE_ATIVACAO_CONVERSOR = 'CONVERSORDECOORDENADA:DEFINE_ATIVACAO';
+export const ALTERNA_ATIVACAO_CONVERSOR = 'CONVERSORDECOORDENADA:ALTERNA_ATIVACAO';
 export const MOVE_MARCADOR = 'CONVERSORDECOORDENADA:MOVE_MARCADOR';
 
 
@@ -25,7 +25,7 @@ export function geraEscreveCoordenada(x, y) {
 // ativa e desativa o plugin
 export function geraDefineAtivacao(ativado) {
     return {
-        type: DEFINE_ATIVACAO,
+        type: DEFINE_ATIVACAO_CONVERSOR,
         ativado: ativado
     };
 }
@@ -33,6 +33,6 @@ export function geraDefineAtivacao(ativado) {
 // troca o estado de ativacao o plugin
 export function geraAlternaAtivacao() {
     return {
-        type: ALTERNA_ATIVACAO
+        type: ALTERNA_ATIVACAO_CONVERSOR
     };
 }

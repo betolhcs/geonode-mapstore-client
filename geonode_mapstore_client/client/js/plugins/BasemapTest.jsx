@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import axios from 'axios';
@@ -13,9 +13,7 @@ import { changeLayerProperties, addLayer, removeLayer } from "@mapstore/framewor
 const PlanetSelector = (props) => {
     const [listaDeBasemaps, setListaDeBasemaps] = useState([]);
     const [listaDeLinks, setListaDeLinks] = useState([]);
-    const [basemapSelector, setBasemapSelector] = useState("Nenhum");
-
-    const idPlanet = useRef(0); // Para conseguir fazer a mudança entre basemaps planet mantendo sempre apenas um
+    const [basemapSelector, setBasemapSelector] = useState("Adicionar uma camada");
 
     useEffect(() => {
         axios.get("http://localhost:8001/teste/planetbasemap/").then((response) => {
@@ -25,8 +23,8 @@ const PlanetSelector = (props) => {
     }, []);
 
     const adicionaBasemap = (i) => {
-        props.removeLayer("PlanetBasemap" + idPlanet.current);
-        props.addLayer({ // Estrutura padrao de basemap retirada do settings.py do geonode project
+        props.removeLayer("PlanetBasemap" + i);
+        props.addLayer({
             "source": "wmts",
             "type": "tileprovider",
             "name": listaDeBasemaps[i],
@@ -35,28 +33,15 @@ const PlanetSelector = (props) => {
             "provider": "custom",
             "id": "PlanetBasemap" + i,
             "url": listaDeLinks[i],
-            "group": "background",
-            "visibility": false
+            // "group": "background",
+            "visibility": true
         });
-        idPlanet.current = i;
-    };
-
-    const mudaBasemap = (map) => {
-        props.toggleControl.bind(null, 'backgroundSelector', null);
-        props.changeLayerProperties(map, {visibility: true});
-        props.setCurrentBackgroundLayer(map);
+        // idPlanet.current = i;
     };
 
     const handleMudaBase = (event) => {
-        if (event.target.value !== "Nenhum") {
-            setBasemapSelector(event.target.value);
-            adicionaBasemap(event.target.value);
-            mudaBasemap("PlanetBasemap" + idPlanet.current);
-        } else { // Remove planet e volta para o basemap padrao
-            setBasemapSelector("Nenhum");
-            props.removeLayer("PlanetBasemap" + idPlanet.current);
-            mudaBasemap("mapnik__0"); // basemap padrao
-        }
+        // setBasemapSelector(event.target.value);
+        adicionaBasemap(event.target.value);
     };
 
     return (<>
@@ -66,8 +51,7 @@ const PlanetSelector = (props) => {
                     <label htmlFor="planet-basemap-selector">Basemaps Planet</label>
                 </tr>
                 <tr>
-                    <select value={basemapSelector} onChange={handleMudaBase} name="planet-basemap-selector">
-                        <option value="Nenhum">Nenhum</option>
+                    <select value={"Adicionar Mosaico Planet"} onChange={handleMudaBase} name="planet-basemap-selector">
                         {listaDeBasemaps.map((titulo, i) => <option value={i}>{titulo}</option> )}
                     </select>
                 </tr>
@@ -76,16 +60,21 @@ const PlanetSelector = (props) => {
     </>);
 };
 
+const selectorStyle = {
+    position: "absolute",
+    bottom: "175px",
+    background: "rgba(255, 255, 255, 0.75)",
+    padding: "5px",
+    borderRadius: "8px"
+};
+
 class BasemapTestComponent extends React.Component {
     render() {
-        return (this.props.userToken ? <div style={{position: "absolute", bottom: "175px", left: "5px", background: "rgba(255, 255, 255, 0.75)", padding: "5px", borderRadius: "8px"}}><PlanetSelector {...this.props}/></div> : null);
+        return (this.props.userToken ? <div style={{...selectorStyle, left: this.props.layerDrawer ? "305px" : "5px"}}><PlanetSelector {...this.props}/></div> : null);
     }
 }
 
 BasemapTestComponent.propTypes = {
-    setCurrentBackgroundLayer: PropTypes.func,
-    toggleControl: PropTypes.func,
-    changeLayerProperties: PropTypes.func,
     addLayer: PropTypes.func,
     removeLayer: PropTypes.func
 };
@@ -94,13 +83,11 @@ const BasemapTestConectado = connect((state) =>{
     let userObject = get(state, 'security.user');
     return {
         user: userObject,
-        userToken: userObject ? get(state, 'security.token') : null
+        userToken: userObject ? get(state, 'security.token') : null,
+        layerDrawer: get(state, 'controls.drawer.enabled')
     };
 },
 {
-    setCurrentBackgroundLayer,
-    toggleControl,
-    changeLayerProperties,
     addLayer,
     removeLayer
 })(BasemapTestComponent);

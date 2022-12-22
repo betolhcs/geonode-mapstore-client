@@ -1,7 +1,7 @@
 import {
     ESCREVE_COORDENADA,
-    ALTERNA_ATIVACAO,
-    DEFINE_ATIVACAO
+    DEFINE_ATIVACAO_CONVERSOR,
+    ALTERNA_ATIVACAO_CONVERSOR
 } from '../actions/conversordecoordenada';
 
 const defaultState = {
@@ -19,12 +19,12 @@ export default function(state = defaultState, action) { // colocar default state
             x: action.x,
             y: action.y
         };
-    case DEFINE_ATIVACAO:
+    case DEFINE_ATIVACAO_CONVERSOR:
         return {
             ...state,
             enabled: action.ativado
         };
-    case ALTERNA_ATIVACAO:
+    case ALTERNA_ATIVACAO_CONVERSOR:
         return {
             ...state,
             enabled: !state.enabled

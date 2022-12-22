@@ -31,3 +31,7 @@
     border-radius: 8px;
     padding: 10px;
 }
+
+div.barra-de-links td {
+    border: 0px !important;
+}

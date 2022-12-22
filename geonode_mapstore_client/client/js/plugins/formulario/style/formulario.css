@@ -1,0 +1,166 @@
+#formulario {
+    position: absolute;
+    bottom: 60px;
+    left: 92px;
+    right: 320px;
+    z-index: 1000;
+    background-color: rgba(255, 255, 255, 0.75);
+    border-radius: 8px;
+    padding: 5px;
+    height: 560px;
+}
+
+.erro {
+    color: red;
+}
+
+.fechar {
+    position: absolute;
+    right: 10px;
+    background-color: lightgray;
+    opacity: 0.8;
+    border: none;
+    color: black;
+    font-size: 14px;
+    padding: 4px 8px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    transition-duration: 0.1s;
+}
+
+.fechar:hover {
+    background-color: red;
+    /* Green */
+    opacity: 0.8;
+    color: white;
+}
+
+.forms-de-coordenada {
+    width: 13ch;
+}
+
+p {
+    font-size: 90%;
+    margin: 15px 13px 20px;
+}
+
+label {
+    font-size: 90%;
+    margin-right: 0.5em;
+}
+
+input[type=text],
+input[type=number],
+input[type=tel],
+input[type=date],
+textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-top: 6px;
+    margin-bottom: 16px;
+    resize: vertical;
+    max-height: 120px;
+}
+
+input[type=submit] {
+    background-color: #2c689c;
+    color: white;
+    padding: 12px 20px;
+    border: 1px solid lightgray;
+    margin-right: 1px;
+    margin-top: 30px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: inline-block;
+}
+
+input[type=submit]:hover {
+    background-color: rgb(30, 74, 117);
+    color: white;
+}
+
+input[type=submit]:disabled {
+    border: 1px solid #999999;
+    background-color: #cccccc;
+    color: #666666;
+}
+
+select {
+    width: 100%;
+    height: 100%;
+    padding: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-top: 11px;
+    margin-bottom: 16px;
+    resize: vertical;
+}
+
+#unidade {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-top: 14px;
+    margin-bottom: 5px;
+    resize: vertical;
+}
+
+#tituloPlugin {
+    font-weight: bold;
+    margin-top: 10px;
+    text-align: center;
+    font-size: 125%;
+}
+
+.rs-picker-toggle-placeholder {
+    display: none;
+}
+
+.rs-picker-toggle-textbox {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-top: 6px;
+    margin-bottom: 16px;
+    resize: vertical;
+}
+
+.rs-picker-toggle-caret,
+.rs-icon {
+    display: none;
+}
+
+.avisoDeEnvio {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    background: white;
+    border-radius: 5px;
+    width: 230px;
+    padding: 0px;
+    height: 54px;
+    word-wrap: break-word;
+}
+
+.textoDeEnvio {
+    color: black;
+    padding: 0px;
+    margin: 2px 6px;
+}
+
+#pedido-erro {
+    color: red;
+}
+
+#pedido-sucesso {
+    color: green;
+}

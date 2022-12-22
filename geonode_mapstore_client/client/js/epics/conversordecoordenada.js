@@ -18,9 +18,10 @@ import {
     geraMoveMarcador,
     geraDefineAtivacao,
     MOVE_MARCADOR,
-    ALTERNA_ATIVACAO,
+    ALTERNA_ATIVACAO_CONVERSOR,
     ESCREVE_COORDENADA
 } from '../actions/conversordecoordenada';
+import { ALTERNA_ATIVACAO_FORMULARIO } from '../actions/formulario';
 
 
 const STYLE_DO_PONTO = {
@@ -86,7 +87,7 @@ export const moveMarcadorEpic = (action$) =>
         });
 
 // fecha o conversor de coordenada quando abre o plugin de measure
-export const fechaPluginQuandoMeasureAbreEpic = (action$) =>
+export const fechaConversorQuandoMeasureAbreEpic = (action$) =>
     action$.ofType(SET_CONTROL_PROPERTY)
         .filter((action) => action.control === "measure" && action.value)
         .switchMap(() => {
@@ -94,8 +95,8 @@ export const fechaPluginQuandoMeasureAbreEpic = (action$) =>
         });
 
 // funcao que fecharia os outros plugins ao abrir o conversor e remove os marcadores caso esteja fechando o plugin
-export const configuraAtivaDesativaEpic = (action$, store) =>
-    action$.ofType(ALTERNA_ATIVACAO)
+export const configuraAtivaDesativaConversorEpic = (action$, store) =>
+    action$.ofType(ALTERNA_ATIVACAO_CONVERSOR)
         .switchMap(() => {
             if (store.getState().conversordecoordenada.enabled) {
                 return Rx.Observable.of(closeFeatureGrid(),
@@ -115,18 +116,27 @@ export const atualizaMarcadorComCoordenadaEpic = (action$) =>
         });
 
 // fecha o conversor de coordenada quando abre o plugin do identify
-export const fechaPluginQuandoIdentifyAbreEpic = (action$, store) =>
+export const fechaConversorQuandoIdentifyAbreEpic = (action$, store) =>
     action$.ofType(TOGGLE_MAPINFO_STATE)
         .filter(() => store.getState().mapInfo.enabled === true && store.getState().conversordecoordenada.enabled === true)
         .switchMap(() => {
             return Rx.Observable.of(geraDefineAtivacao(false), removeLayer("ConversorDeCoordenada"));
         });
 
+// fecha o conversor de coordenada quando abre o plugin de pedido de imagem abre
+export const fechaConversorQuandoPedidoDeImagemAbreEpic = (action$, store) =>
+action$.ofType(ALTERNA_ATIVACAO_FORMULARIO)
+    .filter(() => store.getState().formulario.enabled === true && store.getState().conversordecoordenada.enabled === true)
+    .switchMap(() => {
+        return Rx.Observable.of(geraDefineAtivacao(false), removeLayer("ConversorDeCoordenada"));
+    });
+
 export default {
-    configuraAtivaDesativaEpic,
+    configuraAtivaDesativaConversorEpic,
     moveMarcadorEpic,
     atualizaMarcadorComCoordenadaEpic,
     pegarCoordenadaEpic,
-    fechaPluginQuandoMeasureAbreEpic,
-    fechaPluginQuandoIdentifyAbreEpic
+    fechaConversorQuandoMeasureAbreEpic,
+    fechaConversorQuandoPedidoDeImagemAbreEpic,
+    fechaConversorQuandoIdentifyAbreEpic
 };

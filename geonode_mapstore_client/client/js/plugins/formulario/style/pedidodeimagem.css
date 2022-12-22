@@ -1,0 +1,176 @@
+#formularioPedidoImagem {
+    position: absolute;
+    bottom: 60px;
+    left: 206px;
+    right: 296px;
+    z-index: 1000;
+    background-color: rgba(255, 255, 255, 0.75);
+    border-radius: 8px;
+    padding: 5px;
+    height: 530px;
+}
+
+.erro {
+    color: red;
+}
+
+.fechar {
+    position: absolute;
+    right: 10px;
+    background-color: lightgray;
+    opacity: 0.8;
+    border: none;
+    color: black;
+    font-size: 14px;
+    padding: 4px 8px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    transition-duration: 0.1s;
+}
+
+.fechar:hover {
+    background-color: red;
+    /* Green */
+    opacity: 0.8;
+    color: white;
+}
+
+#textoInformativo {
+    font-size: 90%;
+    margin: 15px 13px 20px;
+}
+
+.labelsPedidoImagem {
+    font-size: 90%;
+    margin-right: 0.5em;
+}
+
+.inputsPedidoImagem[type=text],
+.inputsPedidoImagem[type=number],
+.inputsPedidoImagem[type=tel],
+.inputsPedidoImagem[type=date],
+.textoJustificativa {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-top: 6px;
+    margin-bottom: 16px;
+    resize: vertical;
+    max-height: 80px;
+}
+
+.botoes-do-plugin {
+    background-color: #2c689c;
+    color: white;
+    padding: 12px 20px;
+    border: 1px solid lightgray;
+    margin-right: 1px;
+    margin-top: 3px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.botoes-do-plugin[type=submit]:hover {
+    background-color: rgb(30, 74, 117);
+    color: white;
+}
+
+.botoes-do-plugin[type=submit]:disabled {
+    border: 1px solid #999999;
+    background-color: #cccccc;
+    color: #666666;
+}
+
+#botaoPoligono {
+    margin-top: 30px;
+    font-size: 13px;
+    padding-right: 14px;
+}
+
+#botaoEnviar {
+    margin-left: 4px;
+}
+
+.selectFinalidade {
+    width: 100%;
+    height: 100%;
+    padding: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-top: 11px;
+    margin-bottom: 16px;
+    resize: vertical;
+}
+
+#unidade {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-top: 14px;
+    margin-bottom: 5px;
+    resize: vertical;
+}
+
+#tituloPlugin {
+    font-weight: bold;
+    margin-top: 10px;
+    text-align: center;
+    font-size: 125%;
+}
+
+.rs-picker-toggle-placeholder {
+    display: none;
+}
+
+.rs-picker-toggle-textbox {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-top: 6px;
+    margin-bottom: 16px;
+    resize: vertical;
+}
+
+.rs-picker-toggle-caret,
+.rs-icon {
+    display: none;
+}
+
+.iconePedidoImagem {
+    font-size: 185%;
+}
+
+.avisoDeEnvio {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    background: white;
+    border-radius: 5px;
+    width: 230px;
+    padding: 0px;
+    height: 54px;
+    word-wrap: break-word;
+}
+
+.textoDeEnvio {
+    color: black;
+    padding: 0px;
+    margin: 2px 6px;
+}
+
+#pedido-erro {
+    color: red;
+}
+
+#pedido-sucesso {
+    color: green;
+}

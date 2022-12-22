@@ -3,6 +3,7 @@
         "url": "proxy/?url=",
         "useCORS": []
     },
+    "printUrl": "http://localhost:8001/v0/impressaoproxy/info",
     "useAuthenticationRules": true,
     "authenticationRules": [
         {
@@ -858,7 +859,10 @@
                 "name": "Print",
                 "cfg": {
                     "useFixedScales": true,
-                    "mapWidth": 256
+                    "mapWidth": 256,
+                    "overrideOptions": {
+                        "geodetic": true
+                    }
                 }
             },
             {
@@ -983,6 +987,9 @@
                 "name": "LinksExternos"
             },
             {
+                "name": "DesenharMapa"
+            },
+            {
                 "name": "RelatorioDeBug"
             },
             {
@@ -1016,7 +1023,11 @@
                 "name": "Print",
                 "cfg": {
                     "useFixedScales": true,
-                    "mapWidth": 256
+                    "mapWidth": 256,
+                    "overrideOptions": {
+                        "geodetic": true
+                    }
+
                 }
             },
             {
@@ -1297,7 +1308,11 @@
                 "name": "Print",
                 "cfg": {
                     "useFixedScales": true,
-                    "mapWidth": 256
+                    "mapWidth": 256,
+                    "overrideOptions": {
+                        "geodetic": true
+                    }
+
                 }
             },
             {
@@ -1575,7 +1590,11 @@
                 "name": "Print",
                 "cfg": {
                     "useFixedScales": true,
-                    "mapWidth": 256
+                    "mapWidth": 256,
+                    "overrideOptions": {
+                        "geodetic": true
+                    }
+
                 }
             },
             {
@@ -1815,6 +1834,9 @@
                 "name": "LinksExternos"
             },
             {
+                "name": "DesenharMapa"
+            },
+            {
                 "name": "RelatorioDeBug"
             },
             {
@@ -1848,7 +1870,11 @@
                 "name": "Print",
                 "cfg": {
                     "useFixedScales": true,
-                    "mapWidth": 256
+                    "mapWidth": 256,
+                    "overrideOptions": {
+                        "geodetic": true
+                    }
+
                 }
             },
             {
@@ -2106,6 +2132,9 @@
                 "name": "LinksExternos"
             },
             {
+                "name": "DesenharMapa"
+            },
+            {
                 "name": "RelatorioDeBug"
             },
             {
@@ -2130,7 +2159,11 @@
                 "name": "Print",
                 "cfg": {
                     "useFixedScales": true,
-                    "mapWidth": 256
+                    "mapWidth": 256,
+                    "overrideOptions": {
+                        "geodetic": true
+                    }
+
                 }
             },
             {
