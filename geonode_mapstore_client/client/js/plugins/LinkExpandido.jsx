@@ -2,10 +2,12 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { panTo, changeZoomLevel } from '@mapstore/framework/actions/map';
+import { toggleControl } from '@mapstore/framework/actions/controls';
 
 // Inicializa o mapa no ponto certo a partir das informacoes obtidas na query string
-const Inicializa = ({ centraliza, mudaZoom }) => {
+const Inicializa = ({ centraliza, mudaZoom, toggleControl }) => {
     useEffect(() => {
+        toggleControl("toolbar", "expanded")
         const params = new URLSearchParams(window.location.search);
         let center = params.has('center') ? params.get('center').split(',').map((a) => Number(a)) : null;
         let zoom = params.has('zoom') ? Number(params.get('zoom')) : null;
@@ -25,13 +27,14 @@ class LinkExpandidoComponent extends React.Component {
     };
 
     render() {
-        return (<Inicializa centraliza={this.props.centraliza} mudaZoom={this.props.mudaZoom}/>);
+        return (<Inicializa centraliza={this.props.centraliza} mudaZoom={this.props.mudaZoom} toggleControl={this.props.toggleControl}/>);
     }
 }
 
 const LinkExpandidoConectado = connect(null, {
     centraliza: panTo,
-    mudaZoom: changeZoomLevel
+    mudaZoom: changeZoomLevel,
+    toggleControl: toggleControl
 })(LinkExpandidoComponent);
 
 export const LinkExpandidoPlugin = LinkExpandidoConectado;

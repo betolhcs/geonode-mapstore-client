@@ -270,12 +270,17 @@ export const plugins = {
         'DrawerMenu',
         import(/* webpackChunkName: 'plugins/drawer-menu-plugin' */ '@mapstore/framework/plugins/DrawerMenu')
     ),
+    // FormularioPlugin: toLazyPlugin(
+    //     'Formulario',
+    //     import(/* webpackChunkName: 'plugins/formulario-plugin' */ './Formulario')
+    // ),
     LinksExternosPlugin: require('@js/plugins/LinksExternos'),
     ConversorDeCoordenadaPlugin: require('@js/plugins/ConversorDeCoordenada'),
     FormularioPlugin: require('@js/plugins/Formulario'),
     LinkExpandidoPlugin: require('@js/plugins/LinkExpandido'),
     RelatorioDeBugPlugin: require('@js/plugins/RelatorioDeBug'),
-    BasemapTestPlugin: require('@js/plugins/BasemapTest'),
+    HelloWorldPlugin: require('@js/plugins/HelloWorld')
+    // BasemapTestPlugin: require('@js/plugins/BasemapTest'),
     // DesenharMapaPlugin: require('@js/plugins/DesenharMapa')
 };
 

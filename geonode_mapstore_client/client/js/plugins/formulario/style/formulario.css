@@ -164,3 +164,17 @@ select {
 #pedido-sucesso {
     color: green;
 }
+
+#tooltip-de-desenho {
+    position: absolute;
+    height: 150px;
+    z-index: 1000;
+    width: 340px;
+    top: 85%;
+    left: 50%;
+    margin-top: -75px;
+    margin-left: -170px;
+    background-color: rgba(255, 255, 255, 0.85);
+    color: black;
+    border-radius: 8px;
+}

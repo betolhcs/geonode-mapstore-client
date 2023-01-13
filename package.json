@@ -14,6 +14,7 @@
     "html2canvas": "^1.4.1",
     "js-cookie": "2.2.1",
     "mapstore": "git+https://github.com/geosolutions-it/MapStore2.git#7a1f6c0f4248937b37e12a8e2906845b578532f2",
-    "react-bootstrap-v1": "npm:react-bootstrap@1.3.0"
+    "react-bootstrap-v1": "npm:react-bootstrap@1.3.0",
+    "react-input-mask": "^2.0.4"
   }
 }

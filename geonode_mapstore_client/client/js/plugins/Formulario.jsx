@@ -15,6 +15,21 @@ import { geraAlternaAtivacao, geraIniciaDesenho, geraFinalizaDesenho } from "../
 import { createPlugin } from '@mapstore/framework/utils/PluginsUtils';
 
 
+const BotaoTeste = ({ alternaAtivacao }) => {
+    const teste = (e) => {
+        e.preventDefault
+        alternaAtivacao
+    }
+
+    return (<>
+        <button onClick={teste}>
+            P
+        </button>
+    </>);
+};
+
+
+
 // Componente com o formulário
 class FormularioComponent extends React.Component {
 
@@ -154,7 +169,14 @@ class FormularioComponent extends React.Component {
         // });
     }
 
-    
+    componentDidMount(){
+        axios.get().then((response) => this.setState({
+            nome: response.data.nomeCompleto,
+            unidade: response.data.lotacao,
+            email: response.data.emailInstitucional
+        })).catch((e) => console.log(e));
+    }
+
     render() {
         return (this.props.enabled) ? ((this.props.visivel) ? (
             < form onSubmit={this.handleSubmit} id="formulario"
@@ -240,8 +262,15 @@ class FormularioComponent extends React.Component {
                         <p className="textoDeEnvio" id={(this.state.statusDoPedido) ? "pedido-sucesso" : "pedido-erro"}>{this.state.mensagemDeAviso}</p>
                     </div>  : null}
                 </div>
-            </form >
-        ) : <div style={{position: "absolute", bottom: "34px", left: "300px", height: "230px", background: "white", zIndex: 1000, }}> TESTE </div> ) : null;
+            </form>
+        ) : <div id="tooltip-de-desenho">
+            <p style={{marginBottom: "2px", paddingBottom: "1px"}}>Clique uma vez para começar a desenhar e duas vezes para finalizar.</p>
+            <ul style={{marginTop: "2px", paddingTop: "1px"}}>
+                <li>O poligono não deve se intersectar</li>
+                <li>O poligono deve estar localizado em território nacional</li>
+                <li>O poligono não deve conter buracos</li>
+            </ul>
+        </div> ) : null;
     }
 }
 
@@ -280,36 +309,10 @@ export const FormularioPlugin = assign(FormularioConectado, {
         // message: ? Coisa dos locales/traducao
         action: geraAlternaAtivacao,
         selector: (state) => ({ // Muda a cor do botao quando ativado
-            bsStyle: state.formulario && state.formulario.enabled ? "success" : "primary",
-            active: !!(state.formulario && state.formulario.enabled)
+            bsStyle: state.user ? (state.formulario && state.formulario.enabled ? "success" : "primary") : "disabled",
+            active: state.user ? !!(state.formulario && state.formulario.enabled) : false
         })
     }
 });
 export const reducers = { formulario };
 export const epics = formularioEpics;
-
-// export default createPlugin(
-//     'FormularioPlugin',
-//     {
-//         options: {
-//             disablePluginIf: "{state('mapType') === 'leaflet' || state('mapType') === 'cesium'}"
-//         },
-//         component: FormularioConectado,
-//         containers: {
-//             TOC: {
-//                 name: "Form",
-//                 target: "toolbar",
-//                 selector: ({ status }) => true,
-//                 Component: FormularioConectado
-//             },
-//             // Map: {
-//             //     name: "Swipe",
-//             //     Tool: MapSwipeSupport
-//             // }
-//         },
-//         reducers: {
-//             formulario
-//         },
-//         epics: formularioEpics
-//     }
-// );

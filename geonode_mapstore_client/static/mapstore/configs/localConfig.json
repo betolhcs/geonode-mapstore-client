@@ -564,7 +564,8 @@
                 "id": "NavigationBar",
                 "cfg": {
                     "id": "navigationBar",
-                    "layout": "horizontal"
+                    "layout": "horizontal",
+                    "expanded": true
                 }
             },
             {
@@ -587,7 +588,7 @@
                 "name": "ZoomIn",
                 "override": {
                     "Toolbar": {
-                        "alwaysVisible": true
+                        "alwaysVisible": false
                     }
                 }
             },
@@ -595,7 +596,7 @@
                 "name": "ZoomOut",
                 "override": {
                     "Toolbar": {
-                        "alwaysVisible": true
+                        "alwaysVisible": false
                     }
                 }
             },
@@ -665,7 +666,8 @@
                 "id": "NavigationBar",
                 "cfg": {
                     "id": "navigationBar",
-                    "layout": "horizontal"
+                    "layout": "horizontal",
+                    "expanded": true
                 }
             },
             {
@@ -688,7 +690,7 @@
                 "name": "ZoomIn",
                 "override": {
                     "Toolbar": {
-                        "alwaysVisible": true
+                        "alwaysVisible": false
                     }
                 }
             },
@@ -696,7 +698,7 @@
                 "name": "ZoomOut",
                 "override": {
                     "Toolbar": {
-                        "alwaysVisible": true
+                        "alwaysVisible": false
                     }
                 }
             },
@@ -754,14 +756,15 @@
                 "name": "Toolbar",
                 "id": "NavigationBar",
                 "cfg": {
-                    "id": "navigationBar"
+                    "id": "navigationBar",
+                    "expanded": true
                 }
             },
             {
                 "name": "ZoomIn",
                 "override": {
                     "Toolbar": {
-                        "alwaysVisible": true
+                        "alwaysVisible": false
                     }
                 }
             },
@@ -769,7 +772,7 @@
                 "name": "ZoomOut",
                 "override": {
                     "Toolbar": {
-                        "alwaysVisible": true
+                        "alwaysVisible": false
                     }
                 }
             },
@@ -825,14 +828,15 @@
                 "name": "Toolbar",
                 "id": "NavigationBar",
                 "cfg": {
-                    "id": "navigationBar"
+                    "id": "navigationBar",
+                    "expanded": true
                 }
             },
             {
                 "name": "ZoomIn",
                 "override": {
                     "Toolbar": {
-                        "alwaysVisible": true
+                        "alwaysVisible": false
                     }
                 }
             },
@@ -840,7 +844,7 @@
                 "name": "ZoomOut",
                 "override": {
                     "Toolbar": {
-                        "alwaysVisible": true
+                        "alwaysVisible": false
                     }
                 }
             },
@@ -969,7 +973,8 @@
                 "id": "NavigationBar",
                 "cfg": {
                     "id": "navigationBar",
-                    "layout": "horizontal"
+                    "layout": "horizontal",
+                    "expanded": true
                 }
             },
             {
@@ -987,13 +992,16 @@
                 "name": "LinksExternos"
             },
             {
-                "name": "DesenharMapa"
+                "name": "Formulario"
             },
             {
                 "name": "RelatorioDeBug"
             },
             {
                 "name": "ConversorDeCoordenada"
+            },
+            {
+                "name": "HelloWorld"
             },
             {
                 "name": "BasemapTest"
@@ -1042,7 +1050,7 @@
                 "name": "ZoomIn",
                 "override": {
                     "Toolbar": {
-                        "alwaysVisible": true
+                        "alwaysVisible": false
                     }
                 }
             },
@@ -1050,7 +1058,7 @@
                 "name": "ZoomOut",
                 "override": {
                     "Toolbar": {
-                        "alwaysVisible": true
+                        "alwaysVisible": false
                     }
                 }
             },
@@ -1272,7 +1280,8 @@
                 "id": "NavigationBar",
                 "cfg": {
                     "id": "navigationBar",
-                    "layout": "horizontal"
+                    "layout": "horizontal",
+                    "expanded": true
                 }
             },
             {
@@ -1327,7 +1336,7 @@
                 "name": "ZoomIn",
                 "override": {
                     "Toolbar": {
-                        "alwaysVisible": true
+                        "alwaysVisible": false
                     }
                 }
             },
@@ -1335,7 +1344,7 @@
                 "name": "ZoomOut",
                 "override": {
                     "Toolbar": {
-                        "alwaysVisible": true
+                        "alwaysVisible": false
                     }
                 }
             },
@@ -1557,7 +1566,8 @@
                 "id": "NavigationBar",
                 "cfg": {
                     "id": "navigationBar",
-                    "layout": "horizontal"
+                    "layout": "horizontal",
+                    "expanded": true
                 }
             },
             {
@@ -1609,7 +1619,7 @@
                 "name": "ZoomIn",
                 "override": {
                     "Toolbar": {
-                        "alwaysVisible": true
+                        "alwaysVisible": false
                     }
                 }
             },
@@ -1617,7 +1627,7 @@
                 "name": "ZoomOut",
                 "override": {
                     "Toolbar": {
-                        "alwaysVisible": true
+                        "alwaysVisible": false
                     }
                 }
             },
@@ -1816,7 +1826,8 @@
                 "id": "NavigationBar",
                 "cfg": {
                     "id": "navigationBar",
-                    "layout": "horizontal"
+                    "layout": "horizontal",
+                    "expanded": true
                 }
             },
             {
@@ -1834,13 +1845,16 @@
                 "name": "LinksExternos"
             },
             {
-                "name": "DesenharMapa"
+                "name": "Formulario"
             },
             {
                 "name": "RelatorioDeBug"
             },
             {
                 "name": "ConversorDeCoordenada"
+            },
+            {
+                "name": "HelloWorld"
             },
             {
                 "name": "BasemapTest"
@@ -1889,7 +1903,7 @@
                 "name": "ZoomIn",
                 "override": {
                     "Toolbar": {
-                        "alwaysVisible": true
+                        "alwaysVisible": false
                     }
                 }
             },
@@ -1897,7 +1911,7 @@
                 "name": "ZoomOut",
                 "override": {
                     "Toolbar": {
-                        "alwaysVisible": true
+                        "alwaysVisible": false
                     }
                 }
             },
@@ -2114,7 +2128,8 @@
                 "id": "NavigationBar",
                 "cfg": {
                     "id": "navigationBar",
-                    "layout": "horizontal"
+                    "layout": "horizontal",
+                    "expanded": true
                 }
             },
             {
@@ -2132,7 +2147,7 @@
                 "name": "LinksExternos"
             },
             {
-                "name": "DesenharMapa"
+                "name": "Formulario"
             },
             {
                 "name": "RelatorioDeBug"
@@ -2178,7 +2193,7 @@
                 "name": "ZoomIn",
                 "override": {
                     "Toolbar": {
-                        "alwaysVisible": true
+                        "alwaysVisible": false
                     }
                 }
             },
@@ -2186,7 +2201,7 @@
                 "name": "ZoomOut",
                 "override": {
                     "Toolbar": {
-                        "alwaysVisible": true
+                        "alwaysVisible": false
                     }
                 }
             },
